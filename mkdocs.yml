@@ -71,7 +71,7 @@ theme:
     - content.tooltips
 
 extra_css:
-  - stylesheets/extra.css
+  - stylesheets/mandari.css
 
 extra:
   generator: false
