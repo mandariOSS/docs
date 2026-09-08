@@ -1,0 +1,66 @@
+/* mandari-Markenfarben (Indigo aus der Website) und Feinschliff */
+:root {
+  --md-primary-fg-color: #4f46e5;
+  --md-primary-fg-color--light: #6366f1;
+  --md-primary-fg-color--dark: #4338ca;
+  --md-accent-fg-color: #4338ca;
+  --md-accent-fg-color--transparent: rgba(67, 56, 202, 0.1);
+  --md-text-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --md-code-font: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #4338ca;
+  --md-primary-fg-color--light: #6366f1;
+  --md-primary-fg-color--dark: #312e81;
+  --md-accent-fg-color: #a5b4fc;
+  --md-accent-fg-color--transparent: rgba(165, 180, 252, 0.12);
+  --md-hue: 232;
+}
+
+.md-header__button.md-logo img {
+  height: 1.6rem;
+  width: 1.6rem;
+  border-radius: 0.35rem;
+}
+
+/* Tabellen etwas kompakter, Code-Spalten ohne Umbruch */
+.md-typeset table:not([class]) {
+  font-size: 0.72rem;
+}
+.md-typeset table:not([class]) code {
+  white-space: nowrap;
+}
+
+/* Kachel-Grid für Einstiegsseiten */
+.mandari-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 0.8rem;
+  margin: 1.2rem 0;
+}
+.mandari-grid > a {
+  display: block;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: 0.5rem;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.mandari-grid > a:hover {
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 0.2rem 0.6rem rgba(79, 70, 229, 0.12);
+}
+.mandari-grid > a strong {
+  display: block;
+  color: var(--md-primary-fg-color);
+  margin-bottom: 0.3rem;
+}
+[data-md-color-scheme="slate"] .mandari-grid > a strong {
+  color: var(--md-accent-fg-color);
+}
+.mandari-grid > a span {
+  font-size: 0.72rem;
+  color: var(--md-default-fg-color--light);
+}

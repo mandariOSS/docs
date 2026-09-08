@@ -1,0 +1,13 @@
+{% extends "main.html" %}
+
+{% block content %}
+<h1>Seite nicht gefunden</h1>
+<p>Diese Seite gibt es unter dieser Adresse nicht (mehr). Die Dokumentation wurde neu gegliedert – vielleicht hilft die Suche oder einer dieser Einstiege:</p>
+<ul>
+  <li><a href="{{ config.site_url }}">Startseite der Dokumentation</a></li>
+  <li><a href="{{ config.site_url }}insight/oparl-api/">OParl-Aggregations-API</a></li>
+  <li><a href="{{ config.site_url }}work/termine-einbinden/">Termine auf der Fraktions-Webseite</a></li>
+  <li><a href="{{ config.site_url }}betrieb/">Self-Hosting und Betrieb</a></li>
+</ul>
+<p>Fehlt hier etwas? <a href="https://github.com/mandariOSS/docs/issues/new">Sag uns Bescheid</a>.</p>
+{% endblock %}

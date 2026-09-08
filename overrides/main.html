@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {% set og_title = (page.title if page and page.title else config.site_name) %}
+  {% set og_desc = (page.meta.description if page and page.meta and page.meta.description else config.site_description) %}
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="mandari Dokumentation">
+  <meta property="og:title" content="{{ og_title }} – mandari Dokumentation">
+  <meta property="og:description" content="{{ og_desc }}">
+  {% if page and page.canonical_url %}<meta property="og:url" content="{{ page.canonical_url }}">{% endif %}
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary">
+{% endblock %}

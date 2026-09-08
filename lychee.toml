@@ -1,0 +1,3 @@
+# Konfiguration für den Offline-Link-Check in CI (nur interne Links)
+exclude_path = ["site/assets", "site/search"]
+exclude = ["^mailto:", "^https?://"]

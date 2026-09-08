@@ -1,0 +1,46 @@
+# Prüfung jedes Pushs und Pull Requests: strikter MkDocs-Build, interne Links, Docker-Build.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  DISABLE_MKDOCS_2_WARNING: "true"
+
+jobs:
+  build:
+    name: Build & Link-Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # vollständige Historie für "Zuletzt aktualisiert"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Abhängigkeiten installieren
+        run: pip install -r requirements.txt
+
+      - name: Strikter Build
+        run: mkdocs build --strict
+
+      - name: Interne Links prüfen (offline)
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --offline --no-progress --root-dir "${{ github.workspace }}/site" --include-fragments "site/**/*.html"
+          fail: true
+
+      - name: Docker-Image bauen (ohne Push)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: docs:ci

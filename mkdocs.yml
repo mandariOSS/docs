@@ -1,0 +1,208 @@
+# Dokumentation der mandari-Plattform – https://docs.mandari.de
+site_name: mandari Dokumentation
+site_url: https://docs.mandari.de/
+site_description: >-
+  Handbuch der mandari-Plattform für kommunalpolitische Transparenz:
+  Bürgerportal Insight, Fraktionsarbeit mit Work, Ratsinformationssystem Session,
+  OParl-Schnittstellen, Self-Hosting und Datenschutz.
+site_author: mandari
+copyright: >-
+  Inhalte unter <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a> ·
+  <a href="https://mandari.de/impressum/">Impressum</a> ·
+  <a href="https://mandari.de/datenschutz/">Datenschutz</a>
+
+repo_name: mandariOSS/docs
+repo_url: https://github.com/mandariOSS/docs
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+site_dir: site
+strict: true
+
+theme:
+  name: material
+  custom_dir: overrides
+  language: de
+  logo: assets/logo.png
+  favicon: assets/favicon.png
+  # Keine Web-Fonts von Drittanbietern – Systemschriften, keine externen Requests
+  font: false
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Systemeinstellung
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Dunkles Design
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Helles Design
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+    - content.action.edit
+    - content.action.view
+    - content.tabs.link
+    - content.tooltips
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/mandariOSS
+      name: mandari auf GitHub
+    - icon: material/web
+      link: https://mandari.de
+      name: mandari.de
+    - icon: material/heart-pulse
+      link: https://status.mandari.de
+      name: Betriebsstatus
+
+plugins:
+  - search:
+      lang: de
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - git-revision-date-localized:
+      type: date
+      locale: de
+      timezone: Europe/Berlin
+      fallback_to_build_date: true
+      enable_creation_date: false
+  - glightbox:
+      touchNavigation: true
+      skip_classes:
+        - no-lightbox
+  - redirects:
+      redirect_maps:
+        # Alte Pfade der Dokumentation unter mandari.de/docs/
+        tutorial-termine-einbinden.md: work/termine-einbinden.md
+        oparl.md: insight/oparl-api.md
+        fraktions-api.md: work/fraktions-api.md
+        session-api.md: session/oparl-api.md
+        self-hosting.md: betrieb/index.md
+  - minify:
+      minify_html: true
+      minify_js: true
+      minify_css: true
+      htmlmin_opts:
+        remove_comments: true
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      permalink_title: Direktlink zu diesem Abschnitt
+      toc_depth: 3
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.snippets:
+      base_path:
+        - docs
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+nav:
+  - Start:
+      - index.md
+      - Die Plattform im Überblick: plattform.md
+      - Glossar: glossar.md
+      - Änderungen an dieser Dokumentation: aenderungen.md
+  - Insight (Bürgerportal):
+      - insight/index.md
+      - OParl-Aggregations-API: insight/oparl-api.md
+      - Beschlüsse verfolgen: insight/beschluesse.md
+      - Ratsfragen: insight/ratsfragen.md
+      - Dokumente und Datenstand: insight/dokumente.md
+  - Work (Fraktionen):
+      - work/index.md
+      - Termine auf der eigenen Webseite: work/termine-einbinden.md
+      - Öffentliche Fraktions-API: work/fraktions-api.md
+      - Anträge digital einreichen: work/antraege-einreichen.md
+      - Beschlüsse der Kommune: work/beschluesse.md
+  - Session (Verwaltung):
+      - session/index.md
+      - OParl-API je Kommune: session/oparl-api.md
+      - Veröffentlichung im Bürgerportal: session/buergerportal.md
+      - Beschlusskontrolle: session/beschlusskontrolle.md
+      - Fristen-Erinnerungen: session/fristen-erinnerungen.md
+      - Einreichungs-Zugänge für Fraktionen: session/einreichungs-zugaenge.md
+  - Betrieb:
+      - betrieb/index.md
+      - Konfiguration: betrieb/konfiguration.md
+      - Regelmäßige Aufgaben (Cron): betrieb/cron.md
+      - Quellen anbinden: betrieb/quellen-anbinden.md
+      - Dokument-Cache: betrieb/dokument-cache.md
+      - Betriebsmonitor: betrieb/monitoring.md
+      - Demo-Umgebung: betrieb/demo-umgebung.md
+      - Updates und Backups: betrieb/updates-backups.md
+  - Datenschutz:
+      - datenschutz/index.md
+      - Technische und organisatorische Maßnahmen: datenschutz/tom.md
+      - Löschkonzept: datenschutz/loeschkonzept.md
+      - Muster-AVV: datenschutz/avv-muster.md
+      - Crawler und Opt-out: datenschutz/crawler.md
+  - Entwicklung:
+      - entwicklung/index.md
+      - An der Dokumentation mitarbeiten: entwicklung/dokumentation.md
+      - Abhängigkeiten (SBOM): entwicklung/sbom.md
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  anchors: warn
