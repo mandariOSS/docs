@@ -9,7 +9,7 @@ mandari verarbeitet in Session und Work personenbezogene Daten von Mandatsträge
 
 ## Dokumente
 
-<div class="mandari-grid" markdown>
+<div class="mandari-grid">
 <a href="tom/"><strong>Technische und organisatorische Maßnahmen</strong><span>Vertraulichkeit, Integrität, Verfügbarkeit, Löschung, organisatorische Maßnahmen. Anlage zum AVV nach Art. 32 DSGVO.</span></a>
 <a href="loeschkonzept/"><strong>Löschkonzept</strong><span>Datenarten, Aufbewahrungsfristen, auditierter Löschlauf, Betroffenenauskunft, Löschung ganzer Mandanten.</span></a>
 <a href="avv-muster/"><strong>Muster-AVV</strong><span>Arbeitsgrundlage für den Auftragsverarbeitungsvertrag zwischen Kommune und Betreiber nach Art. 28 DSGVO.</span></a>

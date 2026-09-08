@@ -11,7 +11,7 @@ Willkommen! Hier findest du alles, um mandari zu nutzen, Daten einzubinden und d
 
 ## Wo möchtest du hin?
 
-<div class="mandari-grid" markdown>
+<div class="mandari-grid">
 <a href="insight/"><strong>Insight – Bürgerportal</strong><span>Ratsinformationen durchsuchen, Beschlüsse verfolgen, Fragen an Ratsmitglieder stellen. Plus die OParl-Aggregations-API für Entwicklerinnen und Entwickler.</span></a>
 <a href="work/"><strong>Work – Fraktionen</strong><span>Sitzungsvorbereitung, Anträge, digitale Einreichung bei der Verwaltung und die öffentliche Fraktions-API für eure Webseite.</span></a>
 <a href="session/"><strong>Session – Verwaltung</strong><span>Das Ratsinformationssystem für Kommunen: Sitzungsdienst, Beschlusskontrolle, Fristen, OParl-Schnittstelle je Kommune.</span></a>
