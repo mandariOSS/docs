@@ -9,11 +9,32 @@ mandari verarbeitet in Session und Work personenbezogene Daten von Mandatsträge
 
 ## Dokumente
 
-<div class="mandari-grid">
-<a href="tom/"><strong>Technische und organisatorische Maßnahmen</strong><span>Vertraulichkeit, Integrität, Verfügbarkeit, Löschung, organisatorische Maßnahmen. Anlage zum AVV nach Art. 32 DSGVO.</span></a>
-<a href="loeschkonzept/"><strong>Löschkonzept</strong><span>Datenarten, Aufbewahrungsfristen, auditierter Löschlauf, Betroffenenauskunft, Löschung ganzer Mandanten.</span></a>
-<a href="avv-muster/"><strong>Muster-AVV</strong><span>Arbeitsgrundlage für den Auftragsverarbeitungsvertrag zwischen Kommune und Betreiber nach Art. 28 DSGVO.</span></a>
-<a href="crawler/"><strong>Crawler und Opt-out</strong><span>Wie unser Ingestor mit kommunalen Servern umgeht und wie Kommunen Drosselung oder Entfernung verlangen.</span></a>
+<div class="mandari-grid" markdown>
+
+<div class="mandari-card" markdown>
+<span class="mandari-card__icon">:octicons-shield-check-24:</span>
+**[Technische und organisatorische Maßnahmen](tom.md)**
+Vertraulichkeit, Integrität, Verfügbarkeit, Löschung, organisatorische Maßnahmen. Anlage zum AVV nach Art. 32 DSGVO.
+</div>
+
+<div class="mandari-card" markdown>
+<span class="mandari-card__icon">:octicons-trash-24:</span>
+**[Löschkonzept](loeschkonzept.md)**
+Datenarten, Aufbewahrungsfristen, auditierter Löschlauf, Betroffenenauskunft, Löschung ganzer Mandanten.
+</div>
+
+<div class="mandari-card" markdown>
+<span class="mandari-card__icon">:octicons-file-badge-24:</span>
+**[Muster-AVV](avv-muster.md)**
+Arbeitsgrundlage für den Auftragsverarbeitungsvertrag zwischen Kommune und Betreiber nach Art. 28 DSGVO.
+</div>
+
+<div class="mandari-card" markdown>
+<span class="mandari-card__icon">:octicons-globe-24:</span>
+**[Crawler und Opt-out](crawler.md)**
+Wie unser Ingestor mit kommunalen Servern umgeht und wie Kommunen Drosselung oder Entfernung verlangen.
+</div>
+
 </div>
 
 ## Grundsätze in Kürze

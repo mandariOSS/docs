@@ -7,9 +7,9 @@ site_description: >-
   OParl-Schnittstellen, Self-Hosting und Datenschutz.
 site_author: mandari
 copyright: >-
-  Inhalte unter <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a> ·
-  <a href="https://mandari.de/impressum/">Impressum</a> ·
-  <a href="https://mandari.de/datenschutz/">Datenschutz</a>
+  Inhalte unter <a href="https://creativecommons.org/licenses/by/4.0/deed.de">CC BY 4.0</a>,
+  Quellcode der Plattform unter Open-Source-Lizenz auf
+  <a href="https://github.com/mandariOSS">GitHub</a>.
 
 repo_name: mandariOSS/docs
 repo_url: https://github.com/mandariOSS/docs
@@ -23,7 +23,6 @@ theme:
   name: material
   custom_dir: overrides
   language: de
-  logo: assets/logo.png
   favicon: assets/favicon.png
   # Keine Web-Fonts von Drittanbietern – Systemschriften, keine externen Requests
   font: false

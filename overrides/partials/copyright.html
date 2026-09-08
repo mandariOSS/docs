@@ -1,0 +1,21 @@
+{#- Fußzeile im Stil von mandari.de: Wortmarke, Kurztext, Pflichtlinks -#}
+<div class="md-copyright mandari-footer">
+  <div class="mandari-footer__brand">
+    <a href="https://mandari.de/" class="mandari-footer__wordmark" aria-label="mandari.de">mandari<span class="mandari-wordmark__dot">.</span></a>
+    <p class="mandari-footer__claim">Open-Source-Plattform für kommunalpolitische Transparenz. Diese Dokumentation ist quelloffen und freut sich über Verbesserungen.</p>
+    <a href="https://status.mandari.de" class="mandari-status" target="_blank" rel="noopener">
+      <span class="mandari-status__dot" aria-hidden="true"></span>
+      <strong>Live-Status</strong>
+    </a>
+  </div>
+  <div class="mandari-footer__links">
+    <a href="https://mandari.de/">Website</a>
+    <a href="https://mandari.de/insight/">Bürgerportal</a>
+    <a href="https://github.com/mandariOSS/docs">Quelltext der Doku</a>
+    <a href="https://mandari.de/impressum/">Impressum</a>
+    <a href="https://mandari.de/datenschutz/">Datenschutz</a>
+  </div>
+  <div class="mandari-footer__legal">
+    {% if config.copyright %}{{ config.copyright }}{% endif %}
+  </div>
+</div>

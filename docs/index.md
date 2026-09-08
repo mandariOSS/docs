@@ -11,13 +11,44 @@ Willkommen! Hier findest du alles, um mandari zu nutzen, Daten einzubinden und d
 
 ## Wo möchtest du hin?
 
-<div class="mandari-grid">
-<a href="insight/"><strong>Insight – Bürgerportal</strong><span>Ratsinformationen durchsuchen, Beschlüsse verfolgen, Fragen an Ratsmitglieder stellen. Plus die OParl-Aggregations-API für Entwicklerinnen und Entwickler.</span></a>
-<a href="work/"><strong>Work – Fraktionen</strong><span>Sitzungsvorbereitung, Anträge, digitale Einreichung bei der Verwaltung und die öffentliche Fraktions-API für eure Webseite.</span></a>
-<a href="session/"><strong>Session – Verwaltung</strong><span>Das Ratsinformationssystem für Kommunen: Sitzungsdienst, Beschlusskontrolle, Fristen, OParl-Schnittstelle je Kommune.</span></a>
-<a href="betrieb/"><strong>Betrieb und Self-Hosting</strong><span>mandari mit Docker selbst betreiben, konfigurieren, Quellen anbinden, überwachen und aktualisieren.</span></a>
-<a href="datenschutz/"><strong>Datenschutz</strong><span>Technische und organisatorische Maßnahmen, Löschkonzept, Muster-AVV und der Umgang unseres Crawlers mit kommunalen Servern.</span></a>
-<a href="entwicklung/"><strong>Entwicklung</strong><span>Quellcode, Technologie-Stack, Tests und wie du an mandari oder an dieser Dokumentation mitarbeitest.</span></a>
+<div class="mandari-grid" markdown>
+
+<div class="mandari-card" markdown>
+<span class="mandari-card__icon">:octicons-eye-24:</span>
+**[Insight – Bürgerportal](insight/index.md)**
+Ratsinformationen durchsuchen, Beschlüsse verfolgen, Fragen an Ratsmitglieder stellen. Plus die OParl-Aggregations-API für Entwicklerinnen und Entwickler.
+</div>
+
+<div class="mandari-card" markdown>
+<span class="mandari-card__icon">:octicons-briefcase-24:</span>
+**[Work – Fraktionen](work/index.md)**
+Sitzungsvorbereitung, Anträge, digitale Einreichung bei der Verwaltung und die öffentliche Fraktions-API für eure Webseite.
+</div>
+
+<div class="mandari-card" markdown>
+<span class="mandari-card__icon">:octicons-law-24:</span>
+**[Session – Verwaltung](session/index.md)**
+Das Ratsinformationssystem für Kommunen: Sitzungsdienst, Beschlusskontrolle, Fristen, OParl-Schnittstelle je Kommune.
+</div>
+
+<div class="mandari-card" markdown>
+<span class="mandari-card__icon">:octicons-server-24:</span>
+**[Betrieb und Self-Hosting](betrieb/index.md)**
+mandari mit Docker selbst betreiben, konfigurieren, Quellen anbinden, überwachen und aktualisieren.
+</div>
+
+<div class="mandari-card" markdown>
+<span class="mandari-card__icon">:octicons-shield-lock-24:</span>
+**[Datenschutz](datenschutz/index.md)**
+Technische und organisatorische Maßnahmen, Löschkonzept, Muster-AVV und der Umgang unseres Crawlers mit kommunalen Servern.
+</div>
+
+<div class="mandari-card" markdown>
+<span class="mandari-card__icon">:octicons-code-24:</span>
+**[Entwicklung](entwicklung/index.md)**
+Quellcode, Technologie-Stack, Tests und wie du an mandari oder an dieser Dokumentation mitarbeitest.
+</div>
+
 </div>
 
 ## Schnellzugriff
