@@ -176,6 +176,7 @@ nav:
   - Session (Verwaltung):
       - session/index.md
       - OParl-API je Kommune: session/oparl-api.md
+      - Session-API v1: session/api-v1.md
       - Veröffentlichung im Bürgerportal: session/buergerportal.md
       - Beschlusskontrolle: session/beschlusskontrolle.md
       - Fristen-Erinnerungen: session/fristen-erinnerungen.md
@@ -187,6 +188,7 @@ nav:
       - Quellen anbinden: betrieb/quellen-anbinden.md
       - Dokument-Cache: betrieb/dokument-cache.md
       - Betriebsmonitor: betrieb/monitoring.md
+      - Logging und Tracing: betrieb/logging-tracing.md
       - Demo-Umgebung: betrieb/demo-umgebung.md
       - Updates und Backups: betrieb/updates-backups.md
   - Datenschutz:
@@ -198,6 +200,7 @@ nav:
   - Entwicklung:
       - entwicklung/index.md
       - An der Dokumentation mitarbeiten: entwicklung/dokumentation.md
+      - Qualitätsgates und Tests: entwicklung/qualitaetsgates.md
       - Abhängigkeiten (SBOM): entwicklung/sbom.md
 
 validation:
