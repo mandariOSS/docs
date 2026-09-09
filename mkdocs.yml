@@ -183,6 +183,7 @@ nav:
       - Einreichungs-Zugänge für Fraktionen: session/einreichungs-zugaenge.md
   - Betrieb:
       - betrieb/index.md
+      - Betrieb in Kubernetes: betrieb/kubernetes.md
       - Konfiguration: betrieb/konfiguration.md
       - Regelmäßige Aufgaben (Cron): betrieb/cron.md
       - Quellen anbinden: betrieb/quellen-anbinden.md

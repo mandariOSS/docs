@@ -5,6 +5,11 @@ description: mandari auf eigener Infrastruktur betreiben. Voraussetzungen, Kompo
 
 # Self-Hosting mit Docker
 
+!!! tip "Kubernetes"
+    Diese Seite beschreibt den Betrieb auf einem einzelnen Server mit Docker Compose.
+    Für einen Cluster gibt es ein Helm-Chart und einen eigenen Installer:
+    [Betrieb in Kubernetes](kubernetes.md).
+
 mandari ist Open Source und vollständig selbst betreibbar: volle Datenhoheit auf eurer eigenen Infrastruktur. Diese Seite führt durch die Installation, die weiteren Seiten dieses Bereichs durch Konfiguration, regelmäßige Aufgaben, Quellen, Überwachung und Updates.
 
 ## Voraussetzungen
