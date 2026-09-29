@@ -32,4 +32,4 @@ Zugänge verwalten dürfen Nutzerinnen und Nutzer mit dem Recht zur Verwaltung d
 
 ## Getrennte Installationen
 
-Betreibt die Fraktion eine eigene mandari-Installation, nutzt sie denselben Token über den HTTP-Endpunkt `<kommune>/api/session/applications/submit/` mit Bearer-Authentifizierung.
+Betreibt die Fraktion eine eigene mandari-Installation, nutzt sie denselben Token über den HTTP-Endpunkt `/api/v1/session/<kommune>/applications/submit/` der [Session-API v1](api-v1.md) mit Bearer-Authentifizierung. Den Rückmeldestand eines eingereichten Antrags liefert `/api/v1/session/<kommune>/applications/<id>/feedback/`. Der frühere Pfad `/session/<kommune>/api/session/applications/submit/` ist abgekündigt und entfällt am 31. Mai 2027.
