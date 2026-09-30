@@ -169,6 +169,11 @@ nav:
       - Dokumente und Datenstand: insight/dokumente.md
   - Work (Fraktionen):
       - work/index.md
+      - Erste Schritte: work/erste-schritte.md
+      - Sitzungen vorbereiten: work/sitzungen-vorbereiten.md
+      - Dokumente und Anträge: work/dokumente.md
+      - Konto und Sicherheit: work/konto-und-sicherheit.md
+      - Häufige Fragen: work/haeufige-fragen.md
       - Termine auf der eigenen Webseite: work/termine-einbinden.md
       - Öffentliche Fraktions-API: work/fraktions-api.md
       - Anträge digital einreichen: work/antraege-einreichen.md

@@ -7,7 +7,7 @@ description: Was mandari Work Fraktionen und politischen Organisationen bietet, 
 
 mandari Work ist der geschützte Arbeitsbereich für Fraktionen und politische Organisationen. Er verbindet die öffentlichen Ratsinformationen der Kommune mit der internen Fraktionsarbeit: Sitzungen vorbereiten, Anträge schreiben, Aufgaben verteilen, Beschlüsse im Blick behalten.
 
-Der Zugang läuft über [mandari.de/work/](https://mandari.de/work/) mit einem persönlichen Konto. Konten entstehen ausschließlich per Einladung durch die eigene Organisation.
+Der Zugang läuft über [mandari.de/work/](https://mandari.de/work/) mit einem persönlichen Konto. Konten entstehen per Einladung durch die eigene Organisation oder, wenn die Organisation das freigibt, per Selbstregistrierung mit anschließender Freischaltung. Wie der Einstieg gelingt, zeigen die [Ersten Schritte](erste-schritte.md).
 
 ## Module
 
@@ -20,7 +20,7 @@ Der Zugang läuft über [mandari.de/work/](https://mandari.de/work/) mit einem p
 | **Dokumente und Anträge** | Gemeinsames Schreiben mit Versionshistorie, Vorlagen, Kommentaren, Freigabe und Teilen mit anderen Organisationen. [Digitale Einreichung](antraege-einreichen.md) bei der Verwaltung |
 | **Aufgaben** | Aufgaben mit Zuständigkeit, Frist und Bezug zu Sitzungen |
 | **Öffentliche API** | Termine und Tagesordnungen eurer Fraktionssitzungen automatisch auf eurer Webseite ([Anleitung](termine-einbinden.md), [Referenz](fraktions-api.md)) |
-| **Support** | Support-Anfragen direkt aus dem Arbeitsbereich |
+| **Support** | Support-Anfragen direkt aus dem Arbeitsbereich. Anleitungen und Antworten auf häufige Fragen stehen in dieser Dokumentation |
 
 ## Rollen und Berechtigungen
 
@@ -37,6 +37,16 @@ Jede Organisation verwaltet ihre Mitglieder selbst. Berechtigungen kommen aus dr
 Notizen und Kommentare haben eine explizite Sichtbarkeit: **privat** (nur die Autorin), **Organisation** (alle Mitglieder) oder bei Vorlagenkommentaren **beratende Gremien**. Nichts aus dem Arbeitsbereich wird ohne bewusste Entscheidung öffentlich. Die einzige Ausnahme ist die [öffentliche Fraktions-API](fraktions-api.md), die ihr ausdrücklich aktivieren müsst und die ausschließlich öffentliche Sitzungstermine und Tagesordnungen liefert.
 
 ## Anleitungen
+
+Für den Alltag im Arbeitsbereich:
+
+- [Erste Schritte](erste-schritte.md): Zugang, Profil, Dashboard und Navigation, Nutzung auf dem Smartphone
+- [Sitzungen vorbereiten](sitzungen-vorbereiten.md): Positionen, Notizen, Redebeiträge und Diskussion je Tagesordnungspunkt
+- [Dokumente und Anträge](dokumente.md): gemeinsam schreiben, freigeben, exportieren, KI-Assistent
+- [Konto und Sicherheit](konto-und-sicherheit.md): Passwort, Zwei-Faktor-Anmeldung, Sicherheitsschlüssel, Datenexport
+- [Häufige Fragen](haeufige-fragen.md)
+
+Für Anbindungen und die Zusammenarbeit mit der Verwaltung:
 
 - [Termine auf der eigenen Webseite](termine-einbinden.md): in zehn Minuten die nächsten Fraktionssitzungen automatisch anzeigen
 - [Öffentliche Fraktions-API](fraktions-api.md): Referenz mit Endpunkten, Beispielen und Sicherheitshinweisen
