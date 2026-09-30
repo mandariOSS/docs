@@ -11,8 +11,10 @@ Unter **Meine Sitzungen** bereitet eure Organisation die Sitzungen von Rat, Auss
 
 Die Liste hat zwei Reiter:
 
-- **Meine Gremien**: Sitzungen der Gremien, die dir deine Organisation zugewiesen hat
+- **Meine Gremien**: Sitzungen der Gremien, die du unter *Profil → Meine Gremien* ausgewählt hast. Ohne Auswahl gelten die Gremien, die dir deine Organisation zugewiesen hat. Mit Auswahl zählen nur die ausgewählten. Es ist dieselbe Auswahl wie auf dem Dashboard.
 - **Alle Sitzungen**: alle Sitzungen der verknüpften Kommune
+
+Hast du keine Gremien ausgewählt und auch keine zugewiesen bekommen, zeigt der Reiter „Meine Gremien“ einen Hinweis und darunter alle Sitzungen.
 
 Filter grenzen nach Gremium, Zeitraum (anstehend, vergangen, alle) und Suchbegriff ein. Angezeigt werden Sitzungen aus einem Fenster von rund sechs Monaten in die jeweilige Richtung. Daneben gibt es eine Kalenderansicht.
 
@@ -52,7 +54,7 @@ Ergänzende Unterlagen zum Tagesordnungspunkt: Links, hochgeladene Dateien oder 
 
 ## Warum sehe ich eine Sitzung nicht? { #sitzung-fehlt }
 
-- **Reiter „Meine Gremien“**: Er zeigt nur die Gremien, die dir deine Organisation zugewiesen hat. Wechsle zu „Alle Sitzungen“ oder bitte die Verwaltung deiner Organisation, dir das Gremium zuzuweisen. Die Auswahl unter *Profil → Meine Gremien* wirkt auf das Dashboard, nicht auf diesen Reiter.
+- **Reiter „Meine Gremien“**: Er zeigt nur die Sitzungen deiner Gremien. Das sind die Gremien, die du unter *Profil → Meine Gremien* ausgewählt hast, ohne Auswahl die dir zugewiesenen. Nimm das Gremium in deine Auswahl auf oder wechsle zu „Alle Sitzungen“.
 - **Zeitraum**: Vergangene Sitzungen erscheinen erst mit dem Filter „Vergangen“ oder „Alle“.
 - **Noch nicht veröffentlicht**: Sitzungen erscheinen, sobald die Kommune sie in ihrem Ratsinformationssystem veröffentlicht hat und mandari sie abgeholt hat. Das geschieht regelmäßig, aber nicht in Echtzeit.
 - **Keine Kommune verknüpft**: Dann bleibt die Liste leer, und ein Hinweis führt zu den Einstellungen der Organisation.

@@ -35,7 +35,7 @@ Viele Organisationen schalten neue Registrierungen erst nach einer Prüfung frei
 
 ### Warum sehe ich bestimmte Sitzungen nicht? { #sitzungen-fehlen }
 
-Meist zeigt die Liste nur die Gremien, die dir zugewiesen sind, oder der Zeitfilter steht auf „Anstehend“. Die möglichen Gründe und was du tun kannst, stehen unter [Warum sehe ich eine Sitzung nicht?](sitzungen-vorbereiten.md#sitzung-fehlt)
+Meist zeigt die Liste nur deine Gremien, oder der Zeitfilter steht auf „Anstehend“. Deine Gremien sind die unter *Profil → Meine Gremien* ausgewählten, ohne Auswahl die dir zugewiesenen. Die möglichen Gründe und was du tun kannst, stehen unter [Warum sehe ich eine Sitzung nicht?](sitzungen-vorbereiten.md#sitzung-fehlt)
 
 ### Wer sieht meine Notizen? { #notizen }
 
