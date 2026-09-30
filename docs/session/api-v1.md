@@ -92,9 +92,10 @@ entspricht dem Antwort-Header `X-Request-ID`; Betreiber finden sie in den Server
 !!! warning "Abgekündigt: alte Session-API, Wegfall am 31. Mai 2027"
     Die früheren Endpunkte unter `/session/<kommune>/api/session/…` (`meetings/`, `papers/`,
     `applications/`, `applications/submit/`) sind abgekündigt und entfallen am **31. Mai 2027**.
-    Bis dahin bleiben sie erreichbar und antworten mit den Headern `Deprecation: true`,
-    `Sunset: Mon, 31 May 2027 00:00:00 GMT` und `Link: <neuer Pfad>; rel="successor-version"`.
-    Bis Version 0.11 nannte der Header den 31. März 2027; der Termin wurde zugunsten der Nutzer
+    Bis dahin bleiben sie erreichbar und antworten mit den Headern `Deprecation: @1790467200`
+    (Zeitpunkt der Abkündigung, 27.09.2026, nach RFC 9745), `Sunset: Mon, 31 May 2027 00:00:00 GMT`
+    und `Link: <neuer Pfad>; rel="successor-version"`. Bis Version 0.11 lautete der Header
+    `Deprecation: true` und nannte als Wegfall den 31. März 2027; der Termin wurde zugunsten der Nutzer
     verlängert. Ersatz ist die hier beschriebene Session-API v1.
 
 Der Einstiegspunkt `/session/<kommune>/api/` und die [OParl-API je Kommune](oparl-api.md) bleiben.
