@@ -31,7 +31,7 @@ Unter **Profil** pflegst du deine Angaben:
 |--------|--------|
 | Profil | Vorname, Nachname, Telefon, Profilbild (JPG, PNG oder WebP bis 5 MB), persönlicher Kalender-Feed |
 | Sichtbarkeit | Kurzvorstellung und welche Kontaktwege andere Mitglieder sehen |
-| Meine Gremien | Gremien, die dich interessieren, für ein persönliches Dashboard |
+| Meine Gremien | Gremien, die dich interessieren, für dein Dashboard und deine Sitzungsliste |
 | Sicherheit | Passwort, Zwei-Faktor-Anmeldung, Sicherheitsschlüssel, aktive Sitzungen |
 | Benachrichtigungen | welche Nachrichten du in der Anwendung und per E-Mail bekommst |
 | Abwesenheit | Zeiträume, in denen du nicht erreichbar bist |
@@ -48,7 +48,7 @@ Das Dashboard ist deine Startseite. Oben stehen deine Rollen und Gremien, darunt
 - **Meine Aufgaben**: offene Aufgaben, die dir zugewiesen sind
 - **Aktuelle Dokumente**: zuletzt bearbeitete Anträge und Dokumente
 
-Hast du unter *Profil → Meine Gremien* Gremien ausgewählt, zeigt das Dashboard bevorzugt deren Sitzungen und Dokumente. Ohne Auswahl gelten die Gremien, die dir deine Organisation zugewiesen hat. Über „Alle anzeigen“ wechselst du jederzeit zur Sicht auf die ganze Organisation.
+Hast du unter *Profil → Meine Gremien* Gremien ausgewählt, zeigt das Dashboard bevorzugt deren Sitzungen und Dokumente. Ohne Auswahl gelten die Gremien, die dir deine Organisation zugewiesen hat. Über „Alle anzeigen“ wechselst du jederzeit zur Sicht auf die ganze Organisation. Dieselbe Auswahl gilt für den Reiter „Meine Gremien“ unter [Meine Sitzungen](sitzungen-vorbereiten.md#sitzungsliste).
 
 ## Navigation { #navigation }
 
