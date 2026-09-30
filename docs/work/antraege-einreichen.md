@@ -52,4 +52,4 @@ Die Statusseite in Work zeigt zusätzlich die Beratungsfolge der Vorlagen, die a
 
 ## Getrennte Installationen
 
-Betreiben Fraktion und Verwaltung getrennte mandari-Installationen, steht der HTTP-Endpunkt `<tenant>/api/session/applications/submit/` mit Bearer-Token zur Verfügung. Der Token ist derselbe wie oben. Innerhalb einer Installation läuft die Einreichung direkt, ohne HTTP-Umweg.
+Betreiben Fraktion und Verwaltung getrennte mandari-Installationen, steht der HTTP-Endpunkt `/api/v1/session/<kommune>/applications/submit/` der [Session-API v1](../session/api-v1.md) mit Bearer-Token zur Verfügung (der frühere Pfad `/session/<kommune>/api/session/applications/submit/` entfällt am 31. Mai 2027). Der Token ist derselbe wie oben. Innerhalb einer Installation läuft die Einreichung direkt, ohne HTTP-Umweg.
