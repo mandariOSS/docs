@@ -107,4 +107,4 @@ fetch("https://mandari.de/api/public/v1/fraktionen/<token>/sitzungen/")
 
 ## Eigene Installation
 
-Bei einer selbst betriebenen Installation ersetzt du `mandari.de` durch deine Domain. Die Pfade unterhalb von `/api/public/v1/` bleiben gleich.
+Bei einer selbst betriebenen Installation ersetzen Sie `mandari.de` durch Ihre Domain. Die Pfade unterhalb von `/api/public/v1/` bleiben gleich.

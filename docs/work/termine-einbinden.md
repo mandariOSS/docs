@@ -5,23 +5,23 @@ description: Schritt für Schritt die nächsten öffentlichen Fraktionssitzungen
 
 # Termine auf der eigenen Webseite
 
-In zehn Minuten zeigt eure Webseite automatisch die nächsten öffentlichen Fraktionssitzungen. Ohne Plugin, ohne Backend, mit einem kleinen JavaScript-Snippet. Grundlage ist die [öffentliche Fraktions-API](fraktions-api.md).
+In zehn Minuten zeigt Ihre Webseite automatisch die nächsten öffentlichen Fraktionssitzungen. Ohne Plugin, ohne Backend, mit einem kleinen JavaScript-Snippet. Grundlage ist die [öffentliche Fraktions-API](fraktions-api.md).
 
 ## Schritt 1: API aktivieren
 
-Im Work-Portal unter **Organisation → Reiter „API“** die öffentliche API aktivieren und die **Basis-URL** kopieren. Sie enthält euer Zugangs-Token.
+Im Work-Portal unter **Organisation → Reiter „API“** die öffentliche API aktivieren und die **Basis-URL** kopieren. Sie enthält Ihr Zugangs-Token.
 
 !!! tip "Origins einschränken"
-    Beschränkt dort die „Erlaubten Origins“ auf eure Webseiten-Domain. Dann kann niemand sonst die Daten per Browser einbetten.
+    Beschränken Sie dort die „Erlaubten Origins“ auf die Domain Ihrer Webseite. Dann kann niemand sonst die Daten per Browser einbetten.
 
 ## Schritt 2: Snippet einbauen
 
-Diesen Block an die gewünschte Stelle eurer Webseite einfügen und `DEINE_BASIS_URL` durch die kopierte URL ersetzen. Der API-Reiter erzeugt das Snippet auch fertig ausgefüllt zum Kopieren.
+Diesen Block an die gewünschte Stelle Ihrer Webseite einfügen und `IHRE_BASIS_URL` durch die kopierte URL ersetzen. Der API-Reiter erzeugt das Snippet auch fertig ausgefüllt zum Kopieren.
 
 ```html
 <div id="fraktions-termine">Termine werden geladen…</div>
 <script>
-fetch("DEINE_BASIS_URLsitzungen/")
+fetch("IHRE_BASIS_URLsitzungen/")
   .then(r => r.json())
   .then(data => {
     const el = document.getElementById("fraktions-termine");
@@ -44,12 +44,12 @@ Seite neu laden, die kommenden Termine erscheinen. Falls nicht:
 |---------|--------------------|
 | „Termine derzeit nicht verfügbar“ | Basis-URL prüfen (endet auf `/`). Ist die API im Work-Portal wirklich aktiviert? |
 | Leere Liste | Es gibt aktuell keine geplanten öffentlichen Sitzungen. Entwürfe und nicht-öffentliche Termine erscheinen nie. |
-| CORS-Fehler in der Browser-Konsole | Eure Domain unter „Erlaubte Origins“ eintragen, oder das Feld leeren, um alle Origins zuzulassen. |
+| CORS-Fehler in der Browser-Konsole | Ihre Domain unter „Erlaubte Origins“ eintragen, oder das Feld leeren, um alle Origins zuzulassen. |
 
 ## WordPress und andere Systeme
 
-Das Snippet funktioniert überall, wo ihr HTML einfügen könnt. Bei WordPress zum Beispiel über einen „Custom HTML“-Block, bei TYPO3 über ein HTML-Inhaltselement. Für Systeme, die kein JavaScript erlauben, könnt ihr die JSON-Daten auch serverseitig abrufen und rendern. Die Details stehen in der [API-Referenz](fraktions-api.md).
+Das Snippet funktioniert überall, wo Sie HTML einfügen können. Bei WordPress zum Beispiel über einen „Custom HTML“-Block, bei TYPO3 über ein HTML-Inhaltselement. Für Systeme, die kein JavaScript erlauben, können Sie die JSON-Daten auch serverseitig abrufen und rendern. Die Details stehen in der [API-Referenz](fraktions-api.md).
 
 ## Tagesordnung mit anzeigen
 
-Die Terminliste enthält keine Tagesordnung. Wenn ihr sie anzeigen wollt, ruft je Sitzung den Detail-Endpunkt `…/sitzungen/<id>/` auf. Er liefert das Feld `agenda` mit Nummer und Titel der öffentlichen Punkte. Ob die Tagesordnung überhaupt ausgeliefert wird, entscheidet ihr im API-Reiter.
+Die Terminliste enthält keine Tagesordnung. Wenn Sie sie anzeigen wollen, rufen Sie je Sitzung den Detail-Endpunkt `…/sitzungen/<id>/` auf. Er liefert das Feld `agenda` mit Nummer und Titel der öffentlichen Punkte. Ob die Tagesordnung überhaupt ausgeliefert wird, entscheiden Sie im API-Reiter.

@@ -19,7 +19,7 @@ Der Zugang läuft über [mandari.de/work/](https://mandari.de/work/) mit einem p
 | **Fraktionssitzungen** | Eigene Sitzungen mit hierarchischer Tagesordnung, Einladungen mit Rückmeldung, Anwesenheit, Protokoll und Beschlüssen |
 | **Dokumente und Anträge** | Gemeinsames Schreiben mit Versionshistorie, Vorlagen, Kommentaren, Freigabe und Teilen mit anderen Organisationen. [Digitale Einreichung](antraege-einreichen.md) bei der Verwaltung |
 | **Aufgaben** | Aufgaben mit Zuständigkeit, Frist und Bezug zu Sitzungen |
-| **Öffentliche API** | Termine und Tagesordnungen eurer Fraktionssitzungen automatisch auf eurer Webseite ([Anleitung](termine-einbinden.md), [Referenz](fraktions-api.md)) |
+| **Öffentliche API** | Termine und Tagesordnungen Ihrer Fraktionssitzungen automatisch auf Ihrer Webseite ([Anleitung](termine-einbinden.md), [Referenz](fraktions-api.md)) |
 | **Support** | Support-Anfragen direkt aus dem Arbeitsbereich. Anleitungen und Antworten auf häufige Fragen stehen in dieser Dokumentation |
 
 ## Rollen und Berechtigungen
@@ -34,12 +34,13 @@ Jede Organisation verwaltet ihre Mitglieder selbst. Berechtigungen kommen aus dr
 
 ## Sichtbarkeit von Inhalten
 
-Notizen und Kommentare haben eine explizite Sichtbarkeit: **privat** (nur die Autorin), **Organisation** (alle Mitglieder) oder bei Vorlagenkommentaren **beratende Gremien**. Nichts aus dem Arbeitsbereich wird ohne bewusste Entscheidung öffentlich. Die einzige Ausnahme ist die [öffentliche Fraktions-API](fraktions-api.md), die ihr ausdrücklich aktivieren müsst und die ausschließlich öffentliche Sitzungstermine und Tagesordnungen liefert.
+Notizen und Kommentare haben eine explizite Sichtbarkeit: **privat** (nur die Autorin), **Organisation** (alle Mitglieder) oder bei Vorlagenkommentaren **beratende Gremien**. Nichts aus dem Arbeitsbereich wird ohne bewusste Entscheidung öffentlich. Die einzige Ausnahme ist die [öffentliche Fraktions-API](fraktions-api.md), die Ihre Organisation ausdrücklich aktivieren muss und die ausschließlich öffentliche Sitzungstermine und Tagesordnungen liefert.
 
 ## Anleitungen
 
 Für den Alltag im Arbeitsbereich:
 
+- [Was ist neu in Work](was-ist-neu.md): Änderungen der letzten Wochen, neueste zuerst
 - [Erste Schritte](erste-schritte.md): Zugang, Profil, Dashboard und Navigation, Nutzung auf dem Smartphone
 - [Sitzungen vorbereiten](sitzungen-vorbereiten.md): Positionen, Notizen, Redebeiträge und Diskussion je Tagesordnungspunkt
 - [Dokumente und Anträge](dokumente.md): gemeinsam schreiben, freigeben, exportieren, KI-Assistent
