@@ -5,7 +5,11 @@ description: Was sich an der mandari-Dokumentation wann geändert hat.
 
 # Änderungen an dieser Dokumentation
 
-Größere Änderungen an Struktur und Inhalt, neueste zuerst. Einzelne Korrekturen findest du in der [Commit-Historie](https://github.com/mandariOSS/docs/commits/main).
+Größere Änderungen an Struktur und Inhalt, neueste zuerst. Einzelne Korrekturen finden Sie in der [Commit-Historie](https://github.com/mandariOSS/docs/commits/main).
+
+## Oktober 2026
+
+- Neu (06.10.2026): [Was ist neu in Work](work/was-ist-neu.md) mit den Neuerungen in Work, neueste zuerst. Die Work-Hilfe spricht Leserinnen und Leser jetzt mit „Sie“ an, wie Work selbst. [Dokumente und Anträge](work/dokumente.md) beschreibt zusätzlich Anhänge, Änderungsanträge mit Bezug, den Import aus Word und PDF und die Einreichung per E-Mail.
 
 ## September 2026
 
