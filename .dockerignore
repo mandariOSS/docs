@@ -3,3 +3,4 @@ site/
 .github/
 .cache/
 README.md
+tests/

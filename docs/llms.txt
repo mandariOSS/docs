@@ -1,0 +1,79 @@
+# mandari Dokumentation
+
+> mandari ist ein Open-Source-Ratsinformationssystem für Verwaltungen, Fraktionen und Bürger:innen.
+
+Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerportal Insight unter https://mandari.de/insight/, den Arbeitsbereich Work für Fraktionen und das Ratsinformationssystem Session für kommunale Verwaltungen. Dazu kommen die offenen Schnittstellen nach dem Standard OParl 1.1, der Selbstbetrieb mit Docker oder Kubernetes und der Datenschutz.
+
+- Die Anwendung läuft unter https://mandari.de, die Dokumentation unter https://docs.mandari.de.
+- Einstiegspunkt der OParl-Aggregations-API: https://mandari.de/oparl/v1/system (lesend, anonym, JSON).
+- Inhalte der Dokumentation stehen unter CC BY 4.0, der Quellcode liegt unter https://github.com/mandariOSS.
+
+## Einstieg
+
+- [Start](https://docs.mandari.de/): Überblick über alle Bereiche der Dokumentation
+- [Die Plattform im Überblick](https://docs.mandari.de/plattform/): wie Insight, Work und Session zusammenspielen und welche Daten fließen
+- [Glossar](https://docs.mandari.de/glossar/): Begriffe aus OParl, Kommunalpolitik und mandari
+
+## Schnittstellen
+
+- [OParl-Aggregations-API](https://docs.mandari.de/insight/oparl-api/): OParl-1.1-Schnittstelle mit den Ratsinformationen aller angebundenen Kommunen über einen Endpunkt
+- [OParl-API je Kommune](https://docs.mandari.de/session/oparl-api/): OParl-1.1-Schnittstelle jeder Kommune, die mandari Session nutzt
+- [Session-API v1](https://docs.mandari.de/session/api-v1/): authentifizierte Schnittstelle des Ratsinformationssystems je Kommune mit OpenAPI-Beschreibung
+- [Öffentliche Fraktions-API](https://docs.mandari.de/work/fraktions-api/): öffentliche Termine und Tagesordnungen der Fraktionssitzungen als JSON für die eigene Webseite
+
+## Insight (Bürgerportal)
+
+- [Insight – das Bürgerportal](https://docs.mandari.de/insight/): Ratsinformationen vieler Kommunen suchen, verfolgen und weiterverwenden
+- [Beschlüsse verfolgen](https://docs.mandari.de/insight/beschluesse/): sehen, was aus einem Ratsbeschluss geworden ist, und Beschlüsse abonnieren
+- [Ratsfragen](https://docs.mandari.de/insight/ratsfragen/): öffentliche Fragen an Ratsmitglieder stellen und beantworten
+- [Dokumente und Datenstand](https://docs.mandari.de/insight/dokumente/): wie das Bürgerportal Dokumente bereitstellt und was der Datenstand-Hinweis bedeutet
+
+## Work (Fraktionen)
+
+- [Work – Arbeitsbereich für Fraktionen](https://docs.mandari.de/work/): Überblick, Rollen und Rechte
+- [Erste Schritte in Work](https://docs.mandari.de/work/erste-schritte/): Anmeldung, Profil, Dashboard und Navigation
+- [Sitzungen vorbereiten](https://docs.mandari.de/work/sitzungen-vorbereiten/): Rats- und Ausschusssitzungen gemeinsam vorbereiten
+- [Dokumente und Anträge](https://docs.mandari.de/work/dokumente/): Anträge und Anfragen gemeinsam schreiben, abstimmen und freigeben
+- [Anträge digital einreichen](https://docs.mandari.de/work/antraege-einreichen/): Anträge direkt beim Ratsinformationssystem der Verwaltung einreichen
+- [Termine auf der eigenen Webseite](https://docs.mandari.de/work/termine-einbinden/): öffentliche Fraktionssitzungen ohne Plugin auf der Fraktions-Webseite anzeigen
+
+## Session (Verwaltung)
+
+- [Session – Ratsinformationssystem für Verwaltungen](https://docs.mandari.de/session/): was Session dem kommunalen Sitzungsdienst bietet
+- [Veröffentlichung im Bürgerportal](https://docs.mandari.de/session/buergerportal/): öffentliche Daten einer Kommune ins Bürgerportal bringen
+- [Beschlusskontrolle](https://docs.mandari.de/session/beschlusskontrolle/): Zuständigkeit, Fristen und Umsetzungsstand je Beschluss
+- [Fristen-Erinnerungen](https://docs.mandari.de/session/fristen-erinnerungen/): automatische Erinnerungen an Ladungs- und Vorlagenfristen
+- [Einreichungs-Zugänge für Fraktionen](https://docs.mandari.de/session/einreichungs-zugaenge/): Zugänge, mit denen Fraktionen Anträge digital einreichen
+
+## Betrieb
+
+- [Self-Hosting mit Docker](https://docs.mandari.de/betrieb/): mandari auf eigener Infrastruktur betreiben
+- [Betrieb in Kubernetes](https://docs.mandari.de/betrieb/kubernetes/): Installation mit Helm-Chart
+- [Konfiguration](https://docs.mandari.de/betrieb/konfiguration/): Referenz aller Umgebungsvariablen
+- [Quellen anbinden](https://docs.mandari.de/betrieb/quellen-anbinden/): Kommunen über OParl, SessionNet oder ALLRIS anbinden
+- [Updates und Backups](https://docs.mandari.de/betrieb/updates-backups/): aktualisieren, sichern und wiederherstellen
+
+## Datenschutz
+
+- [Datenschutz und Sicherheit](https://docs.mandari.de/datenschutz/): Verschlüsselung, Mandantentrennung, Berechtigungen und Löschung
+- [Technische und organisatorische Maßnahmen](https://docs.mandari.de/datenschutz/tom/): TOM nach Art. 32 DSGVO
+- [Löschkonzept](https://docs.mandari.de/datenschutz/loeschkonzept/): Datenarten, Fristen und Nachweis der Löschung
+- [Crawler und Opt-out](https://docs.mandari.de/datenschutz/crawler/): wie der Ingestor kommunale Systeme abruft und wie Kommunen Drosselung, Pausierung oder Entfernung verlangen können
+
+## Optional
+
+- [Was ist neu in Work](https://docs.mandari.de/work/was-ist-neu/): Neuerungen in Work, neueste zuerst
+- [Häufige Fragen zu Work](https://docs.mandari.de/work/haeufige-fragen/): Antworten von Anmeldung bis Smartphone
+- [Konto und Sicherheit](https://docs.mandari.de/work/konto-und-sicherheit/): Passwort, Zwei-Faktor-Anmeldung, Passkeys und Datenexport in Work
+- [Beschlüsse der Kommune](https://docs.mandari.de/work/beschluesse/): Umsetzungsstand der Ratsbeschlüsse in Work verfolgen
+- [Regelmäßige Aufgaben (Cron)](https://docs.mandari.de/betrieb/cron/): wiederkehrende Aufgaben einer Installation
+- [Dokument-Cache](https://docs.mandari.de/betrieb/dokument-cache/): lokaler Speicher für Dokumente des Bürgerportals
+- [Betriebsmonitor](https://docs.mandari.de/betrieb/monitoring/): Bewertung der Quellen, Systemchecks und Alarmierung
+- [Logging und Tracing](https://docs.mandari.de/betrieb/logging-tracing/): strukturierte Logs und OpenTelemetry
+- [Demo-Umgebung](https://docs.mandari.de/betrieb/demo-umgebung/): Musterumgebung über Insight, Work und Session anlegen
+- [Muster-AVV](https://docs.mandari.de/datenschutz/avv-muster/): Muster für den Auftragsverarbeitungsvertrag nach Art. 28 DSGVO
+- [Entwicklung](https://docs.mandari.de/entwicklung/): Quellcode, Technologie-Stack und Beitragswege
+- [An der Dokumentation mitarbeiten](https://docs.mandari.de/entwicklung/dokumentation/): wie diese Dokumentation gebaut wird
+- [Qualitätsgates und Tests](https://docs.mandari.de/entwicklung/qualitaetsgates/): Prüfungen in der CI
+- [Abhängigkeiten (SBOM)](https://docs.mandari.de/entwicklung/sbom/): Liste der Abhängigkeiten mit Lizenzen
+- [Änderungen an dieser Dokumentation](https://docs.mandari.de/aenderungen/): größere Änderungen, neueste zuerst

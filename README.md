@@ -20,7 +20,9 @@ mkdocs build --strict # wie in CI
 | `mkdocs.yml` | Navigation, Theme, Plugins |
 | `overrides/` | Template-Anpassungen (Meta-Tags, 404-Seite) |
 | `Dockerfile`, `nginx.conf` | Produktions-Image: statischer Build hinter unprivilegiertem nginx |
-| `.github/workflows/` | CI (strikter Build, Link-Check) und Release (Image nach GHCR) |
+| `docs/llms.txt` | Übersicht für Sprachmodelle nach [llmstxt.org](https://llmstxt.org/), neue Seiten hier eintragen |
+| `tests/` | CI-Prüfungen: `llms.txt` und Antworten des nginx-Containers (Doku-Seiten, Weiterleitungen auf mandari.de) |
+| `.github/workflows/` | CI (strikter Build, Link-Check, llms.txt, Container-Test) und Release (Image nach GHCR) |
 
 ## Beitragen
 

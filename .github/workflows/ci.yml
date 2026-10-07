@@ -1,4 +1,5 @@
-# Prüfung jedes Pushs und Pull Requests: strikter MkDocs-Build, interne Links, Docker-Build.
+# Prüfung jedes Pushs und Pull Requests: strikter MkDocs-Build, interne Links, llms.txt,
+# Docker-Build und die Antworten des nginx-Containers (Doku-Seiten, Weiterleitungen).
 name: CI
 
 on:
@@ -38,9 +39,25 @@ jobs:
           args: --offline --no-progress --root-dir "${{ github.workspace }}/site" "site/**/*.html"
           fail: true
 
+      - name: llms.txt prüfen
+        run: python tests/llms_txt.py --site site
+
       - name: Docker-Image bauen (ohne Push)
         uses: docker/build-push-action@v6
         with:
           context: .
           push: false
+          load: true
           tags: docs:ci
+
+      - name: nginx-Konfiguration prüfen
+        run: docker run --rm docs:ci nginx -t
+
+      - name: Doku-Seiten und Weiterleitungen im Container prüfen
+        run: |
+          docker run -d --name docs-ci -p 8080:8080 docs:ci
+          python tests/nginx_pfade.py --basis http://127.0.0.1:8080 --site site
+
+      - name: Container-Log bei Fehler
+        if: failure()
+        run: docker logs docs-ci || true

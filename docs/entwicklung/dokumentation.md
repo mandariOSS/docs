@@ -27,7 +27,13 @@ Vor dem Einreichen:
 mkdocs build --strict
 ```
 
-Der strikte Build schlägt bei defekten internen Links, fehlenden Seiten in der Navigation oder unbekannten Ankern fehl. Dieselbe Prüfung läuft in der CI, dazu ein Offline-Link-Check über das gebaute HTML.
+Der strikte Build schlägt bei defekten internen Links, fehlenden Seiten in der Navigation oder unbekannten Ankern fehl. Dieselbe Prüfung läuft in der CI, dazu ein Offline-Link-Check über das gebaute HTML, eine Prüfung der `llms.txt` und ein Test des fertigen Containers (Doku-Seiten und Weiterleitungen).
+
+Die Prüfung der `llms.txt` kannst du nach dem Build auch lokal ausführen:
+
+```bash
+python tests/llms_txt.py --site site
+```
 
 ## Struktur
 
@@ -40,12 +46,15 @@ docs/
 ├── session/              Verwaltung
 ├── betrieb/              Self-Hosting, Konfiguration, Cron, Quellen, Monitoring
 ├── datenschutz/          TOM, Löschkonzept, AVV, Crawler
-└── entwicklung/          Code, Mitarbeit, SBOM
+├── entwicklung/          Code, Mitarbeit, SBOM
+└── llms.txt              Übersicht für Sprachmodelle
 mkdocs.yml                Navigation, Theme, Plugins
 overrides/                Template-Anpassungen
+nginx.conf                Auslieferung und Weiterleitungen
+tests/                    CI-Prüfungen für llms.txt und den nginx-Container
 ```
 
-Neue Seiten müssen in der Navigation in `mkdocs.yml` eingetragen werden. Jede Seite beginnt mit einem Frontmatter aus `title` und `description`, die Beschreibung erscheint in Suchmaschinen und Vorschauen.
+Neue Seiten müssen in der Navigation in `mkdocs.yml` und in `docs/llms.txt` eingetragen werden. Jede Seite beginnt mit einem Frontmatter aus `title` und `description`, die Beschreibung erscheint in Suchmaschinen und Vorschauen.
 
 ## Konventionen
 
@@ -65,4 +74,6 @@ Erklärungen für Nutzerinnen, Betreiber und Integratoren gehören hierher. Impl
 - **Suche**: clientseitig, deutsch, ohne externen Dienst
 - **Keine externen Ressourcen**: Systemschriften, keine Web-Fonts, kein Tracking
 - **Auslieferung**: Docker-Image mit statischem Build hinter einem unprivilegierten nginx, gebaut und veröffentlicht durch GitHub Actions bei jedem Push auf `main`
+- **[llms.txt](../llms.txt)**: kompakte Übersicht für Sprachmodelle nach [llmstxt.org](https://llmstxt.org/), gepflegt in `docs/llms.txt`. Neue Seiten trägst du dort im passenden Abschnitt ein; die CI prüft, dass jede Seite verlinkt ist und jeder Link auf eine vorhandene Seite zeigt.
+- **Weiterleitungen**: Alte Adressen der Anwendung, die Suchmaschinen noch unter docs.mandari.de kennen (etwa `/insight/vorgaenge/<id>/` oder `/oparl/v1/…`), leitet nginx dauerhaft auf mandari.de weiter. Die CI startet den Container und prüft die Pfade aus `tests/nginx_pfade.txt` sowie jede gebaute Seite.
 - **Lizenz**: Inhalte CC BY 4.0, Build-Code MIT
