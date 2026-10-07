@@ -1,0 +1,77 @@
+# Erwartete Antworten des Docs-Containers (nginx.conf), geprüft von tests/nginx_pfade.py.
+#
+# Format: <Status> <Pfad> [Erwartung]
+#   200 – optional der erwartete Content-Type
+#   301 – optional das erwartete Ziel; ohne Angabe https://mandari.de<Pfad>
+#   404 – keine weitere Angabe
+#
+# Zusätzlich prüft das Skript jede gebaute HTML-Seite unter site/ auf Status 200. Eine neue
+# Doku-Seite, die eine Weiterleitungsregel trifft, fällt also auch ohne Eintrag hier auf.
+
+# Doku-Seiten unter /insight/ und die alte Doku-Adresse /oparl/: nie weiterleiten
+200 /
+200 /insight/
+200 /insight/index.html
+200 /insight/beschluesse/
+200 /insight/beschluesse/index.html
+200 /insight/dokumente/
+200 /insight/dokumente/index.html
+200 /insight/oparl-api/
+200 /insight/ratsfragen/
+200 /oparl/
+200 /oparl/index.html
+200 /health
+200 /robots.txt
+200 /sitemap.xml
+200 /llms.txt text/plain; charset=utf-8
+
+# Schrägstrich-Ergänzung von nginx bleibt relativ und auf docs.mandari.de
+301 /insight /insight/
+301 /insight/beschluesse /insight/beschluesse/
+301 /insight/dokumente /insight/dokumente/
+301 /oparl /oparl/
+
+# Alte Anwendungsadressen des Bürgerportals mit Kennungssegment
+301 /insight/vorgaenge/3f1c9a2e-5b7d-4c8e-9a10-2d4b6e8f0a1c/
+301 /insight/vorgaenge/3f1c9a2e-5b7d-4c8e-9a10-2d4b6e8f0a1c/zusammenfassung/
+301 /insight/termine/7b2e4d6f-8a1c-4e3b-b5d7-9f0a2c4e6b8d/
+301 /insight/termine/kalender/
+301 /insight/termine/kalender.ics
+301 /insight/personen/c4e6a8b0-1d3f-4a5c-8e7b-0a2c4e6f8b1d/
+301 /insight/personen/c4e6a8b0-1d3f-4a5c-8e7b-0a2c4e6f8b1d/frage-stellen/
+301 /insight/gremien/9d1f3b5a-7c9e-4b2d-a4f6-8b0d2f4a6c8e/
+301 /insight/fragen/2a4c6e8b-0d2f-4b4a-9c6e-8a0c2e4b6d8f/
+301 /insight/beschluesse/5e7a9c1b-3d5f-4a7c-b9e1-3c5a7e9b1d3f/
+301 /insight/beschluesse/abo/bestaetigen/6f8b0d2c-4e6a-4c8b-a0d2-4f6b8d0a2c4e/
+301 /insight/sitzungen/1234/
+301 /insight/dokumente/8a0c2e4d-6f8b-4d0c-b2e4-6a8c0e2f4b6d/preview/
+301 /insight/dokumente/index.htm
+
+# Listen ohne Doku-Gegenstück
+301 /insight/vorgaenge/
+301 /insight/termine/
+301 /insight/personen/
+301 /insight/gremien/
+301 /insight/fragen/
+301 /insight/sitzungen/
+301 /insight/vorgaenge
+301 /insight/suche?q=radweg
+
+# Kommunen, Suche, Karte, OParl
+301 /insight/k/muenster/
+301 /insight/k/muenster/vorgaenge/3f1c9a2e-5b7d-4c8e-9a10-2d4b6e8f0a1c/
+301 /insight/kommune/0b2d4f6a-8c0e-4a2b-9d4f-6b8d0a2c4e6f/
+301 /insight/kommune/alle/
+301 /insight/suche/
+301 /insight/suche/?q=radweg&typ=vorgang
+301 /insight/karte/
+301 /oparl/v1/system
+301 /oparl/v1/body/0b2d4f6a-8c0e-4a2b-9d4f-6b8d0a2c4e6f/papers?page=2
+
+# Ähnliche Pfade, die weder Doku-Seite noch Anwendungsadresse sind: bleiben 404
+404 /insight/unbekannt/
+404 /insight/kartei/
+404 /insight/beschluesse-alt/
+404 /insight/oparl-api/gibt-es-nicht/
+404 /oparlx/
+404 /vorgaenge/3f1c9a2e-5b7d-4c8e-9a10-2d4b6e8f0a1c/
