@@ -21,7 +21,7 @@ Eine Organisation kann die Registrierung auf bestimmte E-Mail-Domains beschränk
 Sie melden sich mit E-Mail-Adresse und Passwort an. Ist für Ihr Konto ein zweiter Faktor eingerichtet oder vorgeschrieben, folgt ein Code aus Ihrer Authenticator-App oder ein Sicherheitsschlüssel. Wie das funktioniert, steht unter [Konto und Sicherheit](konto-und-sicherheit.md).
 
 !!! tip "Gleich zu Beginn"
-    Richten Sie die Zwei-Faktor-Anmeldung ein, auch wenn sie für Sie nicht vorgeschrieben ist. Für Administratorinnen und Administratoren ist sie Pflicht.
+    Richten Sie die Zwei-Faktor-Anmeldung ein, auch wenn sie für Sie nicht vorgeschrieben ist. Für die Administration und alle, die Mitglieder, Rollen, Einstellungen oder API-Zugänge verwalten dürfen, ist sie Pflicht ([Wann ist sie Pflicht?](konto-und-sicherheit.md#zwei-faktor-pflicht)).
 
 ## Profil vervollständigen { #profil }
 
