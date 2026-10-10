@@ -9,6 +9,7 @@ Größere Änderungen an Struktur und Inhalt, neueste zuerst. Einzelne Korrektur
 
 ## Oktober 2026
 
+- Aktualisiert: [Konto und Sicherheit](work/konto-und-sicherheit.md#zwei-faktor-pflicht) nennt den erweiterten Kreis, für den die Zwei-Faktor-Anmeldung in Work Pflicht ist, die Empfehlung auf der Startseite und die Angabe in der Mitgliederliste; [Was ist neu in Work](work/was-ist-neu.md) mit einem Eintrag dazu.
 - Neu (07.10.2026): Eine [llms.txt](llms.txt) fasst die Dokumentation für Sprachmodelle und KI-Assistenten zusammen. Alte Adressen des Bürgerportals und der OParl-API, die Suchmaschinen noch unter docs.mandari.de führten, leiten jetzt dauerhaft auf mandari.de weiter.
 - Neu (06.10.2026): [Was ist neu in Work](work/was-ist-neu.md) mit den Neuerungen in Work, neueste zuerst. Die Work-Hilfe spricht Leserinnen und Leser jetzt mit „Sie“ an, wie Work selbst. [Dokumente und Anträge](work/dokumente.md) beschreibt zusätzlich Anhänge, Änderungsanträge mit Bezug, den Import aus Word und PDF und die Einreichung per E-Mail.
 
