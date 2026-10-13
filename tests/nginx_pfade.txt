@@ -57,6 +57,26 @@
 301 /insight/vorgaenge
 301 /insight/suche?q=radweg
 
+# Weitere Anwendungsadressen unter /insight/ (Abos, Chat, Merkliste …) und außerhalb
+301 /insight/benachrichtigungen/
+301 /insight/chat/?download=1
+301 /insight/merkliste/
+301 /insight/nachbarschaft/
+301 /insight/beschluesse/5e7a9c1b-3d5f-4a7c-b9e1-3c5a7e9b1d3f/umsetzung/
+301 /accounts/password-reset/
+301 /accounts/login/?next=/work/
+301 /work/
+301 /session/
+301 /api/v1/
+
+# Frühere Website-Seiten
+301 /team/ https://mandari.de/unternehmen/
+301 /faq/ https://mandari.de/kontakt/
+
+# Ähnlich klingende, aber unbekannte Pfade bleiben 404
+404 /accountsx/
+404 /insightx/
+
 # Kommunen, Suche, Karte, OParl
 301 /insight/k/muenster/
 301 /insight/k/muenster/vorgaenge/3f1c9a2e-5b7d-4c8e-9a10-2d4b6e8f0a1c/
