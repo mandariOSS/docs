@@ -38,7 +38,7 @@ Kurz prüfen: `<basis-url>si0040.asp` (oder `.php`) muss den Sitzungskalender li
 
 ### Schritt 2: robots.txt prüfen
 
-Der Ingestor prüft robots.txt automatisch vor jedem Crawl und überspringt die Quelle bei einem Disallow. Der Status wird im Admin angezeigt. Vorab manuell nachsehen schadet nicht: `https://<host>/robots.txt`.
+Der Ingestor prüft die robots.txt vor jeder Anfrage, auch vor jeder Weiterleitung. Sperrt sie die Basis-URL, wird die Quelle nicht gecrawlt; sperrt sie eine Seite unterwegs, bricht der Crawl ab. In beiden Fällen ruht die Quelle mindestens 24 Stunden, bei einer nicht erreichbaren robots.txt mindestens 30 Minuten. Der Status wird im Admin angezeigt. Die Regeln im Einzelnen stehen unter [Crawler und Opt-out](../datenschutz/crawler.md#robotstxt). Vorab manuell nachsehen schadet nicht: `https://<host>/robots.txt`.
 
 ### Schritt 3: Quelle anlegen
 
@@ -68,7 +68,7 @@ Alle Schlüssel unter `scraper` außer `base_url` sind optional:
 |-----------|----------|-----------|
 | `body_name` | „Unbekannte Kommune“ | Anzeigename der Kommune |
 | `variant` | automatisch | `"asp"` oder `"php"` |
-| `rate_limit_seconds` | `2.0` | Mindestabstand zwischen Anfragen je Host |
+| `rate_limit_seconds` | `2.0` | Mindestabstand zwischen Anfragen je Host in Sekunden; kleinere Werte als `1.0` gelten als `1.0` |
 | `max_concurrent` | `1` | immer 1, Anfragen laufen nacheinander |
 | `calendar_window_days` | `[-60, 210]` | Kalenderfenster inkrementeller Läufe |
 | `full_window_days` | `[-365, 210]` | Fenster des Voll-Crawls (Historie) |

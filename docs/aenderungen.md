@@ -9,7 +9,7 @@ Größere Änderungen an Struktur und Inhalt, neueste zuerst. Einzelne Korrektur
 
 ## Oktober 2026
 
-- Überarbeitet (16.10.2026): [Crawler und Opt-out](datenschutz/crawler.md) beschreibt den Abruf jetzt wie die [Abrufregeln](https://github.com/mandariOSS/mandari/blob/dev/docs/ABRUFREGELN.md) im Code: User-Agent `mandari-ingestor`, höchstens eine Anfrage pro Sekunde je Server, eine nicht erreichbare robots.txt gilt nicht mehr als Erlaubnis, dazu Dokumente, Personenfotos, Schonung und die Abruf-Adresse.
+- Überarbeitet (16.10.2026): [Crawler und Opt-out](datenschutz/crawler.md) beschreibt den Abruf jetzt wie die [Abrufregeln](https://github.com/mandariOSS/mandari/blob/dev/docs/ABRUFREGELN.md) im Code: User-Agent `mandari-ingestor`, höchstens eine Anfrage pro Sekunde je Server, eine nicht erreichbare robots.txt gilt nicht mehr als Erlaubnis, dazu Dokumente, Personenfotos, Schonung und die Abruf-Adresse. Die [Konfigurationsreferenz](betrieb/konfiguration.md) nennt die Variablen für Takt und User-Agent und sagt, welche Variablen `docker-compose.yml` nicht an die Dienste durchreicht.
 - Neu (07.10.2026): Eine [llms.txt](llms.txt) fasst die Dokumentation für Sprachmodelle und KI-Assistenten zusammen. Alte Adressen des Bürgerportals und der OParl-API, die Suchmaschinen noch unter docs.mandari.de führten, leiten jetzt dauerhaft auf mandari.de weiter.
 - Neu (06.10.2026): [Was ist neu in Work](work/was-ist-neu.md) mit den Neuerungen in Work, neueste zuerst. Die Work-Hilfe spricht Leserinnen und Leser jetzt mit „Sie“ an, wie Work selbst. [Dokumente und Anträge](work/dokumente.md) beschreibt zusätzlich Anhänge, Änderungsanträge mit Bezug, den Import aus Word und PDF und die Einreichung per E-Mail.
 
