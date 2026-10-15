@@ -58,7 +58,7 @@ Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerport
 - [Datenschutz und Sicherheit](https://docs.mandari.de/datenschutz/): Verschlüsselung, Mandantentrennung, Berechtigungen und Löschung
 - [Technische und organisatorische Maßnahmen](https://docs.mandari.de/datenschutz/tom/): TOM nach Art. 32 DSGVO
 - [Löschkonzept](https://docs.mandari.de/datenschutz/loeschkonzept/): Datenarten, Fristen und Nachweis der Löschung
-- [Crawler und Opt-out](https://docs.mandari.de/datenschutz/crawler/): wie der Ingestor kommunale Systeme abruft und wie Kommunen Drosselung, Pausierung oder Entfernung verlangen können
+- [Crawler und Opt-out](https://docs.mandari.de/datenschutz/crawler/): wie mandari Ratsinformationssysteme abruft (User-Agent, Takt, robots.txt, Dokumente, Abruf-Adresse) und wie Kommunen Drosselung, Ausschluss oder Entfernung verlangen können
 
 ## Optional
 

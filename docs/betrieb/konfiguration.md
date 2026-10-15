@@ -81,6 +81,7 @@ Die Extraktion versucht zuerst die Textebene des PDFs, dann die lokale Texterken
 | `FILE_CACHE_MAX_MB` | `80` | Größere Dateien werden nicht gecacht, aber durchgereicht |
 | `FILE_CACHE_MIN_FREE_GB` | `15` | Unter dieser Grenze freien Speichers wird nichts mehr geschrieben |
 | `FILE_PROXY_TIMEOUT_SECONDS` | `15` | Lese-Timeout für Live-Abrufe bei der Quelle |
+| `RIS_REQUEST_INTERVAL` | `1.0` | Abstand je Server in Sekunden für alle Abrufe der Anwendung (gemeinsamer Takt über Redis); `0` schaltet die Drossel ab, nur für Tests und Notfälle |
 | `INSIGHT_SOURCE_BACKOFF_FAILURES` | `3` | Ab so vielen Fehlversuchen in Folge pausieren Cache und Proxy für die Quelle |
 
 Details unter [Dokument-Cache](dokument-cache.md).
@@ -98,11 +99,13 @@ Details unter [Betriebsmonitor](monitoring.md).
 
 | Variable | Standard | Bedeutung |
 |----------|----------|-----------|
-| `INGESTOR_INTERVAL` | `15` | Minuten zwischen inkrementellen Läufen |
+| `INGESTOR_INTERVAL` | `10` (Vorlage `.env.example`: `15`) | Minuten zwischen inkrementellen Läufen |
 | `INGESTOR_FULL_SYNC_HOUR` | `3` | Stunde des täglichen Voll-Syncs |
-| `INGESTOR_CONCURRENT` | `10` | Parallel verarbeitete Quellen |
-| `SCRAPER_USER_AGENT` | `mandari-ingestor (+https://mandari.de/crawler)` | User-Agent der Scraper-Quellen |
+| `INGESTOR_CONCURRENT` | `10` | Abrufplätze je Quelle; je Server gilt trotzdem `INGESTOR_HOST_MAX_CONCURRENT` |
+| `INGESTOR_REQUEST_INTERVAL` | `1.0` | Abstand je Server in Sekunden (gemeinsamer Takt über Redis); `0` schaltet die Drossel ab, nur für Tests und Notfälle |
+| `INGESTOR_HOST_MAX_CONCURRENT` | `2` | Offene Anfragen je Server und Prozess |
+| `INGESTOR_USER_AGENT` (älter: `SCRAPER_USER_AGENT`) | `mandari-ingestor/<Version> (+https://mandari.de/crawler/; support@mandari.de)` | User-Agent des Ingestors (Abgleich, Scraper, Texterkennung, Sondierung) |
 | `SCRAPER_TOMBSTONE_FULL_CRAWLS` | `3` | Nach so vielen Voll-Crawls ohne Sichtung gilt ein Objekt als gelöscht |
 | `SCRAPER_PARSE_QUOTA_WARN` | `0.8` | Warnung, wenn weniger als dieser Anteil der Seiten geparst werden konnte |
 
-Details unter [Quellen anbinden](quellen-anbinden.md).
+Details unter [Quellen anbinden](quellen-anbinden.md), Regeln für den Abruf unter [Crawler und Opt-out](../datenschutz/crawler.md).
