@@ -50,7 +50,7 @@ Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerport
 - [Self-Hosting mit Docker](https://docs.mandari.de/betrieb/): mandari auf eigener Infrastruktur betreiben
 - [Betrieb in Kubernetes](https://docs.mandari.de/betrieb/kubernetes/): Installation mit Helm-Chart
 - [Konfiguration](https://docs.mandari.de/betrieb/konfiguration/): Referenz aller Umgebungsvariablen
-- [Quellen anbinden](https://docs.mandari.de/betrieb/quellen-anbinden/): Kommunen über OParl, SessionNet oder ALLRIS anbinden
+- [Quellen anbinden](https://docs.mandari.de/betrieb/quellen-anbinden/): Kommunen über OParl, SessionNet oder ALLRIS anbinden, Takt und Vollabgleich je Quelle einstellen
 - [Updates und Backups](https://docs.mandari.de/betrieb/updates-backups/): aktualisieren, sichern und wiederherstellen
 
 ## Datenschutz
@@ -58,7 +58,7 @@ Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerport
 - [Datenschutz und Sicherheit](https://docs.mandari.de/datenschutz/): Verschlüsselung, Mandantentrennung, Berechtigungen und Löschung
 - [Technische und organisatorische Maßnahmen](https://docs.mandari.de/datenschutz/tom/): TOM nach Art. 32 DSGVO
 - [Löschkonzept](https://docs.mandari.de/datenschutz/loeschkonzept/): Datenarten, Fristen und Nachweis der Löschung
-- [Crawler und Opt-out](https://docs.mandari.de/datenschutz/crawler/): wie der Ingestor kommunale Systeme abruft und wie Kommunen Drosselung, Pausierung oder Entfernung verlangen können
+- [Crawler und Opt-out](https://docs.mandari.de/datenschutz/crawler/): wie mandari Ratsinformationssysteme abruft (User-Agent, Takt, robots.txt, Dokumente, Abruf-Adresse) und wie Kommunen Drosselung, Ausschluss oder Entfernung verlangen können
 
 ## Optional
 
