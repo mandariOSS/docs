@@ -68,6 +68,15 @@
 301 /work/fraktion/antraege/3f1c9a2e-5b7d-4c8e-9a10-2d4b6e8f0a1c/
 301 /session/sitzungen/neu/
 301 /api/v1/
+301 /api/problemex/
+
+# Fehlertypen der Schnittstellen (RFC 9457): Doku-Seite, die Adresse eines Typs springt zu seinem Abschnitt
+200 /api/probleme/
+200 /api/probleme/index.html
+301 /api/probleme /api/probleme/
+301 /api/probleme/keine-berechtigung /api/probleme/#keine-berechtigung
+301 /api/probleme/cursor-abgelaufen /api/probleme/#cursor-abgelaufen
+301 /api/probleme/idempotenzschluessel-fehlt/ /api/probleme/#idempotenzschluessel-fehlt
 
 # Frühere Website-Seiten
 301 /team/ https://mandari.de/unternehmen/
