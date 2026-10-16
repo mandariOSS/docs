@@ -5,13 +5,13 @@ description: Wie mandari Ratsinformationssysteme abruft (Kennung, Takt, robots.t
 
 # Crawler und Opt-out
 
-mandari spiegelt öffentliche Ratsinformationen. Dafür rufen zwei Programmteile die OParl-Schnittstellen und, wo es keine gibt, die HTML-Seiten kommunaler Ratsinformationssysteme ab: der Ingestor und die Anwendung selbst (Dokumente, Vorschau, Personenfotos). Kommunale Server sind oft klein, deshalb gelten für alle Abrufe dieselben festen Regeln. Diese Seite fasst sie zusammen und zeigt, wie Sie als Kommune den Abruf drosseln, ausschließen oder Inhalte entfernen lassen.
+mandari spiegelt öffentliche Ratsinformationen. Dafür rufen zwei Programmteile die OParl-Schnittstellen und, wo es keine gibt, die HTML-Seiten kommunaler Ratsinformationssysteme ab: der Ingestor und die Anwendung selbst (Dokumente, Vorschau, Personenfotos). Kommunale Server sind oft klein, deshalb gelten für alle Abrufe dieselben festen Regeln. Diese Seite fasst sie zusammen und zeigt, wie Sie als Kommune den Abruf [drosseln oder ausschließen](#drosseln-oder-ausschlieen) oder [Inhalte entfernen lassen](#inhalte-entfernen-takedown).
 
 - Kurzfassung für IT-Verantwortliche: [mandari.de/crawler](https://mandari.de/crawler/)
 - Technische Referenz mit Fundstellen im Code: [Abrufregeln (ABRUFREGELN.md)](https://github.com/mandariOSS/mandari/blob/dev/docs/ABRUFREGELN.md)
 
 !!! info "Stand"
-    Diese Seite beschreibt den Code auf dem Entwicklungszweig `dev` nach den Änderungen für [mandari#1027](https://github.com/mandariOSS/mandari/issues/1027): Änderungsfenster und höchstens eine Anfrage pro Sekunde ([#1029](https://github.com/mandariOSS/mandari/pull/1029)), leere Listen von SD.NET ([#1035](https://github.com/mandariOSS/mandari/pull/1035)), eine robots.txt-Regel für alle Abrufe ([#1031](https://github.com/mandariOSS/mandari/pull/1031)), neue Quellen und Kommunen ([#1037](https://github.com/mandariOSS/mandari/pull/1037)), robots.txt je Hostname sowie Kennung und Takt auch für Live-Übertragung und Geodienste ([#1038](https://github.com/mandariOSS/mandari/pull/1038)), Takt je Quelle nach Bedarf ([#1039](https://github.com/mandariOSS/mandari/pull/1039)), Vollabgleich in Zeitscheiben und langsame Listen ([#1040](https://github.com/mandariOSS/mandari/pull/1040)). Die von uns betriebene Instanz mandari.de folgt diesen Regeln ab dem ersten Update, das diese Änderungen enthält; bis dahin läuft dort noch ein älterer Stand.
+    Diese Seite beschreibt den Code auf dem Entwicklungszweig `dev` nach den Änderungen für [mandari#1027](https://github.com/mandariOSS/mandari/issues/1027). Auf der von uns betriebenen Instanz mandari.de gelten davon heute schon unter anderem die Kennung `mandari-ingestor` samt Token für die robots.txt, höchstens eine Anfrage pro Sekunde und das Änderungsfenster. Weitere Regeln, darunter der Takt je Quelle nach Bedarf, der Vollabgleich in Zeitscheiben und die langsamen Listen, folgen dort mit dem nächsten Update.
 
 ## Auf einen Blick
 
@@ -23,13 +23,32 @@ mandari spiegelt öffentliche Ratsinformationen. Dafür rufen zwei Programmteile
 | Gleichzeitig | höchstens zwei offene Anfragen je Server und Ingestor-Prozess, auch am Ziel einer Weiterleitung |
 | robots.txt | nach RFC 9309, für Schnittstelle, Seiten und Dokumente; je Hostname 24 Stunden zwischengespeichert |
 | Abgleich | je Quelle nach Bedarf: werktags 7–19 Uhr alle 10 Minuten, sonst stündlich, am Wochenende alle 2 Stunden, an Sitzungstagen und am Vortag (7–22 Uhr) alle 5 Minuten; nach Abgleichen ohne Änderung seltener, an Sitzungstagen bis alle 10 Minuten, sonst bis alle 2 Stunden; gefragt wird nur nach Änderungen (`modified_since`) |
-| Vollabgleich | geplant höchstens einmal je Nacht im Zeitfenster der Quelle (bei mandari.de ohne eigenes Fenster: Beginn zwischen 1 und 6 Uhr), je Quelle auch seltener; bei Servern, deren vollständige Listen abbrechen, nur in Zeitscheiben (`modified_since` und `modified_until`); von Hand angefordert sofort, auch tagsüber, außer die Quelle hat ein eigenes Zeitfenster oder Zeitscheiben |
+| Vollabgleich | geplant höchstens einmal je Nacht im Zeitfenster der Quelle (bei mandari.de ohne eigenes Fenster: Beginn zwischen 1 und 6 Uhr), je Quelle auch seltener; bei Servern, deren vollständige Listen abbrechen, nur in Zeitscheiben (`modified_since` und `modified_until`); von Hand nur ausnahmsweise, etwa nach der Aufnahme eines neuen Systems; ein eigenes Zeitfenster und der Mindestabstand der Quelle gelten auch dann, ohne eigenes Fenster kann er auch tagsüber laufen (siehe [Vollabgleich](#vollabgleich)) |
 | Langsame Listen | eine optionale Liste, die in eine Zeitüberschreitung läuft, ruht 1 Stunde, danach jeweils doppelt so lange, höchstens 24 Stunden |
 | Neue Quellen | von unseren Werkzeugen inaktiv angelegt; regelmäßig abgefragt wird eine Quelle erst, wenn sie aktiv ist; neu entdeckte Kommunen bleiben ungelistet (siehe [Neue Quellen und Kommunen](#neue-quellen-und-kommunen)) |
 | Dokumente | geladen, wenn sie fehlen oder die Quelle sie geändert hat; dazu Stichproben per `HEAD` |
 | Abruf-Adresse | derzeit `144.76.153.200`, nur IPv4; sie kann sich ändern, erkennen Sie uns am User-Agent |
 | Andere Dienste | Live-Übertragung und Geodienste mit derselben Kennung und eigenem Takt je Server, ohne robots.txt (siehe [Andere Abrufe](#andere-abrufe)) |
 | Kontakt | [support@mandari.de](mailto:support@mandari.de) |
+
+## Drosseln oder ausschließen
+
+Kommunen, die den Abruf drosseln oder ausschließen möchten, haben zwei Wege:
+
+1. **robots.txt:** Eine Gruppe für `mandari-ingestor` wirkt spätestens nach 24 Stunden, ohne dass wir etwas tun müssen, ganz oder nur für Dokumente (siehe [Beispiele](#robotstxt)).
+2. **Kontakt:** Schreiben Sie an [support@mandari.de](mailto:support@mandari.de). Wir können für Ihre Quelle den Abstand je Anfrage erhöhen (bis 30 Sekunden), seltener abgleichen, den Vollabgleich in ein Zeitfenster legen, ihn seltener oder nur in Zeitscheiben ausführen, den Dateiabruf abschalten oder Ihr System gar nicht mehr abrufen. Ein Zeitfenster gilt nur für den Vollabgleich; Änderungsabgleich und Dokumentabrufe laufen weiter im Takt. Liegen mehrere Quellen auf Ihrem Server, stellen wir das bei allen ein.
+
+## Inhalte entfernen (Takedown)
+
+1. **Tombstone**: Betroffene Objekte werden zunächst als gelöscht markiert. Sie verschwinden sofort aus Portal, Suche und Schnittstellen. Die Daten bleiben für Prüfzwecke erhalten.
+2. **Physische Löschung** auf ausdrückliche Aufforderung der Kommune, einschließlich Suchindex und lokaler Dateikopien:
+
+    ```bash
+    python manage.py purge_deleted --body <slug>            # Vorschau
+    python manage.py purge_deleted --body <slug> --yes      # endgültig löschen
+    ```
+
+3. **Abwägung**: Opt-out-Wünsche werden geprüft, nicht blind ausgeführt. Amtliche Informationen haben ein Transparenzinteresse. Mindestens einen langsameren Takt und ein Zeitfenster für den Vollabgleich bieten wir immer an. Reaktionszeit: fünf Werktage.
 
 ## Kennung
 
@@ -118,7 +137,7 @@ Einen gemeinsamen Durchlauf über alle Quellen gibt es nicht mehr. Jede Quelle h
 - **Ruhe:** Nach je drei Abgleichen in Folge ohne Änderung verdoppelt sich der Abstand, höchstens bis 2 Stunden, an Sitzungstagen und am Vortag bis 10 Minuten. Werktags tagsüber sind es also 10, nach drei ruhigen Abgleichen 20, dann 40, 80 und höchstens 120 Minuten. Ein Abgleich mit Änderung setzt den Abstand auf den Takt der Tageszeit zurück, ebenso der Wechsel in einen anderen Takt, etwa um 7 Uhr.
 - **Nächster Abgleich:** Der Abstand zählt ab dem Ende des vorigen Abgleichs. Beginnt vorher ein kürzerer Takt, ist der Abgleich zu dessen Beginn fällig, etwa um 7 Uhr statt um 7:30 Uhr. Je Quelle läuft höchstens ein Abgleich zugleich; der Ingestor gleicht standardmäßig höchstens vier Quellen gleichzeitig ab. Der Takt je Server gilt unabhängig davon.
 - **Wenig Last ohne Änderungen:** Ändert sich nichts und steht keine Sitzung an, sind das je Quelle am Wochenende 12 Abgleiche am Tag, werktags von 19 bis 7 Uhr 7 und von 7 bis 19 Uhr 14, in einer Woche 131 statt 1008 im früheren Takt von 10 Minuten.
-- **Schonung geht vor:** Eine Quelle in Schonung (siehe [Fehler und Schonung](#fehler-und-schonung)) gleicht der Ingestor nicht ab, auch nicht, wenn wir einen Abgleich im Admin anfordern. Nur ohne laufenden Ingestor oder bei einer abgeschalteten Quelle läuft ein angeforderter Abgleich in der Anwendung; er hält robots.txt, Takt je Server und das Zeitfenster der Quelle ein, aber nicht die Schonung.
+- **Schonung geht vor:** Eine Quelle in Schonung (siehe [Fehler und Schonung](#fehler-und-schonung)) gleicht der Ingestor nicht ab, auch nicht, wenn wir einen Abgleich im Admin anfordern. Nur ohne laufenden Ingestor, bei einer abgeschalteten Quelle oder wenn die Anforderung den Ingestor nicht erreicht, läuft ein angeforderter Abgleich in der Anwendung; er hält robots.txt, Takt je Server sowie Zeitfenster und Mindestabstand des Vollabgleichs ein, aber nicht die Schonung.
 - **Je Quelle:** Für einzelne Quellen stellen wir den Takt auf Wunsch langsamer ein, für jede Tageszeit getrennt. In einer eigenen Installation setzt `INGESTOR_INTERVAL` den Takt werktags 7–19 Uhr (siehe [Konfiguration](../betrieb/konfiguration.md#ingestor)).
 - Gefragt wird jede Liste nur nach Änderungen (OParl-Filter `modified_since`). Ohne Änderungen kostet das bei einer Quelle, die den Filter auswertet, eine Seite je Liste. Die Kommunenliste lesen wir über alle Seiten (`links.next`), höchstens 20.
 - **Änderungsfenster:** Gefragt wird nach Änderungen seit dem Beginn des letzten vollständigen Abgleichs der Kommune, mit zwei Stunden Sicherheitsabstand, höchstens aber der letzten sieben Tage. Dieses kurze Fenster bekommen nur Listen, deren Änderungsdatum nachweislich eine Uhrzeit trägt; die übrigen, auch neue Listen und Listen ohne bisher gesehene Änderung, fragen wir ab Tagesbeginn an.
@@ -136,7 +155,7 @@ Wertet Ihre Schnittstelle `modified_since` aus, bleibt unsere Last am kleinsten.
 - **In Zeitscheiben:** Liefert ein Server seine vollständigen Listen nicht aus (etwa weil sie nach 60 Sekunden mit HTTP 504 abbrechen), fragt der Vollabgleich jede Liste nur in Zeitscheiben an, von alt nach neu, mit `modified_since` und `modified_until` (OParl 1.1) auf jeder Seite. Ohne Filter fragt er nie an: Lehnt der Server den Filter ab, bleibt die Liste offen, statt dass wir die vollständige Liste anfordern. Jede Scheibe kostet mindestens eine Anfrage, auch wenn sie leer ist; Scheiben zu 30 Tagen ab 2010 sind am 16.10.2026 je Liste 206 Scheiben.
 - **Zeitscheiben nur im Fenster:** Ein Vollabgleich in Zeitscheiben läuft nur im Zeitfenster der Quelle (eigenes oder Standardfenster) und endet immer mit ihm. Außerhalb des Fensters läuft stattdessen ein Änderungsabgleich, ebenso bei einem Aufruf ohne Zeitfenster, etwa über die Kommandozeile. Ein Durchgang kann so mehrere Nächte brauchen: Der nächste Vollabgleich setzt an der letzten vollständigen Scheibe fort.
 - **Filter nicht beachtet:** Liefert eine Scheibe Objekte, die mehr als einen Tag vor oder nach ihrem Zeitraum geändert wurden, beachtet der Server den Filter nicht. Dann übernehmen wir nichts aus dieser Seite und brechen den Vollabgleich ab, statt in jeder Scheibe dieselbe vollständige Liste zu holen. 30 Tage lang läuft der Vollabgleich der Quelle danach nur als Änderungsabgleich.
-- **Von Hand:** Einen Vollabgleich, den wir im Admin anfordern, bindet nur das eigene Zeitfenster der Quelle. Ohne eigenes Fenster beginnt er sofort, auch tagsüber, und läuft zu Ende; ein Vollabgleich in Zeitscheiben nur im Standardfenster.
+- **Von Hand:** Einen Vollabgleich fordern wir im Admin nur ausnahmsweise an, etwa nach der Aufnahme eines neuen Systems. Auch dann gelten das eigene Zeitfenster und der Mindestabstand der Quelle: Liegt der letzte vollständige Vollabgleich weniger lange zurück als dieser Abstand oder ist das eigene Fenster gerade geschlossen, läuft nur ein Änderungsabgleich. Sonst beginnt er ohne eigenes Fenster sofort, auch tagsüber, und läuft zu Ende; ein Vollabgleich in Zeitscheiben nur im Standardfenster. Bei Systemen ohne OParl-Schnittstelle (Scraper) gelten Zeitfenster und Mindestabstand derzeit nur für den geplanten Vollabgleich.
 
 ### Vor der Aufnahme eines Systems
 
@@ -157,6 +176,7 @@ Dateien (Vorlagen, Anlagen, Niederschriften, fast immer PDF) laden wir unter den
 - **Dokument-Cache:** stündlich höchstens 400 Dateien, je Quelle höchstens 200, bis 80 MB je Datei. Nach Zeitüberschreitung, Verbindungsfehler, leerer Antwort, 429, 5xx oder nicht erreichbarer robots.txt versuchen wir es nach 15 Minuten, 1, 6, 24 und 72 Stunden erneut. Danach und bei anderen Fehlern, auch HTTP 403, versuchen wir es alle sieben Tage wieder, ohne Obergrenze. Die Versuche enden, wenn die robots.txt die Datei sperrt oder die Quelle statt der Datei eine HTML-Seite liefert (siehe unten), wenn die Datei größer als 80 MB ist, wenn sie mit HTTP 404 oder 410 nicht mehr vorhanden ist (dann übernimmt der Löschabgleich) oder wenn wir Ihre Quelle oder den Dateiabruf dafür abschalten. HTTP 404 oder 410 gilt in den ersten sieben Tagen nach unserer Erfassung als vorläufig, weil Quellen das Objekt oft vor der Datei veröffentlichen.
 - **Vorschau:** Öffnet jemand bei uns ein Dokument, das wir nicht abgelegt haben, laden wir es bei der Quelle, mit den Grenzen unter [Takt](#takt). Bei Kommunen, deren Dokumente wir ablegen, legen wir es dabei ab; bei den übrigen fragt jedes Öffnen bei der Quelle an.
 - **Löschabgleich:** stündlich. Dokumente, die die Quelle geändert hat, laden wir neu (höchstens 200 je Lauf). Dazu kommen Stichproben per `HEAD`, nur bei öffentlich gelisteten Kommunen und höchstens 30 je Kommune und Lauf. Dokumente, die mit 404 oder 410 verschwunden sind, prüfen wir bei öffentlich gelisteten Kommunen nach 1, 7 und 25 Tagen erneut; nach 30 Tagen fragen wir sie vor dem Löschen noch einmal per `GET` an. Fehlen sie weiter, löschen wir Kopie und Text, sonst heben wir die Sperre auf. Nach HTTP 429 oder 503 oder nach fünf Fehlern in Folge fragt der Lauf diesen Server nicht weiter an. Melden in einem Lauf mehr als 10 Dokumente einer Quelle neu 404 oder 410, lässt er die Quelle für diesen Lauf ruhen. Was Sie löschen, verschwindet so auch bei uns.
+- **Abgeschaltete Quelle:** Vorschau und Löschabgleich richten sich nicht danach, ob die Quelle aktiv ist, sondern nur nach dem Dateiabruf und der Schonung. Sollen gar keine Abrufe mehr stattfinden, schalten wir deshalb zusätzlich den Dateiabruf ab. Eine Sperre per robots.txt wirkt ohnehin bei allen Abrufen.
 - **Gesperrt per robots.txt oder Bot-Schutz** (eine HTML-Seite statt der Datei): Diese Datei laden wir erst nach einer Freigabe wieder. Zugangsprüfungen umgehen wir nicht.
 
 ## Personenfotos
@@ -174,25 +194,6 @@ Dateien (Vorlagen, Anlagen, Niederschriften, fast immer PDF) laden wir unter den
 - **Pausen:** Ab dem dritten fehlgeschlagenen Lauf einer Quelle in Folge pausiert der Abgleich 10 Minuten, danach je weiterem Fehlversuch doppelt so lang, höchstens 6 Stunden (10, 20, 40 … 360 Minuten). Bei drei Arten von Befunden pausiert er schon beim ersten Mal: mindestens 60 Minuten, wenn ein Server unseren User-Agent sperrt, 30 Minuten bei einer 5xx-Serie oder nicht erreichbarer robots.txt und 24 Stunden, wenn die robots.txt keine Anfrage zulässt. Ist die Pause aus der Reihe länger, gilt sie.
 - **Anwendung:** Dokument-Cache, Vorschau, Löschabgleich und Personenfotos ruhen für eine Quelle ab drei fehlgeschlagenen Läufen des Abgleichs in Folge, bis ein Lauf sie wieder erreicht. Eine Sperre per robots.txt beachten sie unabhängig davon bei jedem Abruf. Ein getrennt betriebener Worker für die Texterkennung richtet sich nur nach dem Dateiabruf der Quelle und der robots.txt, nicht nach der Schonung und nicht danach, ob die Quelle abgeschaltet ist.
 - Einen `Retry-After`-Header werten wir nicht aus. Eine Sperre unseres User-Agents umgehen wir nicht; wir versuchen es nur in den genannten Abständen wieder.
-
-## Drosseln oder ausschließen
-
-Kommunen, die den Abruf drosseln oder ausschließen möchten, haben zwei Wege:
-
-1. **robots.txt:** Eine Gruppe für `mandari-ingestor` wirkt spätestens nach 24 Stunden, ohne dass wir etwas tun müssen, ganz oder nur für Dokumente (siehe [Beispiele](#robotstxt)).
-2. **Kontakt:** Schreiben Sie an [support@mandari.de](mailto:support@mandari.de). Wir können für Ihre Quelle den Abstand je Anfrage erhöhen (bis 30 Sekunden), seltener abgleichen, den Vollabgleich in ein Zeitfenster legen, ihn seltener oder nur in Zeitscheiben ausführen oder den Dateiabruf abschalten. Liegen mehrere Quellen auf Ihrem Server, stellen wir das bei allen ein.
-
-## Inhalte entfernen (Takedown)
-
-1. **Tombstone**: Betroffene Objekte werden zunächst als gelöscht markiert. Sie verschwinden sofort aus Portal, Suche und Schnittstellen. Die Daten bleiben für Prüfzwecke erhalten.
-2. **Physische Löschung** auf ausdrückliche Aufforderung der Kommune, einschließlich Suchindex und lokaler Dateikopien:
-
-    ```bash
-    python manage.py purge_deleted --body <slug>            # Vorschau
-    python manage.py purge_deleted --body <slug> --yes      # endgültig löschen
-    ```
-
-3. **Abwägung**: Opt-out-Wünsche werden geprüft, nicht blind ausgeführt. Amtliche Informationen haben ein Transparenzinteresse. Mindestens Drosselung oder Nachtfenster bieten wir immer an. Reaktionszeit: fünf Werktage.
 
 ## Andere Abrufe
 
@@ -214,8 +215,9 @@ Die robots.txt werten diese Abrufe nicht aus, auch nicht bei Geoportalen von Kom
 
 Wer mandari selbst betreibt, ruft von der Adresse des eigenen Servers ab und übernimmt die Verantwortung gegenüber den Betreibern der eigenen Quellen.
 
-- Setzen Sie `INGESTOR_USER_AGENT` (älterer Name: `SCRAPER_USER_AGENT`) auf eine Kennung mit Ihrer Kontaktadresse, etwa `mandari-ingestor/0.1.0 (+https://ris.example.de/abruf/; it@example.de)`. Die Variable gehört in die Umgebung des Ingestors und auch in die Umgebung der Anwendung: Die Sync-Aktionen an einer Quelle im Admin gehen an den Ingestor, solange er läuft; ohne ihn und für abgeschaltete Quellen laufen sie im Worker der Anwendung. Ein Eintrag nur in der `.env` wirkt unter Docker Compose nicht. Regeln der robots.txt für `mandari-ingestor` gelten weiter, weil mandari dieses Token immer zusätzlich prüft.
+- Setzen Sie `INGESTOR_USER_AGENT` (älterer Name: `SCRAPER_USER_AGENT`) auf eine Kennung mit Ihrer Kontaktadresse, etwa `mandari-ingestor/0.1.0 (+https://ris.example.de/abruf/; it@example.de)`. Die Variable gehört in die Umgebung des Ingestors und auch in die Umgebung der Anwendung: Die Sync-Aktionen an einer Quelle im Admin gehen an den Ingestor, solange er läuft; ohne ihn, für abgeschaltete Quellen und wenn die Anforderung ihn nicht erreicht, laufen sie im Worker der Anwendung. Ein Eintrag nur in der `.env` wirkt unter Docker Compose nicht. Regeln der robots.txt für `mandari-ingestor` gelten weiter, weil mandari dieses Token immer zusätzlich prüft.
 - Die Abrufe der Anwendung (Dokument-Cache, Vorschau, Löschabgleich, Personenfotos, Quellenanlage, Live-Übertragung und Geodienste) melden sich mit der festen Kennung `mandari-ingestor (+https://mandari.de/crawler/; support@mandari.de)`. Abweichend lässt sie sich nur je Quelle über `sync_config["download_headers"]` setzen (nicht für Quellenanlage, Live-Übertragung und Geodienste).
 - Den gemeinsamen Takt über alle Prozesse gibt es nur mit Redis, das Ingestor und Anwendung beide erreichen. `INGESTOR_REQUEST_INTERVAL` und `RIS_REQUEST_INTERVAL` (Standard je `1.0`) legen den Abstand je Server fest; `0` schaltet die Drossel ab und ist nur für Tests und Notfälle gedacht. Den Takt der [anderen Abrufe](#andere-abrufe) legt der Code je Dienst fest; eine Umgebungsvariable dafür gibt es nicht.
+- Eine Quelle abzuschalten (`is_active = false`) stoppt nicht alle Abrufe: Vorschau, Löschabgleich und ein getrennt betriebener Worker für die Texterkennung richten sich nicht danach, ob die Quelle aktiv ist. Sollen nach einem Opt-out gar keine Abrufe mehr stattfinden, schalten Sie zusätzlich den Dateiabruf ab (`sync_config["file_downloads"] = false`).
 
 Alle Einstellungen je Quelle und per Umgebungsvariable stehen in den [Abrufregeln](https://github.com/mandariOSS/mandari/blob/dev/docs/ABRUFREGELN.md). Wie Sie Quellen anbinden und Takt und Vollabgleich je Quelle einstellen, steht unter [Quellen anbinden](../betrieb/quellen-anbinden.md#takt-und-vollabgleich-je-quelle), weitere Variablen in der [Konfigurationsreferenz](../betrieb/konfiguration.md#ingestor).
