@@ -21,21 +21,14 @@ Vorlaufzeiten und An/Aus je Typ konfiguriert jede Kommune unter **Einstellungen 
 
 ## Betrieb
 
-Täglicher Lauf, zum Beispiel werktags morgens per Cron auf dem Host:
+Die Erinnerungen verschickt ein Zeitplan im Worker, täglich um 07:00 für alle aktiven Mandanten. Ein Cron-Eintrag auf dem Host ist dafür nicht mehr nötig. Von Hand:
 
 ```bash
-# alle aktiven Mandanten
-docker compose exec -T mandari python manage.py send_session_reminders
+# Testlauf ohne Versand (läuft immer)
+docker compose exec -T worker python manage.py send_session_reminders --dry-run
 
-# nur ein Mandant / Testlauf ohne Versand
-docker compose exec -T mandari python manage.py send_session_reminders --tenant stadt-musterstadt
-docker compose exec -T mandari python manage.py send_session_reminders --dry-run
-```
-
-Beispiel-Crontab für 07:00 Uhr:
-
-```cron
-0 7 * * * cd /opt/mandari && docker compose exec -T mandari python manage.py send_session_reminders >> /var/log/mandari-reminders.log 2>&1
+# echter Lauf für einen Mandanten, obwohl der Zeitplan ihn bedient
+docker compose exec -T worker python manage.py send_session_reminders --tenant stadt-musterstadt --trotz-zeitplan
 ```
 
 Alle regelmäßigen Aufgaben einer Installation sind unter [Regelmäßige Aufgaben](../betrieb/cron.md) zusammengefasst.

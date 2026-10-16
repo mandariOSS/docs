@@ -19,8 +19,8 @@ Entwicklung findet im Hauptrepository auf dem Branch `dev` statt, `main` ist der
 
 | Komponente | Technologie |
 |------------|-------------|
-| Backend | Django 6, Python 3.12 |
-| Frontend | Django-Templates, HTMX, Alpine.js, Tailwind CSS, Tiptap-Editor |
+| Backend | Django 6.1, Python 3.12 oder neuer |
+| Frontend | Django-Templates, HTMX, Alpine.js, Tailwind CSS, Tiptap-Editor; TypeScript, gebaut mit Vite |
 | Admin | django-unfold |
 | Datenbank | PostgreSQL 16 |
 | Suche | Elasticsearch 8 |
@@ -31,21 +31,39 @@ Entwicklung findet im Hauptrepository auf dem Branch `dev` statt, `main` ist der
 
 ## Lokal entwickeln
 
+Voraussetzungen: Python 3.12 oder neuer, Node.js 22 oder neuer, Docker (für PostgreSQL, Redis und Elasticsearch) und [uv](https://docs.astral.sh/uv/). Die Python-Abhängigkeiten stehen in `mandari/pyproject.toml`, die gesperrten Versionen in `mandari/uv.lock`. Eine `requirements.txt` liegt nicht im Repository; wer sie für pip braucht, erzeugt sie mit `sh scripts/export_requirements.sh <datei>` aus der Lock-Datei.
+
 ```bash
 git clone https://github.com/mandariOSS/mandari.git
-cd mandari/mandari
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp ../.env.example .env        # SECRET_KEY, DATABASE_URL, ENCRYPTION_MASTER_KEY setzen
-python manage.py migrate
-python manage.py setup_roles
-python manage.py createsuperuser
-python manage.py runserver
+cd mandari
+
+# Datenbank, Cache und Suche starten
+docker compose up -d postgres redis elasticsearch
+
+cd mandari
+cp ../.env.example .env          # SECRET_KEY und ENCRYPTION_MASTER_KEY eintragen
+uv sync --extra dev              # Abhängigkeiten aus uv.lock, mit Test- und Lint-Werkzeugen
+npm ci && npm run build          # Frontend bauen
+
+uv run python manage.py migrate
+uv run python manage.py setup_roles
+uv run python manage.py createsuperuser
+uv run python manage.py runserver
 ```
 
-Für einen schnellen Überblick über alle drei Portale eignet sich die [Demo-Umgebung](../betrieb/demo-umgebung.md). Die Datei `CLAUDE.md` im Repository beschreibt Architektur, Apps, Berechtigungssystem und Konventionen ausführlich.
+Die Anwendung läuft dann unter <http://localhost:8000>. Für die Frontend-Entwicklung mit Hot Reload laufen `npm run watch` und `DJANGO_VITE_DEV_MODE=1 uv run python manage.py runserver` nebeneinander. Eine neue Abhängigkeit kommt mit `uv lock` in die Lock-Datei; `pyproject.toml` und `uv.lock` gehören in denselben Commit.
+
+Für einen schnellen Überblick über alle drei Portale eignet sich die [Demo-Umgebung](../betrieb/demo-umgebung.md). Die Datei `AGENTS.md` im Repository beschreibt Architektur, Apps, Berechtigungssystem und Konventionen ausführlich, `CONTRIBUTING.md` die Entwicklungsumgebung und die Prüfungen, `docs/ENGINEERING_STANDARDS.md` die Regeln für neuen Code.
 
 ## Tests
+
+Die Testsuite läuft mit pytest:
+
+```bash
+cd mandari
+uv run pytest apps/work/tasks -q                 # einzelne App
+uv run pytest -n auto -m "not migrationen"       # parallel, ohne Migrationstests
+```
 
 Neben den Unit-Tests gibt es eine Reihe von **Smoke-Tests** unter `scripts/smoke_*.py`. Jeder läuft selbst enthalten auf einer frischen SQLite-Datenbank und prüft ein Feature Ende-zu-Ende, inklusive Berechtigungen, Mandantentrennung und der Garantie, dass nur öffentliche Inhalte nach außen gelangen. Beispiele:
 

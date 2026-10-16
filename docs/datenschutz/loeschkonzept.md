@@ -38,7 +38,7 @@ Empfehlungswerte (unverbindlich): Kontakt- und Bankdaten 2 Jahre nach Mandatsend
 Zwei gleichwertige Wege:
 
 1. **Anwendung**: *Einstellungen → Datenschutz → Löschlauf ausführen*, mit Probelauf-Option, Berechtigung zur Verwaltung der Einstellungen.
-2. **Kommandozeile**, zum Beispiel monatlich per Cron:
+2. **Kommandozeile.** Monatlich läuft der Befehl ohnehin als Zeitplan im Worker (am 1. um 05:00, siehe [Regelmäßige Aufgaben](../betrieb/cron.md)); von Hand mit `--trotz-zeitplan`, ein Probelauf geht immer:
 
     ```bash
     python manage.py session_privacy_purge              # alle aktiven Mandanten

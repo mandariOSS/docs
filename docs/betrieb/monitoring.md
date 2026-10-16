@@ -29,9 +29,7 @@ Ab `INSIGHT_SOURCE_BACKOFF_FAILURES` (Standard 3) Fehlversuchen greift die **Que
 
 ## Alarmierung
 
-```cron
-15 * * * * docker exec mandari python manage.py check_source_health >> /var/log/mandari-source-health.log 2>&1
-```
+Die Prüfung `check_source_health` läuft als Zeitplan im Worker, stündlich zur Minute 15 (siehe [Regelmäßige Aufgaben](cron.md)).
 
 - Kritische Quelle: E-Mail-Alarm, Wiederholung frühestens nach 7 Tagen
 - Quelle wieder OK: Entwarnung, der Alarm-Zeitstempel wird gelöscht
