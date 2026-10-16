@@ -50,7 +50,7 @@ Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerport
 - [Self-Hosting mit Docker](https://docs.mandari.de/betrieb/): mandari auf eigener Infrastruktur betreiben
 - [Betrieb in Kubernetes](https://docs.mandari.de/betrieb/kubernetes/): Installation mit Helm-Chart
 - [Konfiguration](https://docs.mandari.de/betrieb/konfiguration/): Referenz aller Umgebungsvariablen
-- [Quellen anbinden](https://docs.mandari.de/betrieb/quellen-anbinden/): Kommunen über OParl, SessionNet oder ALLRIS anbinden
+- [Quellen anbinden](https://docs.mandari.de/betrieb/quellen-anbinden/): Kommunen über OParl, SessionNet oder ALLRIS anbinden, Takt und Vollabgleich je Quelle einstellen
 - [Updates und Backups](https://docs.mandari.de/betrieb/updates-backups/): aktualisieren, sichern und wiederherstellen
 
 ## Datenschutz

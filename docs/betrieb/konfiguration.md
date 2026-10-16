@@ -104,8 +104,8 @@ Details unter [Betriebsmonitor](monitoring.md).
 
 | Variable | Standard | Bedeutung |
 |----------|----------|-----------|
-| `INGESTOR_INTERVAL` | `10` (Vorlage `.env.example`: `15`) | Grundtakt je Quelle werktags 7–19 Uhr in Minuten; sonst stündlich, am Wochenende alle 2 Stunden, an Sitzungstagen und am Vortag (7–22 Uhr) alle 5 Minuten, je Quelle einstellbar (siehe [Crawler und Opt-out](../datenschutz/crawler.md#abgleich)) |
-| `INGESTOR_FULL_SYNC_HOUR` | `3` | Beginn des nächtlichen Standardfensters für Vollabgleiche (5 Stunden, Ortszeit) für Quellen ohne eigenes Zeitfenster; Werte außerhalb von 0 bis 23 schalten geplante Vollabgleiche ab |
+| `INGESTOR_INTERVAL` | `10` (`.env.example`, `install.sh` und Helm: `15`) | Grundtakt je Quelle werktags 7–19 Uhr in Minuten; sonst stündlich, am Wochenende alle 2 Stunden, an Sitzungstagen und am Vortag (7–22 Uhr) alle 5 Minuten, nach Abgleichen ohne Änderung seltener; je Quelle einstellbar (siehe [Takt und Vollabgleich je Quelle](quellen-anbinden.md#takt-und-vollabgleich-je-quelle)) |
+| `INGESTOR_FULL_SYNC_HOUR` | `3` | Beginn des nächtlichen Standardfensters für Vollabgleiche (5 Stunden, Ortszeit) für Quellen ohne eigenes Zeitfenster; Werte außerhalb von 0 bis 23 schalten geplante Vollabgleiche ab, auch in eigenen Zeitfenstern der Quellen; im Admin angeforderte bleiben möglich |
 | `INGESTOR_CONCURRENT` | `10` | Abrufplätze je Quelle; je Server gilt trotzdem `INGESTOR_HOST_MAX_CONCURRENT` |
 | `INGESTOR_SYNC_POOL_SIZE` | `4` | Quellen, die der Ingestor gleichzeitig abgleicht, je Quelle höchstens ein Lauf; Vollabgleiche belegen höchstens alle Plätze bis auf einen |
 | `INGESTOR_MEM_LIMIT` | `512m` | Speichergrenze des Ingestor-Containers (nur Docker Compose) |
