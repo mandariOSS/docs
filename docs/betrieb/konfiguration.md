@@ -104,15 +104,17 @@ Details unter [Betriebsmonitor](monitoring.md).
 
 | Variable | Standard | Bedeutung |
 |----------|----------|-----------|
-| `INGESTOR_INTERVAL` | `10` (Vorlage `.env.example`: `15`) | Minuten zwischen inkrementellen Läufen |
-| `INGESTOR_FULL_SYNC_HOUR` | `3` | Stunde des täglichen Voll-Syncs |
+| `INGESTOR_INTERVAL` | `10` (Vorlage `.env.example`: `15`) | Grundtakt je Quelle werktags 7–19 Uhr in Minuten; sonst stündlich, am Wochenende alle 2 Stunden, an Sitzungstagen und am Vortag (7–22 Uhr) alle 5 Minuten, je Quelle einstellbar (siehe [Crawler und Opt-out](../datenschutz/crawler.md#abgleich)) |
+| `INGESTOR_FULL_SYNC_HOUR` | `3` | Beginn des nächtlichen Standardfensters für Vollabgleiche (5 Stunden, Ortszeit) für Quellen ohne eigenes Zeitfenster; Werte außerhalb von 0 bis 23 schalten geplante Vollabgleiche ab |
 | `INGESTOR_CONCURRENT` | `10` | Abrufplätze je Quelle; je Server gilt trotzdem `INGESTOR_HOST_MAX_CONCURRENT` |
+| `INGESTOR_SYNC_POOL_SIZE` | `4` | Quellen, die der Ingestor gleichzeitig abgleicht, je Quelle höchstens ein Lauf; Vollabgleiche belegen höchstens alle Plätze bis auf einen |
+| `INGESTOR_MEM_LIMIT` | `512m` | Speichergrenze des Ingestor-Containers (nur Docker Compose) |
 | `INGESTOR_REQUEST_INTERVAL` | `1.0` | Abstand je Server in Sekunden (gemeinsamer Takt über Redis); `0` schaltet die Drossel ab, nur für Tests und Notfälle |
 | `INGESTOR_HOST_MAX_CONCURRENT` | `2` | Offene Anfragen je Server und Prozess; `0` = ohne Grenze |
 | `INGESTOR_USER_AGENT` (älter: `SCRAPER_USER_AGENT`) | `mandari-ingestor/<Version> (+https://mandari.de/crawler/; support@mandari.de)` | User-Agent des Ingestors (Abgleich, Scraper, Texterkennung, Sondierung) |
 | `SCRAPER_TOMBSTONE_FULL_CRAWLS` | `3` | Nach so vielen Voll-Crawls ohne Sichtung gilt ein Objekt als gelöscht |
 | `SCRAPER_PARSE_QUOTA_WARN` | `0.8` | Warnung, wenn weniger als dieser Anteil der Seiten geparst werden konnte |
 
-`INGESTOR_INTERVAL`, `INGESTOR_FULL_SYNC_HOUR` und `INGESTOR_CONCURRENT` liest `docker-compose.yml` aus der `.env`. Die übrigen Variablen der Tabelle reicht es nicht durch: Tragen Sie sie unter Docker Compose im Abschnitt `environment` des Dienstes `ingestor` ein, im Helm-Chart in `ingestor.extraEnv`; ein Eintrag nur in der `.env` wirkt nicht. Die Sync-Aktionen an einer Quelle im Admin laufen im Worker der Anwendung. Setzen Sie `INGESTOR_USER_AGENT`, `INGESTOR_REQUEST_INTERVAL` und `INGESTOR_HOST_MAX_CONCURRENT` deshalb auch dort, unter Docker Compose in `x-app-environment`, im Helm-Chart in `app.extraEnv`; sonst ruft der Worker mit der Standardkennung samt support@mandari.de ab.
+`INGESTOR_INTERVAL`, `INGESTOR_FULL_SYNC_HOUR`, `INGESTOR_CONCURRENT`, `INGESTOR_SYNC_POOL_SIZE` und `INGESTOR_MEM_LIMIT` liest `docker-compose.yml` aus der `.env`; im Helm-Chart heißen die ersten beiden `ingestor.syncInterval` und `ingestor.fullSyncHour`, `INGESTOR_SYNC_POOL_SIZE` gehört dort in `ingestor.extraEnv`. Die übrigen Variablen der Tabelle reicht es nicht durch: Tragen Sie sie unter Docker Compose im Abschnitt `environment` des Dienstes `ingestor` ein, im Helm-Chart in `ingestor.extraEnv`; ein Eintrag nur in der `.env` wirkt nicht. Die Sync-Aktionen an einer Quelle im Admin gehen an den Ingestor, solange er läuft; ohne ihn und für abgeschaltete Quellen laufen sie im Worker der Anwendung. Setzen Sie `INGESTOR_USER_AGENT`, `INGESTOR_REQUEST_INTERVAL` und `INGESTOR_HOST_MAX_CONCURRENT` deshalb auch dort, unter Docker Compose in `x-app-environment`, im Helm-Chart in `app.extraEnv`; sonst ruft der Worker mit der Standardkennung samt support@mandari.de ab.
 
 Details unter [Quellen anbinden](quellen-anbinden.md), Regeln für den Abruf unter [Crawler und Opt-out](../datenschutz/crawler.md).

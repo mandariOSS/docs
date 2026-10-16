@@ -11,7 +11,7 @@ mandari spiegelt öffentliche Ratsinformationen. Dafür rufen zwei Programmteile
 - Technische Referenz mit Fundstellen im Code: [Abrufregeln (ABRUFREGELN.md)](https://github.com/mandariOSS/mandari/blob/dev/docs/ABRUFREGELN.md)
 
 !!! info "Stand"
-    Diese Seite beschreibt den Code auf dem Entwicklungszweig `dev` mit den Änderungen aus [mandari#1025](https://github.com/mandariOSS/mandari/issues/1025), [mandari#1031](https://github.com/mandariOSS/mandari/pull/1031) und [mandari#1036](https://github.com/mandariOSS/mandari/issues/1036). Die von uns betriebene Instanz mandari.de folgt diesen Regeln ab dem ersten Update, das #1031 und #1036 enthält; bis dahin läuft dort noch ein älterer Stand.
+    Diese Seite beschreibt den Code auf dem Entwicklungszweig `dev` mit den Änderungen aus [mandari#1025](https://github.com/mandariOSS/mandari/issues/1025), [mandari#1031](https://github.com/mandariOSS/mandari/pull/1031), [mandari#1036](https://github.com/mandariOSS/mandari/issues/1036), [mandari#1037](https://github.com/mandariOSS/mandari/pull/1037) (neue Quellen und Kommunen), [mandari#1039](https://github.com/mandariOSS/mandari/pull/1039) (Takt je Quelle nach Bedarf) und [mandari#1040](https://github.com/mandariOSS/mandari/pull/1040) (Vollabgleich in Zeitscheiben, langsame Listen). Die von uns betriebene Instanz mandari.de folgt diesen Regeln ab dem ersten Update, das diese Änderungen enthält; bis dahin läuft dort noch ein älterer Stand.
 
 ## Auf einen Blick
 
@@ -22,8 +22,10 @@ mandari spiegelt öffentliche Ratsinformationen. Dafür rufen zwei Programmteile
 | Takt | höchstens eine Anfrage pro Sekunde je Server, über alle Abrufe von mandari zusammen; je Quelle nur langsamer |
 | Gleichzeitig | höchstens zwei offene Anfragen je Server und Ingestor-Prozess, auch am Ziel einer Weiterleitung |
 | robots.txt | nach RFC 9309, für Schnittstelle, Seiten und Dokumente; je Hostname 24 Stunden zwischengespeichert |
-| Abgleich | alle 10 Minuten, gefragt wird nur nach Änderungen (`modified_since`) |
-| Vollabgleich | einmal täglich nachts, je Quelle auch seltener oder nur in einem Zeitfenster |
+| Abgleich | je Quelle nach Bedarf: werktags 7–19 Uhr alle 10 Minuten, sonst stündlich, am Wochenende alle 2 Stunden, an Sitzungstagen und am Vortag (7–22 Uhr) alle 5 Minuten; ohne Änderung seltener; gefragt wird nur nach Änderungen (`modified_since`) |
+| Vollabgleich | geplant höchstens einmal je Nacht im Zeitfenster der Quelle (bei mandari.de ohne eigenes Fenster: Beginn zwischen 1 und 6 Uhr), je Quelle auch seltener; bei Servern, deren vollständige Listen abbrechen, nur in Zeitscheiben; von Hand angefordert ohne eigenes Zeitfenster auch tagsüber |
+| Langsame Listen | eine optionale Liste, die in eine Zeitüberschreitung läuft, ruht 1 Stunde, danach jeweils doppelt so lange, höchstens 24 Stunden |
+| Neue Quellen | legen unsere Werkzeuge inaktiv an; regelmäßig abgefragt wird eine Quelle erst, wenn sie aktiv ist; neu entdeckte Kommunen bleiben ungelistet (siehe [Neue Quellen und Kommunen](#neue-quellen-und-kommunen)) |
 | Dokumente | geladen, wenn sie fehlen oder die Quelle sie geändert hat; dazu Stichproben per `HEAD` |
 | Abruf-Adresse | derzeit `144.76.153.200`, nur IPv4; sie kann sich ändern, erkennen Sie uns am User-Agent |
 | Andere Dienste | Live-Übertragung und Geodienste mit derselben Kennung und eigenem Takt je Server, ohne robots.txt (siehe [Andere Abrufe](#andere-abrufe)) |
@@ -103,22 +105,41 @@ Sperrt die robots.txt das Ziel, folgen wir nicht. Ist sie nicht erreichbar, stel
 
 ### Abgleich
 
-- Der Ingestor gleicht alle 10 Minuten ab und fragt jede Liste nur nach Änderungen (OParl-Filter `modified_since`). Ohne Änderungen kostet das bei einer Quelle, die den Filter auswertet, eine Seite je Liste.
+Jede Quelle hat ihren eigenen Takt nach Bedarf, in Ortszeit:
+
+| Wann | Abstand zwischen zwei Abgleichen einer Quelle |
+|---|---|
+| Tag einer Sitzung und Tag davor, 7–22 Uhr | 5 Minuten, ohne Änderung höchstens 10 |
+| werktags 7–19 Uhr | 10 Minuten |
+| werktags außerhalb dieser Zeit | 60 Minuten |
+| Samstag und Sonntag | 120 Minuten |
+
+- **Takt:** Als Sitzungstag zählt ein Tag, an dem laut unserem Bestand eine Sitzung einer Kommune der Quelle beginnt; Feiertage behandelt der Takt wie Werktage. Nach je drei Abgleichen in Folge ohne Änderung verdoppelt sich der Abstand, höchstens bis 2 Stunden; ein Abgleich mit Änderung setzt ihn zurück. Der Abstand zählt ab dem Ende des vorigen Abgleichs, je Quelle läuft höchstens einer zugleich. Für einzelne Quellen stellen wir den Takt auf Wunsch langsamer ein. In einer eigenen Installation setzt `INGESTOR_INTERVAL` den Takt werktags 7–19 Uhr (siehe [Konfiguration](../betrieb/konfiguration.md#ingestor)).
+- Gefragt wird jede Liste nur nach Änderungen (OParl-Filter `modified_since`). Ohne Änderungen kostet das bei einer Quelle, die den Filter auswertet, eine Seite je Liste.
 - **Änderungsfenster:** Gefragt wird nach Änderungen seit dem Beginn des letzten vollständigen Abgleichs der Kommune, mit zwei Stunden Sicherheitsabstand, höchstens aber der letzten sieben Tage. Dieses kurze Fenster bekommen nur Listen, deren Änderungsdatum nachweislich eine Uhrzeit trägt; die übrigen, auch neue Listen und Listen ohne bisher gesehene Änderung, fragen wir ab Tagesbeginn an.
 - **Ohne Filter:** Lehnt ein System den Filter ab oder ignoriert ihn, lesen wir die Liste von vorn, vergleichen selbst und hören nach fünf Seiten ohne Änderung auf. Nach jedem Vollabgleich prüfen wir mit einer Anfrage, ob Ihr System nach Änderungsdatum filtert; bringt sie keine Aussage, wiederholen wir sie einmal nach 60 Sekunden.
-- **Fehlende Listen:** Optionale Listen (Mitgliedschaften, Tagesordnungspunkte, Beratungen, Dateien, Orte), die Ihr System nicht anbietet, vermerken wir. Der Abgleich fragt sie dann höchstens einmal am Tag wieder an, der Vollabgleich jedes Mal.
+- **Fehlende Listen:** Optionale Listen (Mitgliedschaften, Tagesordnungspunkte, Beratungen, Dateien, Orte), die Ihr System nicht anbietet, vermerken wir. Der Abgleich fragt sie dann höchstens einmal am Tag wieder an, der Vollabgleich jedes Mal, der Vollabgleich in Zeitscheiben nicht.
+- **Langsame Listen:** Bricht eine optionale Liste ab, weil die letzte Anfrage nach 60 Sekunden ohne Antwort blieb oder mit HTTP 504 endete, fragen wir diese Liste zunächst 1 Stunde nicht an, nach jeder weiteren Zeitüberschreitung in Folge doppelt so lange, höchstens 24 Stunden. Auch der Vollabgleich lässt sie so lange aus. Die übrigen Listen gleichen wir weiter ab. Danach holen wir die Änderungen der Liste nach, bei Systemen, die nach Änderungsdatum filtern, in Abschnitten zu einem Tag (`modified_since` und `modified_until`). Pflichtlisten (Gremien, Personen, Sitzungen, Vorlagen) setzen wir nie aus.
 
 Wertet Ihre Schnittstelle `modified_since` aus, bleibt unsere Last am kleinsten.
 
 ### Vollabgleich
 
-- Einmal täglich zu einer festen Stunde liest der Ingestor alle Listen vollständig, als Sicherheitsnetz für Änderungen, die ein Filter nicht meldet. Standard ist 03:00 Uhr Ortszeit; die von uns betriebene Instanz startet ihn um 01:00 Uhr. Läuft zu dieser Stunde noch ein Abgleich, folgt der Vollabgleich direkt danach.
-- Je Quelle lässt er sich seltener ausführen (Mindestabstand in Tagen) oder auf ein Zeitfenster begrenzen, auch über Mitternacht. Außerhalb des Fensters läuft nur der Änderungsabgleich. Das Fenster muss die Startstunde enthalten und für einen ganzen Vollabgleich reichen: Nach dem Ende des Fensters holt der Ingestor keine weitere Seite, und offene Listen kommen beim nächsten Vollabgleich wieder dran.
+- **Wann:** Höchstens einmal je Zeitfenster liest der Ingestor alle Listen einer Quelle vollständig, als Sicherheitsnetz für Änderungen, die ein Filter nicht meldet. Ohne eigenes Zeitfenster der Quelle beginnt er im Standardfenster: ab der Stunde `INGESTOR_FULL_SYNC_HOUR` (Standard 03:00 Uhr Ortszeit) für 5 Stunden; die von uns betriebene Instanz beginnt um 01:00 Uhr, ihr Standardfenster reicht also bis 06:00 Uhr. Läuft zu Beginn noch ein Änderungsabgleich der Quelle, folgt der Vollabgleich direkt danach. Während er läuft, ruhen nur die Änderungsabgleiche derselben Quelle; die anderen Quellen gleichen weiter in ihrem Takt ab.
+- **Je Quelle:** Er lässt sich seltener ausführen (Mindestabstand in Tagen) und in ein eigenes Zeitfenster legen, auch über Mitternacht. Der Vollabgleich beginnt dann in diesem Fenster, unabhängig von der Stunde des Standardfensters; außerhalb läuft nur der Änderungsabgleich. Nach dem Ende eines eigenen Fensters holt der Ingestor keine weitere Seite; offene Listen kommen beim nächsten Vollabgleich wieder dran, der dann neu beginnt. Das Standardfenster begrenzt dagegen nur den Beginn: Ein begonnener Vollabgleich läuft zu Ende.
+- **In Zeitscheiben:** Liefert ein Server seine vollständigen Listen nicht aus (etwa weil sie nach 60 Sekunden mit HTTP 504 abbrechen), fragt der Vollabgleich jede Liste nur in Zeitscheiben an, mit `modified_since` und `modified_until`, nie ohne Filter. Er läuft nur im Zeitfenster (eigenes oder Standardfenster) und endet immer mit ihm. Bricht er ab, setzt der nächste Vollabgleich an der letzten vollständigen Scheibe fort.
+- **Von Hand:** Einen Vollabgleich, den wir im Admin anfordern, bindet nur das eigene Zeitfenster der Quelle. Ohne eigenes Fenster beginnt er sofort, auch tagsüber, und läuft zu Ende; ein Vollabgleich in Zeitscheiben nur im Standardfenster.
 
 ### Vor der Aufnahme eines Systems
 
 - **Sondierung:** Ob ein System für uns infrage kommt, prüfen wir mit höchstens fünf Anfragen je Kommune: robots.txt, Startseite und die üblichen Adressen einer OParl-Schnittstelle. Weiterleitungen und die robots.txt eines weiteren Servers zählen mit. Gesperrte Pfade fragen wir nicht an; ist die robots.txt nicht erreichbar, endet die Prüfung nach dieser einen Anfrage. Zwischen zwei Kommunen liegen zusätzlich 2 Sekunden Pause.
-- **Quellenanlage:** Beim Anlegen einer Quelle rufen wir nach Prüfung der robots.txt System und Kommunenliste ab, im selben Takt.
+- **Quellenanlage:** Beim Anlegen einer Quelle rufen wir nach Prüfung der robots.txt System und Kommunenliste ab (höchstens 20 Seiten), im selben Takt.
+
+### Neue Quellen und Kommunen
+
+- **Neue Quellen** legen unsere Werkzeuge inaktiv an: das Werkzeug zum Anlegen einer Quelle (`manage.py add_oparl_source`) und der Ingestor (`add-source`, `init-sources`, ein Abgleich von Hand mit einer noch unbekannten Adresse). Regelmäßig abgefragt wird eine Quelle erst, wenn sie aktiv ist. Vorhandene Quellen behalten ihren Status.
+- **Ausnahmen:** Aktiv legen eine Quelle das Formular „Quelle hinzufügen“ im Admin an (das Feld „Aktiv“ ist vorbelegt), `manage.py import_oparl_sources --activate` und die Veröffentlichung eines Session-Mandanten im Bürgerportal; diese schaltet eine abgeschaltete Quelle des Mandanten auch wieder ein.
+- **Neue Kommunen** bleiben ungelistet, bis wir sie im Admin listen, außer bei der eigenen Schnittstelle eines Session-Mandanten. Bis dahin erscheinen sie nicht in Kommunenauswahl, Übersichten, Sitemaps und öffentlichen Listen. Abgerufen werden ihre Daten und Dateien trotzdem, solange die Quelle aktiv ist; nur abgelegt werden ihre Dokumente beim Abgleich nicht.
 
 ## Dokumente
 
@@ -151,7 +172,7 @@ Dateien (Vorlagen, Anlagen, Niederschriften, fast immer PDF) laden wir unter den
 Kommunen, die den Abruf drosseln oder ausschließen möchten, haben zwei Wege:
 
 1. **robots.txt:** Eine Gruppe für `mandari-ingestor` wirkt spätestens nach 24 Stunden, ohne dass wir etwas tun müssen, ganz oder nur für Dokumente (siehe [Beispiele](#robotstxt)).
-2. **Kontakt:** Schreiben Sie an [support@mandari.de](mailto:support@mandari.de). Wir können für Ihre Quelle den Abstand je Anfrage erhöhen (bis 30 Sekunden), den Vollabgleich in ein Zeitfenster legen, ihn seltener ausführen oder den Dateiabruf abschalten. Liegen mehrere Quellen auf Ihrem Server, stellen wir das bei allen ein.
+2. **Kontakt:** Schreiben Sie an [support@mandari.de](mailto:support@mandari.de). Wir können für Ihre Quelle den Abstand je Anfrage erhöhen (bis 30 Sekunden), seltener abgleichen, den Vollabgleich in ein Zeitfenster legen, ihn seltener oder nur in Zeitscheiben ausführen oder den Dateiabruf abschalten. Liegen mehrere Quellen auf Ihrem Server, stellen wir das bei allen ein.
 
 ## Inhalte entfernen (Takedown)
 
@@ -185,7 +206,7 @@ Die robots.txt werten diese Abrufe nicht aus, auch nicht bei Geoportalen von Kom
 
 Wer mandari selbst betreibt, ruft von der Adresse des eigenen Servers ab und übernimmt die Verantwortung gegenüber den Betreibern der eigenen Quellen.
 
-- Setzen Sie `INGESTOR_USER_AGENT` (älterer Name: `SCRAPER_USER_AGENT`) auf eine Kennung mit Ihrer Kontaktadresse, etwa `mandari-ingestor/0.1.0 (+https://ris.example.de/abruf/; it@example.de)`. Die Variable gehört in die Umgebung des Ingestors und, weil die Sync-Aktionen im Admin im Worker der Anwendung laufen, auch in die Umgebung der Anwendung; ein Eintrag nur in der `.env` wirkt unter Docker Compose nicht. Regeln der robots.txt für `mandari-ingestor` gelten weiter, weil mandari dieses Token immer zusätzlich prüft.
+- Setzen Sie `INGESTOR_USER_AGENT` (älterer Name: `SCRAPER_USER_AGENT`) auf eine Kennung mit Ihrer Kontaktadresse, etwa `mandari-ingestor/0.1.0 (+https://ris.example.de/abruf/; it@example.de)`. Die Variable gehört in die Umgebung des Ingestors und auch in die Umgebung der Anwendung: Die Sync-Aktionen an einer Quelle im Admin gehen an den Ingestor, solange er läuft; ohne ihn und für abgeschaltete Quellen laufen sie im Worker der Anwendung. Ein Eintrag nur in der `.env` wirkt unter Docker Compose nicht. Regeln der robots.txt für `mandari-ingestor` gelten weiter, weil mandari dieses Token immer zusätzlich prüft.
 - Die Abrufe der Anwendung (Dokument-Cache, Vorschau, Löschabgleich, Personenfotos, Quellenanlage, Live-Übertragung und Geodienste) melden sich mit der festen Kennung `mandari-ingestor (+https://mandari.de/crawler/; support@mandari.de)`. Abweichend lässt sie sich nur je Quelle über `sync_config["download_headers"]` setzen (nicht für Quellenanlage, Live-Übertragung und Geodienste).
 - Den gemeinsamen Takt über alle Prozesse gibt es nur mit Redis, das Ingestor und Anwendung beide erreichen. `INGESTOR_REQUEST_INTERVAL` und `RIS_REQUEST_INTERVAL` (Standard je `1.0`) legen den Abstand je Server fest; `0` schaltet die Drossel ab und ist nur für Tests und Notfälle gedacht.
 

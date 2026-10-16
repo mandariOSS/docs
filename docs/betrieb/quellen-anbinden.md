@@ -19,7 +19,7 @@ Die Art steht in der Sync-Konfiguration der Quelle (`sync_config["source_type"]`
 
 1. System-Endpunkt der Kommune ermitteln, zum Beispiel `https://ratsinfo.example.org/oparl/v1/system`. Ein Blick in die JSON-Antwort zeigt Name und Body-Liste.
 2. Admin → *Insight → OParl-Quellen → Hinzufügen*: Name und URL des System-Endpunkts eintragen, aktiv setzen.
-3. Der Ingestor synchronisiert im nächsten Zyklus (Standard alle 15 Minuten, Voll-Sync nachts). Alternativ die Admin-Aktion „Vollständiger Sync“ auslösen.
+3. Eine aktive Quelle ohne bisherigen Abgleich ist sofort fällig; der Ingestor beginnt, sobald ein Platz frei ist. Danach gleicht er sie in ihrem Takt ab (werktags tagsüber alle 10 Minuten, sonst seltener) und vollständig nachts im Zeitfenster, siehe [Crawler und Opt-out](../datenschutz/crawler.md#abgleich). Alternativ die Admin-Aktion „Vollständiger Sync“ auslösen; ohne eigenes Zeitfenster der Quelle beginnt der Vollabgleich dann sofort, auch tagsüber. Das Werkzeug `manage.py add_oparl_source` legt eine Quelle dagegen inaktiv an; sie wird erst nach dem Aktivieren im Admin abgeglichen.
 4. Fortschritt im [Betriebsmonitor](monitoring.md) verfolgen. Beim Onboarding wächst die OCR-Warteschlange sprunghaft, daher Kommunen einzeln aufschalten.
 
 ## SessionNet-Kommune anbinden
