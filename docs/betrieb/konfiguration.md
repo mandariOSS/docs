@@ -22,6 +22,32 @@ mandari wird über Umgebungsvariablen konfiguriert, in der Docker-Installation �
 
 Unter Docker Compose setzt `docker-compose.yml` `ALLOWED_HOSTS`, `SITE_URL` und `CSRF_TRUSTED_ORIGINS` selbst aus `DOMAIN` und `DATABASE_URL` aus den `POSTGRES_*`-Werten, außerdem `DEBUG=false`. Eigene Werte dieser Variablen in der `.env` wirken dort nicht.
 
+## Eigene Variablen unter Docker Compose { #eigene-variablen }
+
+Unter Docker Compose erhält ein Dienst nur die Variablen, die `docker-compose.yml` ihm nennt; die `.env` dient dort nur zum Einsetzen von Werten in die Compose-Datei. Viele Variablen dieser Seite reicht `docker-compose.yml` nicht durch, das steht bei jeder Gruppe.
+
+Ändern Sie dafür nicht die versionierte `docker-compose.yml`. `update.sh` holt bei jedem Update den neuen Stand aus Git; mit einer geänderten Datei kann das scheitern, und die Installation läuft dann mit der alten Compose-Datei weiter. Legen Sie stattdessen eine `docker-compose.override.yml` daneben; das Repository ignoriert sie, und Docker Compose liest sie ohne weitere Angabe mit. Anwendung und Worker teilen sich in `docker-compose.yml` einen gemeinsamen Block (`x-app-environment`), auf den der Dienst `mandari` und die Worker nur verweisen. In der Override-Datei steht eine Variable deshalb bei jedem Dienst, der sie braucht, also für Anwendung und Worker bei `mandari`, `worker`, `worker-heavy` und `worker-live`:
+
+```yaml
+# docker-compose.override.yml
+x-eigene-umgebung: &eigene-umgebung
+  EMAIL_HOST: smtp.example.org
+  EMAIL_HOST_USER: mandari@example.org
+  EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD}   # Wert aus der .env
+
+services:
+  mandari:
+    environment: *eigene-umgebung
+  worker:
+    environment: *eigene-umgebung
+  worker-heavy:
+    environment: *eigene-umgebung
+  worker-live:
+    environment: *eigene-umgebung
+```
+
+Compose ergänzt die Umgebung dieser Dienste um die Einträge; danach `docker compose up -d`. Ist `COMPOSE_FILE` gesetzt (Betrieb auf mehreren Servern), liest Compose die Override-Datei nicht von selbst; dann gehört sie mit in diese Liste. Im Helm-Chart gehören solche Variablen in `app.extraEnv` (Anwendung und Worker) bzw. `ingestor.extraEnv`.
+
 ## Allgemein
 
 | Variable | Standard | Bedeutung |
@@ -40,7 +66,7 @@ Unter Docker Compose setzt `docker-compose.yml` `ALLOWED_HOSTS`, `SITE_URL` und 
 | `DEMO_INSTANCE` | `false` | Macht die Installation zur öffentlichen Demo: kein Mailversand, keine KI, Passwort, zweiter Faktor und Konto nicht änderbar. Nie in einer Installation mit echten Daten setzen, siehe [Demo-Umgebung](demo-umgebung.md). |
 | `DEMO_PASSWORD` | leer | Nur mit `DEMO_INSTANCE`: festes Passwort aller Demo-Konten |
 
-Unter Docker Compose wirken aus dieser Tabelle `TZ` und `ENCRYPTION_MASTER_KEY_PREVIOUS`, die `docker-compose.yml` an die Dienste weiterreicht, sowie `IMAGE_TAG` und `COMPOSE_PROJECT_NAME`, die die Compose-Datei selbst liest; `DEBUG` steht dort fest auf `false`. Die übrigen tragen Sie unter Docker Compose im Abschnitt `x-app-environment` ein, im Helm-Chart in `app.extraEnv`; ein Eintrag nur in der `.env` wirkt nicht.
+Unter Docker Compose wirken aus dieser Tabelle `TZ` und `ENCRYPTION_MASTER_KEY_PREVIOUS`, die `docker-compose.yml` an die Dienste weiterreicht, sowie `IMAGE_TAG` und `COMPOSE_PROJECT_NAME`, die die Compose-Datei selbst liest; `DEBUG` steht dort fest auf `false`. Die übrigen tragen Sie unter Docker Compose in einer `docker-compose.override.yml` (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)) ein, im Helm-Chart in `app.extraEnv`; ein Eintrag nur in der `.env` wirkt nicht.
 
 ## Anmeldung und Zugriffsschutz
 
@@ -55,7 +81,7 @@ Unter Docker Compose wirken aus dieser Tabelle `TZ` und `ENCRYPTION_MASTER_KEY_P
 | `SECURE_HSTS_SECONDS` | `31536000` | Dauer des HSTS-Headers in Sekunden (nur ohne `DEBUG`) |
 | `SECURE_SSL_REDIRECT` | `false` | Umleitung auf HTTPS durch Django; im Standard übernimmt das der Proxy |
 
-Keine dieser Variablen reicht `docker-compose.yml` durch. Im Standard gilt also die Pflicht zum zweiten Faktor; abweichende Werte gehören in `x-app-environment` bzw. `app.extraEnv`. Für die Bedienung siehe [Konto und Sicherheit](../work/konto-und-sicherheit.md).
+Keine dieser Variablen reicht `docker-compose.yml` durch. Im Standard gilt also die Pflicht zum zweiten Faktor; abweichende Werte gehören unter Docker Compose in einer `docker-compose.override.yml` (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)), im Helm-Chart in `app.extraEnv`. Für die Bedienung siehe [Konto und Sicherheit](../work/konto-und-sicherheit.md).
 
 ## E-Mail
 
@@ -75,7 +101,7 @@ Den SMTP-Zugang pflegen Sie am einfachsten im Admin in den Systemeinstellungen; 
 | `INSIGHT_ALERT_EMAILS` | leer | Kommagetrennte Empfänger für Betriebsalarme. Ersatzweise `INSIGHT_MODERATION_EMAILS`, sonst alle Superuser. |
 | `INSIGHT_MODERATION_EMAILS` | leer | Kommagetrennte Empfänger für Moderationshinweise der Ratsfragen |
 
-`docker-compose.yml` reicht von diesen nur `DEFAULT_FROM_EMAIL`, `EMAIL_MESSAGE_ID_DOMAIN`, `MAIL_QUEUE`, `MAIL_QUEUE_MAX_BYTES` und `INSIGHT_ALERT_EMAILS` durch. Für den SMTP-Zugang unter Docker Compose deshalb die Systemeinstellungen nutzen oder die `EMAIL_*`-Variablen in `x-app-environment` eintragen.
+`docker-compose.yml` reicht von diesen nur `DEFAULT_FROM_EMAIL`, `EMAIL_MESSAGE_ID_DOMAIN`, `MAIL_QUEUE`, `MAIL_QUEUE_MAX_BYTES` und `INSIGHT_ALERT_EMAILS` durch. Für den SMTP-Zugang unter Docker Compose deshalb die Systemeinstellungen nutzen oder die `EMAIL_*`-Variablen in einer `docker-compose.override.yml` (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)) eintragen.
 
 ## Datenbank, Cache, Suche
 
@@ -108,7 +134,7 @@ Den SMTP-Zugang pflegen Sie am einfachsten im Admin in den Systemeinstellungen; 
 | `POSTGRES_SHARED_PRELOAD_LIBRARIES` | `pg_stat_statements` | vorab geladene Erweiterungen; leer setzen schaltet die Abfragestatistik ab |
 | `WEBSITE_DB`, `WEBSITE_SECRET_KEY` | `mandari_website`, `SECRET_KEY` | Datenbank und Schlüssel der Website |
 
-Die `DB_POOL*`- und `DB_CONN_MAX_AGE`-Werte und `ELASTICSEARCH_AUTO_INDEX` reicht `docker-compose.yml` nicht an die Anwendung weiter; abweichende Werte gehören in `x-app-environment` bzw. `app.extraEnv`.
+Die `DB_POOL*`- und `DB_CONN_MAX_AGE`-Werte und `ELASTICSEARCH_AUTO_INDEX` reicht `docker-compose.yml` nicht an die Anwendung weiter; abweichende Werte gehören unter Docker Compose in einer `docker-compose.override.yml` (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)), im Helm-Chart in `app.extraEnv`.
 
 ## Volltextsuche
 

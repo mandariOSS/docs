@@ -27,7 +27,7 @@ Mehrere Schnittstellen von mandari melden Fehler im Format **Problem Details** n
 | `status` | HTTP-Status, derselbe wie in der Antwort |
 | `detail` | Erläuterung für Menschen. Programme werten `type` und `status` aus, nicht diesen Text. |
 | `instance` | Pfad der Anfrage |
-| `request_id` | Kennung der Anfrage, dieselbe wie im Header `X-Request-ID`. Nennen Sie sie bei Rückfragen; der Betrieb findet damit die Anfrage im Protokoll. |
+| `request_id` | Kennung der Anfrage, dieselbe wie im Header `X-Request-ID`. Nennen Sie sie bei Rückfragen; der Betrieb findet damit die Anfrage im Protokoll. Das Feld liefern nur die Session-API v1 und der HTTP-Weg der Befehle. Bei Änderungsfeed, Snapshot und Datenkatalog fehlt es; dort steht die Kennung nur im Header `X-Request-ID`. |
 | `errors` | Nur bei Validierungsfehlern: die beanstandeten Stellen, siehe [validierung](#validierung) |
 
 Manche Typen tragen weitere Felder, etwa `snapshot` bei [cursor-abgelaufen](#cursor-abgelaufen). Unbekannte Felder können Sie ignorieren.
@@ -45,7 +45,7 @@ Manche Typen tragen weitere Felder, etwa `snapshot` bei [cursor-abgelaufen](#cur
 
 ### nicht-authentifiziert { #nicht-authentifiziert }
 
-**Status 401.** Die Anfrage braucht eine gültige Anmeldung. Bei der Session-API fehlt das API-Token, es hat ein ungültiges Format, ist unbekannt, gehört zu einem anderen Mandanten oder ist deaktiviert bzw. abgelaufen. Die Antwort trägt den Header `WWW-Authenticate: Bearer realm="mandari Session-API"`.
+**Status 401.** Die Anfrage braucht eine gültige Anmeldung. Bei der Session-API fehlt das API-Token, es hat ein ungültiges Format, ist unbekannt, gehört zu einem anderen Mandanten oder ist deaktiviert bzw. abgelaufen. Beim HTTP-Weg der Befehle fehlt eine gültige Anmeldung; nur dort trägt die Antwort zusätzlich den Header `WWW-Authenticate: Bearer realm="mandari"`.
 
 Abhilfe: Ein gültiges Token des Mandanten im Header `Authorization: Bearer <token>` mitsenden. Wer Anträge einreicht oder den Rückmeldestand abfragt, braucht immer ein Token. Den Rückmeldestand eines Antrags liefert nur das Token, mit dem der Antrag eingereicht wurde.
 

@@ -102,7 +102,7 @@ Mehrere Installationen auf einem Server brauchen unterschiedliche Projektnamen, 
 
 1. **Prüfen:** `https://<domain>/health/ready/` meldet `"status": "ok"`, `docker compose ps` zeigt `worker` und `worker-heavy` als `healthy`.
 2. **Anmelden** unter `https://<domain>/admin/` mit dem Administrationskonto. Beim Installer ist es schon angelegt, sonst mit `createsuperuser` (siehe oben).
-3. **E-Mail einrichten** in den Systemeinstellungen im Admin und eine Testmail senden. Die Variablen `EMAIL_*` reicht `docker-compose.yml` nicht an die Dienste weiter (siehe [Konfiguration](konfiguration.md#e-mail)).
+3. **E-Mail einrichten** in den Systemeinstellungen im Admin und eine Testmail senden. Die Variablen `EMAIL_*` reicht `docker-compose.yml` nicht an die Dienste weiter; wer sie trotzdem nutzen will, trägt sie in einer `docker-compose.override.yml` ein (siehe [Eigene Variablen unter Docker Compose](konfiguration.md#eigene-variablen)).
 4. **Quellen anbinden:** Im Admin unter *OParl-Quellen* die gewünschten Kommunen aktivieren oder neu eintragen, siehe [Quellen anbinden](quellen-anbinden.md).
 5. **Sicherung einrichten:** Passphrase für die Konfiguration in der Sicherung anlegen und `./backup.sh --verify` ausführen, siehe [Updates und Backups](updates-backups.md#sicherung-mit-backupsh).
 6. **Betriebsmonitor** unter `/admin/monitoring/` prüfen, siehe [Betriebsmonitor](monitoring.md). Die [regelmäßigen Aufgaben](cron.md) laufen von selbst im Worker.
@@ -110,7 +110,7 @@ Mehrere Installationen auf einem Server brauchen unterschiedliche Projektnamen, 
 
 ## Provisioning-API
 
-Für den Betrieb als Dienst kann ein externes System Organisationen über `/api/provisioning/` anlegen und verwalten. Die API wird ausschließlich über die Variable `PROVISIONING_API_KEY` aktiviert. Ohne gesetzten Schlüssel antworten alle Anfragen mit 404, sodass Community-Installationen keine offene Angriffsfläche haben. `docker-compose.yml` reicht die Variable nicht durch; wer die API braucht, trägt sie im Abschnitt `environment` des Dienstes `mandari` ein.
+Für den Betrieb als Dienst kann ein externes System Organisationen über `/api/provisioning/` anlegen und verwalten. Die API wird ausschließlich über die Variable `PROVISIONING_API_KEY` aktiviert. Ohne gesetzten Schlüssel antworten alle Anfragen mit 404, sodass Community-Installationen keine offene Angriffsfläche haben. `docker-compose.yml` reicht die Variable nicht durch; wer die API braucht, trägt sie in einer `docker-compose.override.yml` beim Dienst `mandari` ein (siehe [Eigene Variablen unter Docker Compose](konfiguration.md#eigene-variablen)), nicht in der versionierten `docker-compose.yml`.
 
 ## Support
 
