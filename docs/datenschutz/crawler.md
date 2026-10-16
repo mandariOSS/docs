@@ -11,7 +11,7 @@ mandari spiegelt öffentliche Ratsinformationen. Dafür rufen zwei Programmteile
 - Technische Referenz mit Fundstellen im Code: [Abrufregeln (ABRUFREGELN.md)](https://github.com/mandariOSS/mandari/blob/dev/docs/ABRUFREGELN.md)
 
 !!! info "Stand"
-    Diese Seite beschreibt den Code auf dem Entwicklungszweig `dev` nach den Änderungen für [mandari#1027](https://github.com/mandariOSS/mandari/issues/1027). Auf der von uns betriebenen Instanz mandari.de gelten davon heute schon die Kennung `mandari-ingestor` bei Ratsinformationssystemen, höchstens eine Anfrage pro Sekunde je Server und das Änderungsfenster. Eine Gruppe für `mandari-ingestor` in der robots.txt beachten dort Abgleich, Texterkennung, Dokument-Cache, Vorschau und Personenfotos. Für den stündlichen Löschabgleich gilt sie erst mit dem nächsten Update; bis dahin richtet sich der Löschabgleich dort nach einer Gruppe für unsere früheren Kennungen `mandari-file-cache` oder `mandari`, sonst nach `*`. Ebenfalls erst mit dem nächsten Update folgen: die Prüfung jeder Weiterleitung (robots.txt und Takt des Ziels), der Takt je Quelle nach Bedarf, der Vollabgleich in Zeitscheiben, die langsamen Listen sowie Kennung und Takt der [anderen Abrufe](#andere-abrufe).
+    Diese Seite beschreibt den Code auf dem Entwicklungszweig `dev` nach den Änderungen für [mandari#1027](https://github.com/mandariOSS/mandari/issues/1027). Auf der von uns betriebenen Instanz mandari.de gelten davon heute schon die Kennung `mandari-ingestor` bei Ratsinformationssystemen, höchstens eine Anfrage pro Sekunde je Server und das Änderungsfenster; nur Sondierung und Quellenanlage, die wir selten und von Hand auslösen, fragen dort noch ohne den Takt je Server an. Eine Gruppe für `mandari-ingestor` in der robots.txt beachten dort Abgleich, Texterkennung, Dokument-Cache, Vorschau und Personenfotos. Für den stündlichen Löschabgleich gilt sie erst mit dem nächsten Update; bis dahin richtet sich der Löschabgleich dort nach einer Gruppe für unsere früheren Kennungen `mandari-file-cache` oder `mandari`, sonst nach `*`. Ebenfalls erst mit dem nächsten Update folgen: die Prüfung jeder Weiterleitung (robots.txt und Takt des Ziels), der Takt bei Sondierung und Quellenanlage, die Kennung `python-httpx` für die Vergleichsanfrage der Sondierung (bis dahin `Mozilla/5.0 (compatible; Vergleichsanfrage)`), der Takt je Quelle nach Bedarf, der Vollabgleich in Zeitscheiben, die langsamen Listen sowie Kennung und Takt der [anderen Abrufe](#andere-abrufe).
 
 ## Auf einen Blick
 
@@ -35,7 +35,7 @@ mandari spiegelt öffentliche Ratsinformationen. Dafür rufen zwei Programmteile
 
 Kommunen, die den Abruf drosseln oder ausschließen möchten, haben zwei Wege:
 
-1. **robots.txt:** Eine Gruppe für `mandari-ingestor` wirkt spätestens nach 24 Stunden, ohne dass wir etwas tun müssen, ganz oder nur für Dokumente (siehe [Beispiele](#robotstxt)). Auf mandari.de beachtet der stündliche Löschabgleich eine solche Gruppe erst mit dem nächsten Update (siehe Hinweis „Stand“ oben). Schreiben Sie uns bis dahin bitte zusätzlich; dann schalten wir den Dateiabruf für Ihre Quelle ab.
+1. **robots.txt:** Eine Gruppe für `mandari-ingestor` wirkt spätestens nach 24 Stunden, ohne dass wir etwas tun müssen, ganz oder nur für Dokumente (siehe [Beispiele](#robotstxt)). Auf mandari.de gilt eine solche Gruppe erst mit dem nächsten Update auch für den stündlichen Löschabgleich und für das Ziel einer Weiterleitung (siehe Hinweis „Stand“ oben). Schreiben Sie uns bis dahin bitte zusätzlich; dann schalten wir den Dateiabruf für Ihre Quelle ab.
 2. **Kontakt:** Schreiben Sie an [support@mandari.de](mailto:support@mandari.de). Wir können für Ihre Quelle den Abstand je Anfrage erhöhen (bis 30 Sekunden), seltener abgleichen, den Vollabgleich in ein Zeitfenster legen, ihn seltener oder nur in Zeitscheiben ausführen, den Dateiabruf abschalten oder Ihr System gar nicht mehr abrufen. Ein Zeitfenster gilt nur für den Vollabgleich; Änderungsabgleich und Dokumentabrufe laufen weiter im Takt. Liegen mehrere Quellen auf Ihrem Server, stellen wir das bei allen ein.
 
 ## Inhalte entfernen (Takedown)
@@ -93,10 +93,12 @@ Beispiele:
 User-agent: mandari-ingestor
 Disallow: /
 
-# Schnittstelle erlauben, Dokumente sperren
+# Adressen sperren, die auf .pdf enden; die Schnittstelle bleibt frei
 User-agent: mandari-ingestor
 Disallow: /*.pdf$
 ```
+
+Liegen Ihre Dokumente unter anderen Adressen, etwa `getfile.asp?id=…`, sperren Sie deren Pfad. Groß- und Kleinschreibung zählt: `.pdf` erfasst nicht `.PDF`.
 
 Gibt es eine Gruppe für `mandari-ingestor`, gelten die Regeln unter `User-agent: *` für uns nicht mehr. Wiederholen Sie in unserer Gruppe, was auch für uns gelten soll.
 
