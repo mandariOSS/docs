@@ -25,7 +25,7 @@ mandari spiegelt öffentliche Ratsinformationen. Dafür rufen zwei Programmteile
 | Abgleich | je Quelle nach Bedarf: werktags 7–19 Uhr alle 10 Minuten, sonst stündlich, am Wochenende alle 2 Stunden, an Sitzungstagen und am Vortag (7–22 Uhr) alle 5 Minuten; ohne Änderung seltener; gefragt wird nur nach Änderungen (`modified_since`) |
 | Vollabgleich | geplant höchstens einmal je Nacht im Zeitfenster der Quelle (bei mandari.de ohne eigenes Fenster: Beginn zwischen 1 und 6 Uhr), je Quelle auch seltener; bei Servern, deren vollständige Listen abbrechen, nur in Zeitscheiben; von Hand angefordert ohne eigenes Zeitfenster auch tagsüber |
 | Langsame Listen | eine optionale Liste, die in eine Zeitüberschreitung läuft, ruht 1 Stunde, danach jeweils doppelt so lange, höchstens 24 Stunden |
-| Neue Quellen | legen unsere Werkzeuge inaktiv an; regelmäßig abgefragt wird eine Quelle erst, wenn sie aktiv ist; neu entdeckte Kommunen bleiben ungelistet (siehe [Neue Quellen und Kommunen](#neue-quellen-und-kommunen)) |
+| Neue Quellen | von unseren Werkzeugen inaktiv angelegt; regelmäßig abgefragt wird eine Quelle erst, wenn sie aktiv ist; neu entdeckte Kommunen bleiben ungelistet (siehe [Neue Quellen und Kommunen](#neue-quellen-und-kommunen)) |
 | Dokumente | geladen, wenn sie fehlen oder die Quelle sie geändert hat; dazu Stichproben per `HEAD` |
 | Abruf-Adresse | derzeit `144.76.153.200`, nur IPv4; sie kann sich ändern, erkennen Sie uns am User-Agent |
 | Andere Dienste | Live-Übertragung und Geodienste mit derselben Kennung und eigenem Takt je Server, ohne robots.txt (siehe [Andere Abrufe](#andere-abrufe)) |
@@ -137,7 +137,7 @@ Wertet Ihre Schnittstelle `modified_since` aus, bleibt unsere Last am kleinsten.
 
 ### Neue Quellen und Kommunen
 
-- **Neue Quellen** legen unsere Werkzeuge inaktiv an: das Werkzeug zum Anlegen einer Quelle (`manage.py add_oparl_source`) und der Ingestor (`add-source`, `init-sources`, ein Abgleich von Hand mit einer noch unbekannten Adresse). Regelmäßig abgefragt wird eine Quelle erst, wenn sie aktiv ist. Vorhandene Quellen behalten ihren Status.
+- **Neue Quellen** sind inaktiv, wenn unsere Werkzeuge sie anlegen: das Werkzeug zum Anlegen einer Quelle (`manage.py add_oparl_source`) und der Ingestor (`add-source`, `init-sources`, ein Abgleich von Hand mit einer noch unbekannten Adresse). Regelmäßig abgefragt wird eine Quelle erst, wenn sie aktiv ist. Vorhandene Quellen behalten ihren Status.
 - **Ausnahmen:** Aktiv legen eine Quelle das Formular „Quelle hinzufügen“ im Admin an (das Feld „Aktiv“ ist vorbelegt), `manage.py import_oparl_sources --activate` und die Veröffentlichung eines Session-Mandanten im Bürgerportal; diese schaltet eine abgeschaltete Quelle des Mandanten auch wieder ein.
 - **Neue Kommunen** bleiben ungelistet, bis wir sie im Admin listen, außer bei der eigenen Schnittstelle eines Session-Mandanten. Bis dahin erscheinen sie nicht in Kommunenauswahl, Übersichten, Sitemaps und öffentlichen Listen. Abgerufen werden ihre Daten und Dateien trotzdem, solange die Quelle aktiv ist; nur abgelegt werden ihre Dokumente beim Abgleich nicht.
 
