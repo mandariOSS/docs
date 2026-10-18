@@ -106,7 +106,7 @@ Objekte, die im Quellsystem gelöscht wurden, werden in mandari nicht physisch g
 - **Listen mit `modified_since`** enthalten die passenden gelöschten Objekte als Tombstones. Inkrementelle Clients bekommen Löschungen so zuverlässig mit, ohne Voll-Sync.
 - **Eingebettete Referenzen** wie `Meeting.agendaItem` oder `Paper.consultation` lassen gelöschte Objekte aus. Tombstones erscheinen nur als Top-Level-Objekte.
 
-Eine physische Löschung erfolgt ausschließlich auf ausdrückliche Aufforderung einer Kommune, siehe [Crawler und Opt-out](../datenschutz/crawler.md).
+Eine physische Löschung erfolgt ausschließlich auf ausdrückliche Aufforderung einer Kommune, siehe [Ingestor und Opt-out](../datenschutz/ingestor.md).
 
 ## Dateien
 

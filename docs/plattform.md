@@ -39,7 +39,7 @@ flowchart LR
 - **Nur Öffentliches wird öffentlich**: Jede Schnittstelle nach außen filtert serverseitig auf als öffentlich gekennzeichnete Inhalte. Das ist durch automatische Tests abgesichert.
 - **Mandantentrennung**: Organisationen und Kommunen sind strikt voneinander isoliert. Sensible Felder sind mit mandantenspezifischen Schlüsseln verschlüsselt ([Datenschutz](datenschutz/index.md)).
 - **Open Source**: Der Code ist unter einer Open-Source-Lizenz veröffentlicht und kann vollständig selbst betrieben werden ([Betrieb](betrieb/index.md)).
-- **Rücksicht auf Quellen**: Unser Crawler hält sich an robots.txt, drosselt sich selbst und pausiert bei Störungen ([Crawler und Opt-out](datenschutz/crawler.md)).
+- **Rücksicht auf Quellen**: Unser Ingestor hält sich an robots.txt, drosselt sich selbst und pausiert bei Störungen ([Ingestor und Opt-out](datenschutz/ingestor.md)).
 
 ## Begriffe
 

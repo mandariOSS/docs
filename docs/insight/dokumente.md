@@ -23,7 +23,7 @@ Sobald die Quelle wieder erreichbar ist, holt mandari die Änderungen automatisc
 
 ## Rücksicht auf die Quellen
 
-Kommunale Server sind oft klein. mandari hält sich deshalb an einige Regeln: begrenzte Anfragerate, Respekt vor robots.txt, ein ehrlicher `User-Agent` mit Kontaktadresse und eine automatische Schonung, wenn eine Quelle wiederholt nicht antwortet. Details unter [Crawler und Opt-out](../datenschutz/crawler.md).
+Kommunale Server sind oft klein. mandari hält sich deshalb an einige Regeln: begrenzte Anfragerate, Respekt vor robots.txt, ein ehrlicher `User-Agent` mit Kontaktadresse und eine automatische Schonung, wenn eine Quelle wiederholt nicht antwortet. Details unter [Ingestor und Opt-out](../datenschutz/ingestor.md).
 
 ## Für Betreiber
 

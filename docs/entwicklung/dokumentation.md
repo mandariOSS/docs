@@ -45,7 +45,7 @@ docs/
 ├── work/                 Fraktionen
 ├── session/              Verwaltung
 ├── betrieb/              Self-Hosting, Konfiguration, Cron, Quellen, Monitoring
-├── datenschutz/          TOM, Löschkonzept, AVV, Crawler
+├── datenschutz/          TOM, Löschkonzept, AVV, Ingestor
 ├── entwicklung/          Code, Mitarbeit, SBOM
 └── llms.txt              Übersicht für Sprachmodelle
 mkdocs.yml                Navigation, Theme, Plugins
