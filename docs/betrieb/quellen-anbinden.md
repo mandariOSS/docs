@@ -19,7 +19,7 @@ Die Art steht in der Sync-Konfiguration der Quelle (`sync_config["source_type"]`
 
 1. System-Endpunkt der Kommune ermitteln, zum Beispiel `https://ratsinfo.example.org/oparl/v1/system`. Ein Blick in die JSON-Antwort zeigt Name und Body-Liste.
 2. Admin → *Insight → OParl-Quellen → Hinzufügen*: Name und URL des System-Endpunkts eintragen, aktiv setzen.
-3. Eine aktive Quelle ohne bisherigen Abgleich ist sofort fällig; der Ingestor beginnt, sobald ein Platz frei ist. Dieser erste Lauf ist außerhalb des Zeitfensters ein Änderungsabgleich: Bei einer Schnittstelle, die nach Änderungsdatum filtert, holt er nur die Änderungen der letzten sieben Tage. Ein halb leerer Bestand ist dann kein Fehler. Den vollständigen Bestand holt der Vollabgleich in der nächsten Nacht im Zeitfenster oder vorher die Admin-Aktion „Vollständiger Sync“: Ohne eigenes Zeitfenster der Quelle beginnt dieser sofort, auch tagsüber, in Zeitscheiben nur im Standardfenster (siehe [Takt und Vollabgleich je Quelle](#takt-und-vollabgleich-je-quelle)). Danach gleicht der Ingestor die Quelle in ihrem Takt ab (werktags tagsüber alle 10 Minuten, sonst seltener) und vollständig nachts im Zeitfenster, siehe [Crawler und Opt-out](../datenschutz/crawler.md#abgleich). Das Werkzeug `manage.py add_oparl_source` legt eine Quelle dagegen inaktiv an; sie wird erst nach dem Aktivieren im Admin abgeglichen.
+3. Eine aktive Quelle ohne bisherigen Abgleich ist sofort fällig; der Ingestor beginnt, sobald ein Platz frei ist. Dieser erste Lauf ist außerhalb des Zeitfensters ein Änderungsabgleich: Bei einer Schnittstelle, die nach Änderungsdatum filtert, holt er nur die Änderungen der letzten sieben Tage. Ein halb leerer Bestand ist dann kein Fehler. Den vollständigen Bestand holt der Vollabgleich in der nächsten Nacht im Zeitfenster oder vorher die Admin-Aktion „Vollständiger Sync“: Ohne eigenes Zeitfenster der Quelle beginnt dieser sofort, auch tagsüber, in Zeitscheiben nur im Standardfenster (siehe [Takt und Vollabgleich je Quelle](#takt-und-vollabgleich-je-quelle)). Danach gleicht der Ingestor die Quelle in ihrem Takt ab (werktags tagsüber alle 10 Minuten, sonst seltener) und vollständig nachts im Zeitfenster, siehe [Ingestor und Opt-out](../datenschutz/ingestor.md#abgleich). Das Werkzeug `manage.py add_oparl_source` legt eine Quelle dagegen inaktiv an; sie wird erst nach dem Aktivieren im Admin abgeglichen.
 4. Fortschritt im [Betriebsmonitor](monitoring.md) verfolgen. Beim Onboarding wächst die OCR-Warteschlange sprunghaft, daher Kommunen einzeln aufschalten.
 
 ## SessionNet-Kommune anbinden
@@ -38,7 +38,7 @@ Kurz prüfen: `<basis-url>si0040.asp` (oder `.php`) muss den Sitzungskalender li
 
 ### Schritt 2: robots.txt prüfen
 
-Der Ingestor prüft die robots.txt vor jeder Anfrage, auch vor jeder Weiterleitung. Sperrt sie die Basis-URL, wird die Quelle nicht gecrawlt; sperrt sie eine Seite unterwegs, bricht der Crawl ab. In beiden Fällen ruht die Quelle mindestens 24 Stunden, bei einer unterwegs nicht erreichbaren robots.txt mindestens 30 Minuten. Ist sie schon bei der ersten Prüfung der Basis-URL nicht erreichbar, wertet der Scraper das derzeit wie eine Sperre (24 Stunden). Der Status wird im Admin angezeigt. Die Regeln im Einzelnen stehen unter [Crawler und Opt-out](../datenschutz/crawler.md#robotstxt). Vorab manuell nachsehen schadet nicht: `https://<host>/robots.txt`.
+Der Ingestor prüft die robots.txt vor jeder Anfrage, auch vor jeder Weiterleitung. Sperrt sie die Basis-URL, wird die Quelle nicht gecrawlt; sperrt sie eine Seite unterwegs, bricht der Crawl ab. In beiden Fällen ruht die Quelle mindestens 24 Stunden, bei einer unterwegs nicht erreichbaren robots.txt mindestens 30 Minuten. Ist sie schon bei der ersten Prüfung der Basis-URL nicht erreichbar, wertet der Scraper das derzeit wie eine Sperre (24 Stunden). Der Status wird im Admin angezeigt. Die Regeln im Einzelnen stehen unter [Ingestor und Opt-out](../datenschutz/ingestor.md#robotstxt). Vorab manuell nachsehen schadet nicht: `https://<host>/robots.txt`.
 
 ### Schritt 3: Quelle anlegen
 
@@ -144,7 +144,7 @@ Ein Bridge-Container bedient genau eine ALLRIS-Instanz. PDFs werden von der Brid
 
 ## Takt und Vollabgleich je Quelle
 
-Der Ingestor gleicht jede Quelle in ihrem eigenen Takt ab: werktags 7–19 Uhr im Grundtakt (`INGESTOR_INTERVAL`), sonst stündlich, am Wochenende alle 2 Stunden, an Sitzungstagen und am Vortag (7–22 Uhr) alle 5 Minuten, nach Abgleichen ohne Änderung seltener. Den Vollabgleich startet er höchstens einmal je Nacht im Zeitfenster der Quelle. Die Regeln im Einzelnen stehen unter [Crawler und Opt-out](../datenschutz/crawler.md#wann-wir-abrufen).
+Der Ingestor gleicht jede Quelle in ihrem eigenen Takt ab: werktags 7–19 Uhr im Grundtakt (`INGESTOR_INTERVAL`), sonst stündlich, am Wochenende alle 2 Stunden, an Sitzungstagen und am Vortag (7–22 Uhr) alle 5 Minuten, nach Abgleichen ohne Änderung seltener. Den Vollabgleich startet er höchstens einmal je Nacht im Zeitfenster der Quelle. Die Regeln im Einzelnen stehen unter [Ingestor und Opt-out](../datenschutz/ingestor.md#wann-wir-abrufen).
 
 Abweichungen für eine Quelle stehen in ihrer Sync-Konfiguration. Ungültige Werte gelten als nicht gesetzt.
 
@@ -173,4 +173,4 @@ Alle Schlüssel samt der Werte, die der Ingestor selbst pflegt (`sync_state`, `f
 
 ## Rücksicht auf die Quellen
 
-Für alle Quellen gelten die gleichen Regeln: begrenzte Anfragerate, Respekt vor robots.txt, ehrlicher User-Agent, keine Umgehung von Logins oder Captchas, automatische Schonung bei Störungen. Wie Kommunen Drosselung oder Entfernung verlangen können, steht unter [Crawler und Opt-out](../datenschutz/crawler.md).
+Für alle Quellen gelten die gleichen Regeln: begrenzte Anfragerate, Respekt vor robots.txt, ehrlicher User-Agent, keine Umgehung von Logins oder Captchas, automatische Schonung bei Störungen. Wie Kommunen Drosselung oder Entfernung verlangen können, steht unter [Ingestor und Opt-out](../datenschutz/ingestor.md).

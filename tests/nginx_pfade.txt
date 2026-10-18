@@ -99,3 +99,11 @@
 # Ähnliche Pfade, die weder Doku-Seite noch Anwendungsadresse sind: bleiben 404
 404 /oparlx/
 404 /vorgaenge/3f1c9a2e-5b7d-4c8e-9a10-2d4b6e8f0a1c/
+
+# Umbenannte Doku-Seiten: Crawler und Opt-out heißt Ingestor und Opt-out (mandari#1061)
+200 /datenschutz/ingestor/
+301 /datenschutz/crawler/ /datenschutz/ingestor/
+301 /datenschutz/crawler /datenschutz/ingestor/
+301 /datenschutz/crawler/index.html /datenschutz/ingestor/
+404 /datenschutz/crawlerx/
+404 /datenschutz/crawler/alt/

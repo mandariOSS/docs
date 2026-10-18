@@ -203,7 +203,7 @@ nav:
       - Technische und organisatorische Maßnahmen: datenschutz/tom.md
       - Löschkonzept: datenschutz/loeschkonzept.md
       - Muster-AVV: datenschutz/avv-muster.md
-      - Crawler und Opt-out: datenschutz/crawler.md
+      - Ingestor und Opt-out: datenschutz/ingestor.md
   - Entwicklung:
       - entwicklung/index.md
       - An der Dokumentation mitarbeiten: entwicklung/dokumentation.md

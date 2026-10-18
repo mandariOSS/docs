@@ -111,10 +111,10 @@ Details unter [Betriebsmonitor](monitoring.md).
 | `INGESTOR_MEM_LIMIT` | `512m` | Speichergrenze des Ingestor-Containers (nur Docker Compose) |
 | `INGESTOR_REQUEST_INTERVAL` | `1.0` | Abstand je Server in Sekunden (gemeinsamer Takt über Redis); `0` schaltet die Drossel ab, nur für Tests und Notfälle |
 | `INGESTOR_HOST_MAX_CONCURRENT` | `2` | Offene Anfragen je Server und Prozess; `0` = ohne Grenze |
-| `INGESTOR_USER_AGENT` (älter: `SCRAPER_USER_AGENT`) | `mandari-ingestor/<Version> (+https://mandari.de/crawler/; support@mandari.de)` | User-Agent des Ingestors (Abgleich, Scraper, Texterkennung, Sondierung) |
+| `INGESTOR_USER_AGENT` (älter: `SCRAPER_USER_AGENT`) | `mandari-ingestor/<Version> (+https://mandari.de/ingestor/; support@mandari.de)` | User-Agent des Ingestors (Abgleich, Scraper, Texterkennung, Sondierung) |
 | `SCRAPER_TOMBSTONE_FULL_CRAWLS` | `3` | Nach so vielen Voll-Crawls ohne Sichtung gilt ein Objekt als gelöscht |
 | `SCRAPER_PARSE_QUOTA_WARN` | `0.8` | Warnung, wenn weniger als dieser Anteil der Seiten geparst werden konnte |
 
 `INGESTOR_INTERVAL`, `INGESTOR_FULL_SYNC_HOUR`, `INGESTOR_CONCURRENT`, `INGESTOR_SYNC_POOL_SIZE` und `INGESTOR_MEM_LIMIT` liest `docker-compose.yml` aus der `.env`; im Helm-Chart heißen die ersten drei `ingestor.syncInterval`, `ingestor.fullSyncHour` und `ingestor.concurrent`, `INGESTOR_SYNC_POOL_SIZE` gehört dort in `ingestor.extraEnv`. Die übrigen Variablen der Tabelle reicht es nicht durch: Tragen Sie sie unter Docker Compose im Abschnitt `environment` des Dienstes `ingestor` ein, im Helm-Chart in `ingestor.extraEnv`; ein Eintrag nur in der `.env` wirkt nicht. Die Sync-Aktionen an einer Quelle im Admin gehen an den Ingestor, solange er läuft; ohne ihn und für abgeschaltete Quellen laufen sie im Worker der Anwendung. Setzen Sie `INGESTOR_USER_AGENT`, `INGESTOR_REQUEST_INTERVAL` und `INGESTOR_HOST_MAX_CONCURRENT` deshalb auch dort, unter Docker Compose in `x-app-environment`, im Helm-Chart in `app.extraEnv`; sonst ruft der Worker mit der Standardkennung samt support@mandari.de ab.
 
-Details unter [Quellen anbinden](quellen-anbinden.md), Regeln für den Abruf unter [Crawler und Opt-out](../datenschutz/crawler.md).
+Details unter [Quellen anbinden](quellen-anbinden.md), Regeln für den Abruf unter [Ingestor und Opt-out](../datenschutz/ingestor.md).

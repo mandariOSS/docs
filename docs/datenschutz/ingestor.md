@@ -1,23 +1,23 @@
 ---
-title: Crawler und Opt-out
+title: Ingestor und Opt-out
 description: Wie mandari Ratsinformationssysteme abruft (Kennung, Takt, robots.txt, Dokumente, Abruf-Adresse) und wie Kommunen den Abruf drosseln, ausschließen oder Inhalte entfernen lassen können.
 ---
 
-# Crawler und Opt-out
+# Ingestor und Opt-out
 
 mandari spiegelt öffentliche Ratsinformationen. Dafür rufen zwei Programmteile die OParl-Schnittstellen und, wo es keine gibt, die HTML-Seiten kommunaler Ratsinformationssysteme ab: der Ingestor und die Anwendung selbst (Dokumente, Vorschau, Personenfotos). Kommunale Server sind oft klein, deshalb gelten für alle Abrufe dieselben festen Regeln. Diese Seite fasst sie zusammen und zeigt, wie Sie als Kommune den Abruf [drosseln oder ausschließen](#drosseln-oder-ausschlieen) oder [Inhalte entfernen lassen](#inhalte-entfernen-takedown).
 
-- Kurzfassung für IT-Verantwortliche: [mandari.de/crawler](https://mandari.de/crawler/)
+- Kurzfassung für IT-Verantwortliche: [mandari.de/ingestor](https://mandari.de/ingestor/)
 - Technische Referenz mit Fundstellen im Code: [Abrufregeln (ABRUFREGELN.md)](https://github.com/mandariOSS/mandari/blob/dev/docs/ABRUFREGELN.md)
 
 !!! info "Stand"
-    Diese Seite beschreibt den Code auf dem Entwicklungszweig `dev` nach den Änderungen für [mandari#1027](https://github.com/mandariOSS/mandari/issues/1027). Auf der von uns betriebenen Instanz mandari.de gelten davon heute schon die Kennung `mandari-ingestor` bei Ratsinformationssystemen, höchstens eine Anfrage pro Sekunde je Server und das Änderungsfenster; nur Sondierung und Quellenanlage, die wir selten und von Hand auslösen, fragen dort noch ohne den Takt je Server an. Eine Gruppe für `mandari-ingestor` in der robots.txt beachten dort Abgleich, Texterkennung, Dokument-Cache, Vorschau und Personenfotos. Für den stündlichen Löschabgleich gilt sie erst mit dem nächsten Update; bis dahin richtet sich der Löschabgleich dort nach einer Gruppe für unsere früheren Kennungen `mandari-file-cache` oder `mandari`, sonst nach `*`. Ebenfalls erst mit dem nächsten Update folgen: die Prüfung jeder Weiterleitung (robots.txt und Takt des Ziels), der Takt bei Sondierung und Quellenanlage, die Kennung `python-httpx` für die Vergleichsanfrage der Sondierung (bis dahin `Mozilla/5.0 (compatible; Vergleichsanfrage)`), der Takt je Quelle nach Bedarf, der Vollabgleich in Zeitscheiben, die langsamen Listen sowie Kennung und Takt der [anderen Abrufe](#andere-abrufe).
+    Diese Seite beschreibt den Code auf dem Entwicklungszweig `dev` nach den Änderungen für [mandari#1027](https://github.com/mandariOSS/mandari/issues/1027). Auf der von uns betriebenen Instanz mandari.de gelten davon heute schon die Kennung `mandari-ingestor` bei Ratsinformationssystemen, höchstens eine Anfrage pro Sekunde je Server und das Änderungsfenster; nur Sondierung und Quellenanlage, die wir selten und von Hand auslösen, fragen dort noch ohne den Takt je Server an. Eine Gruppe für `mandari-ingestor` in der robots.txt beachten dort Abgleich, Texterkennung, Dokument-Cache, Vorschau und Personenfotos. Für den stündlichen Löschabgleich gilt sie erst mit dem nächsten Update; bis dahin richtet sich der Löschabgleich dort nach einer Gruppe für unsere früheren Kennungen `mandari-file-cache` oder `mandari`, sonst nach `*`. Ebenfalls erst mit dem nächsten Update folgen: die Infoseite `https://mandari.de/ingestor/` im User-Agent (bis dahin `https://mandari.de/crawler/`, die dorthin weiterleitet), die Prüfung jeder Weiterleitung (robots.txt und Takt des Ziels), der Takt bei Sondierung und Quellenanlage, die Kennung `python-httpx` für die Vergleichsanfrage der Sondierung (bis dahin `Mozilla/5.0 (compatible; Vergleichsanfrage)`), der Takt je Quelle nach Bedarf, der Vollabgleich in Zeitscheiben, die langsamen Listen sowie Kennung und Takt der [anderen Abrufe](#andere-abrufe).
 
 ## Auf einen Blick
 
 | Punkt | Regel |
 |---|---|
-| User-Agent | `mandari-ingestor/<Version> (+https://mandari.de/crawler/; support@mandari.de)` |
+| User-Agent | `mandari-ingestor/<Version> (+https://mandari.de/ingestor/; support@mandari.de)` |
 | Token für robots.txt | `mandari-ingestor` |
 | Takt | höchstens eine Anfrage pro Sekunde je Server, über alle Abrufe von mandari zusammen; je Quelle nur langsamer |
 | Gleichzeitig | höchstens zwei offene Anfragen je Server und Ingestor-Prozess, auch am Ziel einer Weiterleitung |
@@ -56,9 +56,9 @@ Unsere Abrufe bei Ratsinformationssystemen melden sich mit dem Produkt-Token `ma
 
 | Abruf | User-Agent |
 |---|---|
-| Ingestor: Abgleich, Scraper, Texterkennung, Sondierung | `mandari-ingestor/<Version> (+https://mandari.de/crawler/; support@mandari.de)` |
-| Anwendung: Dokument-Cache, Vorschau, Löschabgleich, Personenfotos, Texterkennung, Quellenanlage | `mandari-ingestor (+https://mandari.de/crawler/; support@mandari.de)` |
-| Anwendung: Live-Übertragung und Geodienste ([Andere Abrufe](#andere-abrufe)) | `mandari-ingestor (+https://mandari.de/crawler/; support@mandari.de)` |
+| Ingestor: Abgleich, Scraper, Texterkennung, Sondierung | `mandari-ingestor/<Version> (+https://mandari.de/ingestor/; support@mandari.de)` |
+| Anwendung: Dokument-Cache, Vorschau, Löschabgleich, Personenfotos, Texterkennung, Quellenanlage | `mandari-ingestor (+https://mandari.de/ingestor/; support@mandari.de)` |
+| Anwendung: Live-Übertragung und Geodienste ([Andere Abrufe](#andere-abrufe)) | `mandari-ingestor (+https://mandari.de/ingestor/; support@mandari.de)` |
 
 - Die Version ist die Paketversion des Ingestors (derzeit `0.1.0`) und kann sich ändern. Prüfen Sie deshalb auf den Anfang `mandari-ingestor`.
 - Anfragen an die Schnittstelle senden `Accept: application/json`, Abrufe der robots.txt `Accept: text/plain`.
@@ -199,7 +199,7 @@ Dateien (Vorlagen, Anlagen, Niederschriften, fast immer PDF) laden wir unter den
 
 ## Andere Abrufe
 
-Diese Abrufe gehen nicht an Ratsinformationssysteme, sondern an Streaming-Anbieter und Geodienste. Sie melden sich mit derselben Kennung, `mandari-ingestor (+https://mandari.de/crawler/; support@mandari.de)`, und halten einen eigenen Takt je Server ein, vor jeder Anfrage und vor jeder Weiterleitung. Der Takt nutzt denselben gemeinsamen Speicher wie die Abrufe bei Ratsinformationssystemen: Liegt ein Dienst auf dem Server eines Ratsinformationssystems, etwa das Geoportal einer Kommune, teilen sich beide den Takt. Haben wir für eine Quelle auf demselben Hostnamen einen größeren Abstand eingestellt, halten Live-Übertragung und Geoportale ihn ebenfalls ein, auch wenn die Quelle abgeschaltet ist; ein geänderter Abstand wirkt dort spätestens nach fünf Minuten.
+Diese Abrufe gehen nicht an Ratsinformationssysteme, sondern an Streaming-Anbieter und Geodienste. Sie melden sich mit derselben Kennung, `mandari-ingestor (+https://mandari.de/ingestor/; support@mandari.de)`, und halten einen eigenen Takt je Server ein, vor jeder Anfrage und vor jeder Weiterleitung. Der Takt nutzt denselben gemeinsamen Speicher wie die Abrufe bei Ratsinformationssystemen: Liegt ein Dienst auf dem Server eines Ratsinformationssystems, etwa das Geoportal einer Kommune, teilen sich beide den Takt. Haben wir für eine Quelle auf demselben Hostnamen einen größeren Abstand eingestellt, halten Live-Übertragung und Geoportale ihn ebenfalls ein, auch wenn die Quelle abgeschaltet ist; ein geänderter Abstand wirkt dort spätestens nach fünf Minuten.
 
 Die robots.txt werten diese Abrufe nicht aus, auch nicht bei Geoportalen von Kommunen: Sie durchsuchen keine Seiten, sondern fragen Schnittstellen ab, und es gelten die Nutzungsregeln des jeweiligen Dienstes. Eine Gruppe für `mandari-ingestor` in der robots.txt Ihres Geoportals stoppt den täglichen Abruf der Umringe von Bebauungsplänen also nicht. Möchten Sie ihn nicht, schreiben Sie an [support@mandari.de](mailto:support@mandari.de); wir schalten ihn dann ab.
 
@@ -218,7 +218,7 @@ Die robots.txt werten diese Abrufe nicht aus, auch nicht bei Geoportalen von Kom
 Wer mandari selbst betreibt, ruft von der Adresse des eigenen Servers ab und übernimmt die Verantwortung gegenüber den Betreibern der eigenen Quellen.
 
 - Setzen Sie `INGESTOR_USER_AGENT` (älterer Name: `SCRAPER_USER_AGENT`) auf eine Kennung mit Ihrer Kontaktadresse, etwa `mandari-ingestor/0.1.0 (+https://ris.example.de/abruf/; it@example.de)`. Die Variable gehört in die Umgebung des Ingestors und auch in die Umgebung der Anwendung: Die Sync-Aktionen an einer Quelle im Admin gehen an den Ingestor, solange er läuft; ohne ihn, für abgeschaltete Quellen und wenn die Anforderung ihn nicht erreicht, laufen sie im Worker der Anwendung. Ein Eintrag nur in der `.env` wirkt unter Docker Compose nicht. Regeln der robots.txt für `mandari-ingestor` gelten weiter, weil mandari dieses Token immer zusätzlich prüft.
-- Die Abrufe der Anwendung (Dokument-Cache, Vorschau, Löschabgleich, Personenfotos, Quellenanlage, Live-Übertragung und Geodienste) melden sich mit der festen Kennung `mandari-ingestor (+https://mandari.de/crawler/; support@mandari.de)`. Abweichend lässt sie sich nur je Quelle über `sync_config["download_headers"]` setzen (nicht für Quellenanlage, Live-Übertragung und Geodienste).
+- Die Abrufe der Anwendung (Dokument-Cache, Vorschau, Löschabgleich, Personenfotos, Quellenanlage, Live-Übertragung und Geodienste) melden sich mit der festen Kennung `mandari-ingestor (+https://mandari.de/ingestor/; support@mandari.de)`. Abweichend lässt sie sich nur je Quelle über `sync_config["download_headers"]` setzen (nicht für Quellenanlage, Live-Übertragung und Geodienste).
 - Den gemeinsamen Takt über alle Prozesse gibt es nur mit Redis, das Ingestor und Anwendung beide erreichen. `INGESTOR_REQUEST_INTERVAL` und `RIS_REQUEST_INTERVAL` (Standard je `1.0`) legen den Abstand je Server fest; `0` schaltet die Drossel ab und ist nur für Tests und Notfälle gedacht. Den Takt der [anderen Abrufe](#andere-abrufe) legt der Code je Dienst fest; eine Umgebungsvariable dafür gibt es nicht.
 - Eine Quelle abzuschalten (`is_active = false`) stoppt nicht alle Abrufe: Vorschau, Löschabgleich und ein getrennt betriebener Worker für die Texterkennung richten sich nicht danach, ob die Quelle aktiv ist. Sollen nach einem Opt-out gar keine Abrufe beim Ratsinformationssystem mehr stattfinden, schalten Sie zusätzlich den Dateiabruf ab (`sync_config["file_downloads"] = false`). Den Abruf der Umringe vom Geoportal (`PlanBoundarySource.is_active`) und eine Live-Übertragung (`BroadcastSource.active`) schalten Sie getrennt ab.
 

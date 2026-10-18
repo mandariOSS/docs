@@ -40,7 +40,7 @@ mandari mit Docker selbst betreiben, konfigurieren, Quellen anbinden, überwache
 <div class="mandari-card" markdown>
 <span class="mandari-card__icon">:octicons-shield-lock-24:</span>
 **[Datenschutz](datenschutz/index.md)**
-Technische und organisatorische Maßnahmen, Löschkonzept, Muster-AVV und der Umgang unseres Crawlers mit kommunalen Servern.
+Technische und organisatorische Maßnahmen, Löschkonzept, Muster-AVV und der Umgang unseres Ingestors mit kommunalen Servern.
 </div>
 
 <div class="mandari-card" markdown>
