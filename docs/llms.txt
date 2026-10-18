@@ -13,6 +13,7 @@ Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerport
 - [Start](https://docs.mandari.de/): Überblick über alle Bereiche der Dokumentation
 - [Die Plattform im Überblick](https://docs.mandari.de/plattform/): wie Insight, Work und Session zusammenspielen und welche Daten fließen
 - [Glossar](https://docs.mandari.de/glossar/): Begriffe aus OParl, Kommunalpolitik und mandari
+- [Release- und Support-Politik](https://docs.mandari.de/entwicklung/release-politik/): Versionierung, Release-Rhythmus, Supportzeiträume, Fristen für Sicherheitskorrekturen, Abkündigung von Schnittstellen, Abo der Sicherheitsmeldungen
 
 ## Schnittstellen
 
@@ -20,6 +21,7 @@ Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerport
 - [OParl-API je Kommune](https://docs.mandari.de/session/oparl-api/): OParl-1.1-Schnittstelle jeder Kommune, die mandari Session nutzt
 - [Session-API v1](https://docs.mandari.de/session/api-v1/): authentifizierte Schnittstelle des Ratsinformationssystems je Kommune mit OpenAPI-Beschreibung
 - [Öffentliche Fraktions-API](https://docs.mandari.de/work/fraktions-api/): öffentliche Termine und Tagesordnungen der Fraktionssitzungen als JSON für die eigene Webseite
+- [Fehlertypen der Schnittstellen](https://docs.mandari.de/api/probleme/): Fehlerantworten nach RFC 9457 der Session-API v1, des Änderungsfeeds, des Datenkatalogs und der Befehle der Datendrehscheibe
 
 ## Insight (Bürgerportal)
 
@@ -44,10 +46,11 @@ Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerport
 - [Beschlusskontrolle](https://docs.mandari.de/session/beschlusskontrolle/): Zuständigkeit, Fristen und Umsetzungsstand je Beschluss
 - [Fristen-Erinnerungen](https://docs.mandari.de/session/fristen-erinnerungen/): automatische Erinnerungen an Ladungs- und Vorlagenfristen
 - [Einreichungs-Zugänge für Fraktionen](https://docs.mandari.de/session/einreichungs-zugaenge/): Zugänge, mit denen Fraktionen Anträge digital einreichen
+- [Landesrecht und Landesprofil Niedersachsen](https://docs.mandari.de/session/landesrecht/): Sitzungsrecht des NKomVG mit den Fassungen ab 07.05.2026 und ab 01.11.2026, Gremientypen, Ortsrecht, Fristen und Vorlagen für neue Mandanten
 
 ## Betrieb
 
-- [Self-Hosting mit Docker](https://docs.mandari.de/betrieb/): mandari auf eigener Infrastruktur betreiben
+- [Self-Hosting mit Docker](https://docs.mandari.de/betrieb/): mandari auf eigener Infrastruktur betreiben, Dienste der Installation, Optionen des Installers
 - [Betrieb in Kubernetes](https://docs.mandari.de/betrieb/kubernetes/): Installation mit Helm-Chart
 - [Konfiguration](https://docs.mandari.de/betrieb/konfiguration/): Referenz aller Umgebungsvariablen
 - [Quellen anbinden](https://docs.mandari.de/betrieb/quellen-anbinden/): Kommunen über OParl, SessionNet oder ALLRIS anbinden, Takt und Vollabgleich je Quelle einstellen
@@ -66,7 +69,7 @@ Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerport
 - [Häufige Fragen zu Work](https://docs.mandari.de/work/haeufige-fragen/): Antworten von Anmeldung bis Smartphone
 - [Konto und Sicherheit](https://docs.mandari.de/work/konto-und-sicherheit/): Passwort, Zwei-Faktor-Anmeldung, Passkeys und Datenexport in Work
 - [Beschlüsse der Kommune](https://docs.mandari.de/work/beschluesse/): Umsetzungsstand der Ratsbeschlüsse in Work verfolgen
-- [Regelmäßige Aufgaben (Cron)](https://docs.mandari.de/betrieb/cron/): wiederkehrende Aufgaben einer Installation
+- [Regelmäßige Aufgaben](https://docs.mandari.de/betrieb/cron/): wiederkehrende Aufgaben als Zeitpläne im Worker
 - [Dokument-Cache](https://docs.mandari.de/betrieb/dokument-cache/): lokaler Speicher für Dokumente des Bürgerportals
 - [Betriebsmonitor](https://docs.mandari.de/betrieb/monitoring/): Bewertung der Quellen, Systemchecks und Alarmierung
 - [Logging und Tracing](https://docs.mandari.de/betrieb/logging-tracing/): strukturierte Logs und OpenTelemetry

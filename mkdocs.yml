@@ -183,6 +183,7 @@ nav:
       - session/index.md
       - OParl-API je Kommune: session/oparl-api.md
       - Session-API v1: session/api-v1.md
+      - Landesrecht und Landesprofil Niedersachsen: session/landesrecht.md
       - Veröffentlichung im Bürgerportal: session/buergerportal.md
       - Beschlusskontrolle: session/beschlusskontrolle.md
       - Fristen-Erinnerungen: session/fristen-erinnerungen.md
@@ -191,7 +192,7 @@ nav:
       - betrieb/index.md
       - Betrieb in Kubernetes: betrieb/kubernetes.md
       - Konfiguration: betrieb/konfiguration.md
-      - Regelmäßige Aufgaben (Cron): betrieb/cron.md
+      - Regelmäßige Aufgaben: betrieb/cron.md
       - Quellen anbinden: betrieb/quellen-anbinden.md
       - Dokument-Cache: betrieb/dokument-cache.md
       - Betriebsmonitor: betrieb/monitoring.md
@@ -207,6 +208,8 @@ nav:
   - Entwicklung:
       - entwicklung/index.md
       - An der Dokumentation mitarbeiten: entwicklung/dokumentation.md
+      - Release- und Support-Politik: entwicklung/release-politik.md
+      - Fehlertypen der Schnittstellen: api/probleme.md
       - Qualitätsgates und Tests: entwicklung/qualitaetsgates.md
       - Abhängigkeiten (SBOM): entwicklung/sbom.md
 
