@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Prüft die Antworten des laufenden Docs-Containers gegen tests/nginx_pfade.txt.
 
-Zusätzlich muss jede gebaute HTML-Seite unter site/ mit 200 ausgeliefert werden, damit
-keine Weiterleitungsregel eine echte Doku-Seite trifft.
+Zusätzlich muss jede gebaute Datei unter site/ (Seiten, Bilder, Skripte) mit 200 ausgeliefert werden,
+damit keine Weiterleitungsregel eine echte Doku-Datei trifft.
 
 Aufruf (Container läuft auf Port 8080, site/ stammt aus `mkdocs build`):
 
@@ -37,7 +37,8 @@ def lade_faelle(datei: Path) -> list[tuple[int, str, str | None]]:
 
 def seiten_aus_site(site: Path) -> list[str]:
     pfade = []
-    for datei in sorted(site.rglob("*.html")):
+    # Alle Dateien, nicht nur HTML: auch ein Bild unter /insight/ oder /work/ darf keine Regel treffen
+    for datei in sorted(p for p in site.rglob("*") if p.is_file()):
         relativ = datei.relative_to(site).as_posix()
         if relativ == "index.html" or relativ.endswith("/index.html"):
             relativ = relativ[: -len("index.html")]

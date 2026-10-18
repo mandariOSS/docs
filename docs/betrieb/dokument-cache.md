@@ -31,11 +31,9 @@ Der Bedarf hängt von den angebundenen Kommunen ab. Erfahrungswerte: Eine Großs
 | `FILE_PROXY_TIMEOUT_SECONDS` | `15` | Lese-Timeout des Proxys für Live-Abrufe |
 | `INSIGHT_SOURCE_BACKOFF_FAILURES` | `3` | Ab so vielen Sync-Fehlversuchen in Folge pausieren Nachladen und Live-Abruf für die Quelle |
 
-```cron
-40 * * * * docker exec mandari python manage.py cache_files --limit 400 >> /var/log/mandari-file-cache.log 2>&1
-```
+Das Nachladen läuft als Zeitplan im Worker, stündlich zur Minute 40 mit `cache_files --limit 400` (siehe [Regelmäßige Aufgaben](cron.md)). Ein Cron-Eintrag auf dem Host ist dafür nicht mehr nötig.
 
-- Der Cron lädt neueste Dokumente zuerst nach. Jeder Live-Abruf über die Vorschau legt die Datei ebenfalls ab (Write-Through).
+- Der Zeitplan lädt neueste Dokumente zuerst nach. Jeder Live-Abruf über die Vorschau legt die Datei ebenfalls ab (Write-Through).
 - Der [Betriebsmonitor](monitoring.md) hat den Check „Dokument-Cache“ mit denselben Werten wie `cache_files --stats`.
 - `purge_deleted` entfernt lokale Kopien getilgter Dateien.
 

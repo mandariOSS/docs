@@ -19,7 +19,7 @@ Ein zweiter Schalter auf derselben Karte, **„Umsetzungsstand veröffentlichen�
 
 ## Was im Portal erscheint
 
-Die öffentlichen Gremien, Personen, Sitzungen (nur öffentliche Teile), Vorlagen, Anlagen und Beratungsfolgen der Kommune erscheinen unter `/insight/`. Änderungen kommen mit dem nächsten Sync-Zyklus an. Wechsel von öffentlich auf nicht-öffentlich und Löschungen werden über Tombstones nachgezogen und im Portal ausgeblendet.
+Die öffentlichen Gremien, Personen, Sitzungen (nur öffentliche Teile), Vorlagen, Anlagen und Beratungsfolgen der Kommune erscheinen unter `/insight/`. Änderungen kommen mit dem nächsten Abgleich der Quelle an (jede Quelle hat ihren eigenen Takt). Wechsel von öffentlich auf nicht-öffentlich und Löschungen werden über Tombstones nachgezogen und im Portal ausgeblendet.
 
 ## Für Betreiber
 
@@ -41,7 +41,7 @@ python manage.py session_insight_source --tenant musterstadt --base-url http://l
 
 ### Sync-Wege
 
-1. **Produktion: Ingestor-Daemon.** Die registrierte Quelle ist eine normale OParl-Quelle und wird vom Daemon im regulären Zyklus mitsynchronisiert, inklusive `modified_since` und Tombstones. Keine weitere Konfiguration nötig.
+1. **Produktion: Ingestor-Daemon.** Die registrierte Quelle ist eine normale OParl-Quelle und wird vom Daemon in ihrem eigenen Takt abgeglichen wie jede andere Quelle, inklusive `modified_since` und Tombstones. Keine weitere Konfiguration nötig.
 2. **Lokal oder Einzel-Sync.** Ein leichtgewichtiger, synchroner Spiegel ohne Daemon-Abhängigkeiten, der auch mit SQLite funktioniert:
 
     ```bash

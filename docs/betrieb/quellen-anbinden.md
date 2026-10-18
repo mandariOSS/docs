@@ -19,7 +19,7 @@ Die Art steht in der Sync-Konfiguration der Quelle (`sync_config["source_type"]`
 
 1. System-Endpunkt der Kommune ermitteln, zum Beispiel `https://ratsinfo.example.org/oparl/v1/system`. Ein Blick in die JSON-Antwort zeigt Name und Body-Liste.
 2. Admin → *Insight → OParl-Quellen → Hinzufügen*: Name und URL des System-Endpunkts eintragen, aktiv setzen.
-3. Der Ingestor synchronisiert im nächsten Zyklus (Standard alle 15 Minuten, Voll-Sync nachts). Alternativ die Admin-Aktion „Vollständiger Sync“ auslösen.
+3. Eine aktive Quelle ohne bisherigen Abgleich ist sofort fällig; der Ingestor beginnt, sobald ein Platz frei ist. Dieser erste Lauf ist außerhalb des Zeitfensters ein Änderungsabgleich: Bei einer Schnittstelle, die nach Änderungsdatum filtert, holt er nur die Änderungen der letzten sieben Tage. Ein halb leerer Bestand ist dann kein Fehler. Den vollständigen Bestand holt der Vollabgleich in der nächsten Nacht im Zeitfenster oder vorher die Admin-Aktion „Vollständiger Sync“: Ohne eigenes Zeitfenster der Quelle beginnt dieser sofort, auch tagsüber, in Zeitscheiben nur im Standardfenster (siehe [Takt und Vollabgleich je Quelle](#takt-und-vollabgleich-je-quelle)). Danach gleicht der Ingestor die Quelle in ihrem Takt ab (werktags tagsüber alle 10 Minuten, sonst seltener) und vollständig nachts im Zeitfenster, siehe [Ingestor und Opt-out](../datenschutz/ingestor.md#abgleich). Das Werkzeug `manage.py add_oparl_source` legt eine Quelle dagegen inaktiv an; sie wird erst nach dem Aktivieren im Admin abgeglichen.
 4. Fortschritt im [Betriebsmonitor](monitoring.md) verfolgen. Beim Onboarding wächst die OCR-Warteschlange sprunghaft, daher Kommunen einzeln aufschalten.
 
 ## SessionNet-Kommune anbinden
@@ -38,7 +38,7 @@ Kurz prüfen: `<basis-url>si0040.asp` (oder `.php`) muss den Sitzungskalender li
 
 ### Schritt 2: robots.txt prüfen
 
-Der Ingestor prüft robots.txt automatisch vor jedem Crawl und überspringt die Quelle bei einem Disallow. Der Status wird im Admin angezeigt. Vorab manuell nachsehen schadet nicht: `https://<host>/robots.txt`.
+Der Ingestor prüft die robots.txt vor jeder Anfrage, auch vor jeder Weiterleitung. Sperrt sie die Basis-URL, wird die Quelle nicht gecrawlt; sperrt sie eine Seite unterwegs, bricht der Crawl ab. In beiden Fällen ruht die Quelle mindestens 24 Stunden, bei einer unterwegs nicht erreichbaren robots.txt mindestens 30 Minuten. Ist sie schon bei der ersten Prüfung der Basis-URL nicht erreichbar, wertet der Scraper das derzeit wie eine Sperre (24 Stunden). Der Status wird im Admin angezeigt. Die Regeln im Einzelnen stehen unter [Ingestor und Opt-out](../datenschutz/ingestor.md#robotstxt). Vorab manuell nachsehen schadet nicht: `https://<host>/robots.txt`.
 
 ### Schritt 3: Quelle anlegen
 
@@ -68,7 +68,7 @@ Alle Schlüssel unter `scraper` außer `base_url` sind optional:
 |-----------|----------|-----------|
 | `body_name` | „Unbekannte Kommune“ | Anzeigename der Kommune |
 | `variant` | automatisch | `"asp"` oder `"php"` |
-| `rate_limit_seconds` | `2.0` | Mindestabstand zwischen Anfragen je Host |
+| `rate_limit_seconds` | `2.0` | Mindestabstand zwischen Anfragen je Host in Sekunden; kleinere Werte als `1.0` gelten als `1.0` |
 | `max_concurrent` | `1` | immer 1, Anfragen laufen nacheinander |
 | `calendar_window_days` | `[-60, 210]` | Kalenderfenster inkrementeller Läufe |
 | `full_window_days` | `[-365, 210]` | Fenster des Voll-Crawls (Historie) |
@@ -142,6 +142,35 @@ services:
 
 Ein Bridge-Container bedient genau eine ALLRIS-Instanz. PDFs werden von der Bridge bei Bedarf durchgereicht, nicht gespeichert.
 
+## Takt und Vollabgleich je Quelle
+
+Der Ingestor gleicht jede Quelle in ihrem eigenen Takt ab: werktags 7–19 Uhr im Grundtakt (`INGESTOR_INTERVAL`), sonst stündlich, am Wochenende alle 2 Stunden, an Sitzungstagen und am Vortag (7–22 Uhr) alle 5 Minuten, nach Abgleichen ohne Änderung seltener. Den Vollabgleich startet er höchstens einmal je Nacht im Zeitfenster der Quelle. Die Regeln im Einzelnen stehen unter [Ingestor und Opt-out](../datenschutz/ingestor.md#wann-wir-abrufen).
+
+Abweichungen für eine Quelle stehen in ihrer Sync-Konfiguration. Ungültige Werte gelten als nicht gesetzt.
+
+| Schlüssel | Wirkung | Beispiel |
+|-----------|---------|----------|
+| `request_interval` | Abstand der Abrufe dieser Quelle in Sekunden, 1 bis 30; nur langsamer als der Standard, kleinere Werte gelten als 1 | `2.0` |
+| `sync_schedule` | Takt der Quelle: `workday_minutes`, `off_hours_minutes`, `weekend_minutes`, `meeting_minutes`, `idle_max_minutes`, `meeting_idle_max_minutes` (ganze Minuten von 5 bis 1440), `workday_hours`, `meeting_hours` (etwa `{"start": "07:00", "end": "19:00"}`, Beginn vor Ende am selben Tag), `meeting_days_before` (0 bis 7), `idle_runs` (0 bis 100, 0 = nie verlängern), `tz` | `{"weekend_minutes": 240}` |
+| `full_sync_window` | eigenes Zeitfenster des Vollabgleichs in Ortszeit (`Europe/Berlin`, abweichend mit `tz`), auch über Mitternacht; außerhalb läuft nur der Änderungsabgleich | `{"start": "00:00", "end": "06:00"}` |
+| `full_sync_every_days` | Mindestabstand zwischen vollständigen Vollabgleichen in Tagen, 1 bis 365; gilt auch für „Vollständiger Sync“ im Admin, außer bei Scraper-Quellen | `7` |
+| `full_sync_slices` | Vollabgleich nur in Zeitscheiben mit `modified_since` und `modified_until`, für Server, deren vollständige Listen abbrechen: `since` (Pflicht), `days` (1 bis 366, Standard 30), optional `lists` | `{"days": 30, "since": "2010-01-01"}` |
+
+- **Zeitscheiben** gibt es nur für OParl-Schnittstellen, die nach Änderungsdatum filtern (`modified_since` und `modified_until`). Ein Vollabgleich in Zeitscheiben endet immer mit dem Zeitfenster und setzt im nächsten an der letzten vollständigen Scheibe fort; außerhalb des Fensters und ohne bekanntes Fenster (Kommandozeile, Worker ohne eigenes `full_sync_window`) läuft ein Änderungsabgleich. Geben Sie solchen Quellen deshalb ein eigenes `full_sync_window`.
+- **Langsame Listen** setzt der Ingestor selbst aus: Läuft eine optionale Liste in eine Zeitüberschreitung oder HTTP 504, ruht sie 1 Stunde, danach jeweils doppelt so lange, höchstens 24 Stunden (`sync_config["slow_lists"]`).
+- **Geplante Vollabgleiche abschalten:** `INGESTOR_FULL_SYNC_HOUR` außerhalb von 0 bis 23 schaltet sie für alle Quellen ab, auch in eigenen Zeitfenstern; im Admin angeforderte bleiben möglich.
+
+Alle Schlüssel samt der Werte, die der Ingestor selbst pflegt (`sync_state`, `full_sync_progress`, `slow_lists` und weitere), stehen in den [Abrufregeln](https://github.com/mandariOSS/mandari/blob/dev/docs/ABRUFREGELN.md#einstellungen-je-quelle).
+
+### Abgleich anstoßen und prüfen
+
+- **Aktionen im Admin:** „Inkrementeller Sync“ und „Vollständiger Sync“ an einer Quelle gehen an den Ingestor, solange er läuft. Der Abgleich beginnt, sobald ein Platz frei ist; eine Quelle in Schonung bleibt in Ruhe. „Vollständiger Sync“ hält bei OParl- und Bridge-Quellen das eigene Zeitfenster (`full_sync_window`) und den Mindestabstand der Quelle (`full_sync_every_days`) ein: Ist das Fenster geschlossen oder liegt der letzte vollständige Vollabgleich weniger lange zurück als der Abstand, läuft nur ein Änderungsabgleich, mit der Meldung „Vollabgleich nicht fällig“ im Log. Ohne laufenden Ingestor, für abgeschaltete Quellen und wenn die Nachricht keinen Empfänger findet, laufen die Aktionen im Worker der Anwendung, mit robots.txt, Takt je Server, eigenem Zeitfenster und Mindestabstand der Quelle, aber ohne Schonung. Scraper-Quellen gleicht der Worker nicht ab, weil dem Image der Anwendung die Scraper fehlen; das Sync-Protokoll nennt dann den Weg über den Ingestor. Gleichen Sie solche Quellen über den laufenden Ingestor oder von Hand mit `sync --source <Basis-URL>` ab.
+- **Jetzt synchronisieren** auf der Startseite des Admins stößt alle aktiven Quellen an. Ohne laufenden Ingestor meldet der Admin einen Fehler.
+- **Läuft der Ingestor?** Er schreibt bei jeder Prüfung, mindestens alle 30 Sekunden, ein Lebenszeichen in Redis (`mandari:ingestor:heartbeat`, 180 Sekunden gültig). Fehlt es, etwa weil Redis nicht erreichbar ist, gilt er als laufend, wenn in den letzten 30 Minuten ein Sync-Protokoll begonnen hat.
+- **Kommandozeile** (im Container `ingestor`): `python -m src.main sync --all` gleicht alle aktiven Quellen einmal ab, höchstens zwei zugleich, mit Schonung, aber ohne den Takt je Quelle; der Takt je Server gilt. `sync --source` und `sync --body` gleichen eine Quelle ab, auch eine abgeschaltete und auch eine Scraper-Quelle, ohne Schonung.
+- **Sync-Protokoll:** Jeder Lauf des Ingestor-Daemons schreibt eines für seine Quelle, mit den Zählern, höchstens 20 Fehlern, der Zahl der Abrufe (`details.requests`) und dem Takt (`details.takt`: Art, Abstand, Läufe ohne Änderung, nächster Lauf), dazu gegebenenfalls ausgesetzte Listen (`details.suspended_lists`) und den Stand der Zeitscheiben (`details.full_sync_slices`).
+- **Älterer Sync-Daemon:** `manage.py sync_daemon` der Anwendung gleicht alle aktiven Quellen gemeinsam in festem Abstand ab, ohne Takt je Quelle. Docker Compose und das Helm-Chart starten ihn nicht; verwenden Sie den Daemon des Ingestors.
+
 ## Rücksicht auf die Quellen
 
-Für alle Quellen gelten die gleichen Regeln: begrenzte Anfragerate, Respekt vor robots.txt, ehrlicher User-Agent, keine Umgehung von Logins oder Captchas, automatische Schonung bei Störungen. Wie Kommunen Drosselung oder Entfernung verlangen können, steht unter [Crawler und Opt-out](../datenschutz/crawler.md).
+Für alle Quellen gelten die gleichen Regeln: begrenzte Anfragerate, Respekt vor robots.txt, ehrlicher User-Agent, keine Umgehung von Logins oder Captchas, automatische Schonung bei Störungen. Wie Kommunen Drosselung oder Entfernung verlangen können, steht unter [Ingestor und Opt-out](../datenschutz/ingestor.md).

@@ -31,7 +31,7 @@ Arbeitsgrundlage für den Auftragsverarbeitungsvertrag zwischen Kommune und Betr
 
 <div class="mandari-card" markdown>
 <span class="mandari-card__icon">:octicons-globe-24:</span>
-**[Crawler und Opt-out](crawler.md)**
+**[Ingestor und Opt-out](ingestor.md)**
 Wie unser Ingestor mit kommunalen Servern umgeht und wie Kommunen Drosselung oder Entfernung verlangen.
 </div>
 
