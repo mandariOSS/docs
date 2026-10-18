@@ -11,6 +11,8 @@ Fragen oder Rückmeldungen schicken Sie uns über den Bereich **Support** in Wor
 
 ## Oktober 2026 { #2026-10 }
 
+**Zwei-Faktor-Anmeldung für alle mit Verwaltungsrechten.** Wer in Ihrer Organisation Mitglieder, Rollen, Einstellungen oder API-Zugänge verwalten darf, meldet sich jetzt immer mit einem zweiten Faktor an, auch mit einem einzeln vergebenen Recht. Work führt bei der nächsten Anmeldung durch die Einrichtung. Allen anderen empfiehlt die Startseite den zweiten Faktor, „Später“ blendet den Hinweis für 30 Tage aus. Die Mitgliederliste zeigt der Administration, wer ihn eingerichtet hat. Mehr unter [Wann ist sie Pflicht?](konto-und-sicherheit.md#zwei-faktor-pflicht)
+
 **Anhänge an Dokumenten.** In der Seitenleiste **Details** eines Dokuments laden Sie Anhänge hoch, benennen sie um oder entfernen sie. Reichen Sie einen Antrag bei der Verwaltung ein, gehen die Anhänge mit. Mehr unter [Anhänge](dokumente.md#anhaenge).
 
 **Anträge per E-Mail einreichen.** Ist Ihre Organisation nicht mit mandari Session verbunden, reichen Sie Anträge per E-Mail an die Verwaltungskontakte Ihrer Organisation ein, als PDF mit Anhängen. Im Dokument steht, wer wann an wen eingereicht hat, und die Verwaltung kann den Eingang per Link bestätigen. Mehr unter [Exportieren und einreichen](dokumente.md#einreichen).

@@ -43,11 +43,16 @@ Bei der Einrichtung bekommen Sie zehn Backup-Codes. Jeder funktioniert genau ein
 
 Die Zwei-Faktor-Anmeldung ist vorgeschrieben
 
-- für Mitglieder mit der Administrator-Rolle,
+- für die Administration Ihrer Organisation,
+- für alle, die Mitglieder, Rollen, Einstellungen oder API-Zugänge der Organisation verwalten dürfen, also Mitglieder einladen, bearbeiten oder entfernen, Rollen zuweisen oder anlegen, die Organisationseinstellungen ändern oder API-Zugänge verwalten. Das betrifft in der Regel den Vorsitz, den stellvertretenden Vorsitz und die Geschäftsführung. Es gilt auch, wenn Sie ein solches Recht nicht über Ihre Rolle, sondern einzeln bekommen haben,
 - für Rollen, bei denen Ihre Organisation „2FA erforderlich“ eingestellt hat, und
 - für alle Mitglieder, wenn Ihre Organisation sie für alle verlangt.
 
-Fehlt der zweite Faktor, führt Sie die Anmeldung direkt zur Einrichtung. Ist er für Sie vorgeschrieben, können Sie ihn nicht abschalten. Sonst lässt er sich unter *Profil → Sicherheit* mit Ihrem Passwort deaktivieren, wir raten aber davon ab.
+Fehlt der zweite Faktor, führt Sie Work direkt zur Einrichtung, bei der Anmeldung oder beim nächsten Aufruf einer Seite, wenn Sie gerade ein solches Recht bekommen haben. Danach arbeiten Sie wie gewohnt weiter. Ist er für Sie vorgeschrieben, können Sie ihn nicht abschalten. Sonst lässt er sich unter *Profil → Sicherheit* mit Ihrem Passwort deaktivieren, wir raten aber davon ab.
+
+Allen anderen empfehlen wir die Zwei-Faktor-Anmeldung: Solange Sie keinen zweiten Faktor eingerichtet haben, erscheint auf der Startseite der Hinweis „Schützen Sie Ihr Konto mit einem zweiten Faktor“. **Einrichten** führt zu *Profil → Sicherheit*, **Später** blendet den Hinweis für 30 Tage aus.
+
+Die Administration Ihrer Organisation und wer die Organisationseinstellungen bearbeiten darf, sieht in der Mitgliederliste, wer einen zweiten Faktor eingerichtet hat.
 
 ### Kein Zugriff mehr auf die App? { #zwei-faktor-verloren }
 
