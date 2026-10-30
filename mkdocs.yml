@@ -62,7 +62,6 @@ theme:
     - toc.follow
     - search.suggest
     - search.highlight
-    - search.share
     - content.code.copy
     - content.code.annotate
     - content.action.edit
