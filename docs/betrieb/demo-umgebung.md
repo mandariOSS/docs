@@ -1,6 +1,6 @@
 ---
 title: Demo-Umgebung
-description: Mit einem Befehl eine vollständige, klar als Demo erkennbare Musterumgebung über Insight, Work und Session anlegen und wieder entfernen. Öffentliche Demo-Instanz mit DEMO_INSTANCE.
+description: Mit einem Befehl eine vollständige, klar als Demo erkennbare Musterumgebung über Insight, Work und Session anlegen und wieder entfernen. Öffentliche Demo-Instanz mit DEMO_INSTANCE, Präsentationsumgebung für Vorführungen.
 ---
 
 # Demo-Umgebung
@@ -23,7 +23,7 @@ Fiktive Kommune **„Musterstadt (Demo)“**:
 - 3 Gremien (Rat, Hauptausschuss, Ausschuss für Bauen und Verkehr) und 2 Fraktionen
 - 8 fiktive Personen mit Mitgliedschaften
 - 1 Wahlperiode, 6 Sitzungen, vergangene und kommende, mit Tagesordnungspunkten
-- 12 Vorlagen verschiedener Typen (Beschlussvorlage, Antrag, Anfrage, Mitteilungsvorlage) mit Beratungen
+- 12 Vorlagen verschiedener Typen (Beschlussvorlage, Antrag, Anfrage, Mitteilungsvorlage) mit Beratungen; 8 davon sind mit zusammen 12 erfundenen Orten verortet, sodass die Karten in Insight und Work Punkte zeigen
 - 5 kleine, selbst erzeugte PDF-Dateien mit bereits gesetztem Volltext, darunter die Unterlagen aller Vorlagen der kommenden Ratssitzung
 
 Die Kommune ist **nicht gelistet**: Sie erscheint weder in der Kommunenauswahl noch in Übersichten, Sitemaps oder der OParl-Aggregations-API. Erreichbar ist sie nur über ihre direkte Adresse (`/insight/kommune/<uuid>/`). Überall steht „(Demo)“ im Namen.
@@ -70,13 +70,25 @@ Für einen öffentlichen Testzugang läuft die Demo als **eigene Installation mi
 
 Ist zusätzlich `DEMO_PASSWORD` gesetzt, bekommen alle Demo-Konten dieses feste Passwort, damit es öffentlich genannt werden kann. Das gilt **nur** mit `DEMO_INSTANCE`; sonst ignoriert der Befehl die Variable. Setzen Sie `DEMO_INSTANCE` nie in einer Installation mit echten Daten.
 
-Wer die Demo regelmäßig zurücksetzen will, verwirft die Demo-Datenbank, migriert neu und ruft `setup_demo_environment` erneut auf.
+Wer die Demo regelmäßig zurücksetzen will, verwirft die Demo-Datenbank, migriert neu und ruft `setup_demo_environment` erneut auf. Der Hinweis auf jeder Seite sagt fest, dass die Daten jede Nacht zurückgesetzt werden und keine E-Mails hinausgehen; den nächtlichen Neuaufbau richtet der Betreiber selbst ein.
+
+## Präsentationsumgebung
+
+Auf der Demo-Umgebung setzt `setup_demo_praesentation` eine Vorführung auf, in der eine Drucksache ihren Weg von der Fraktion (Work) über den Sitzungsdienst (Session) ins Bürgerportal und die OParl-Schnittstelle nimmt. Dazu kommen ein zweiter Mandant, eine Leitstelle mit Zugang zu beiden und ein Einreichungs-Token für die Musterfraktion. Dafür veröffentlicht der Demo-Mandant im Bürgerportal; die Kommune bleibt ungelistet. Ein erneuter Lauf setzt die live gespielten Schritte zurück, sodass sich die Vorführung proben lässt.
+
+```bash
+python manage.py setup_demo_praesentation                      # Profil nrw: Nummern wie 0001/2026
+python manage.py setup_demo_praesentation --profil stadtstaat   # Drucksachen wie 22-0001, beide Mandanten als Mandantengruppe
+python manage.py setup_demo_praesentation --reset              # nur die Präsentation entfernen, die Basisdemo bleibt
+```
+
+Das Passwort der Leitstelle entsteht beim Anlegen und erscheint nur dann auf der Konsole.
 
 ## Wiederholbarkeit und Aufräumen
 
 - Alle Objekte hängen an festen Demo-Kennungen (Slugs mit Endung `-demo`, OParl-IDs unter einer nicht auflösbaren Demo-Domain). Wiederholte Läufe aktualisieren statt zu duplizieren.
 - Die Demo-Quelle ist **inaktiv**, damit der Ingestor sie nie abruft.
-- `--reset` löscht ausschließlich die über diese Kennungen identifizierten Objekte: Session-Mandant, Work-Organisation, Parteigruppe, Demo-Nutzer, Quelle samt Kommune und die erzeugten PDF-Dateien.
+- `--reset` löscht ausschließlich die über diese Kennungen identifizierten Objekte: Session-Mandant, Work-Organisation, Parteigruppe, Demo-Nutzer, Quelle samt Kommune und die erzeugten PDF-Dateien, dazu eine darauf aufgesetzte Präsentationsumgebung (siehe unten).
 
 ## Verifikation
 

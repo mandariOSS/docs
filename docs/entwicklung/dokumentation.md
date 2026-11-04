@@ -35,6 +35,13 @@ Die Prüfung der `llms.txt` kannst du nach dem Build auch lokal ausführen:
 python tests/llms_txt.py --site site
 ```
 
+Die [Konfigurationsreferenz](../betrieb/konfiguration.md) gleichst du gegen den Code der Anwendung ab: Das Skript meldet Umgebungsvariablen aus Settings, übrigem Code und `docker-compose.yml`, die auf der Seite fehlen, und Namen auf der Seite, die es im Code nicht mehr gibt.
+
+```bash
+git clone --depth 1 https://github.com/mandariOSS/mandari.git ../mandari
+python tests/umgebungsvariablen.py --mandari ../mandari
+```
+
 ## Struktur
 
 ```
@@ -51,7 +58,7 @@ docs/
 mkdocs.yml                Navigation, Theme, Plugins
 overrides/                Template-Anpassungen
 nginx.conf                Auslieferung und Weiterleitungen
-tests/                    CI-Prüfungen für llms.txt und den nginx-Container
+tests/                    CI-Prüfungen für llms.txt und den nginx-Container, Abgleich der Konfiguration
 ```
 
 Neue Seiten müssen in der Navigation in `mkdocs.yml` und in `docs/llms.txt` eingetragen werden. Jede Seite beginnt mit einem Frontmatter aus `title` und `description`, die Beschreibung erscheint in Suchmaschinen und Vorschauen.

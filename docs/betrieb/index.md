@@ -26,14 +26,15 @@ mandari ist Open Source und vollständig selbst betreibbar: volle Datenhoheit au
 | Dienst | Aufgabe |
 |--------|---------|
 | `caddy` | Reverse Proxy, TLS-Zertifikate, Verteilung der Pfade auf Anwendung und Website |
-| `mandari` | Django-Anwendung mit Insight, Work und Session |
-| `worker` | Ereignisse, Aufträge und alle [Zeitpläne](cron.md) (`manage.py events_worker`, Warteschlangen `default`, `mail`, `index`, `adapter`). Ohne ihn laufen keine Erinnerungen, kein Nachladen von Dokumenten und keine Sitzungsmappen. |
-| `worker-heavy` | Aufträge der Texterkennung und der KI (Warteschlangen `ocr` und `ai`) mit eigener Speichergrenze, Standard 3 GB. Er arbeitet erst, wenn die Texterkennung auf den Worker umgestellt ist (`TASKS_BACKEND=journal` und `TEXT_EXTRACTION_RUNNER=worker`); bis dahin wartet er. |
+| `mandari` | Django-Anwendung mit Insight, Work und Session; mit `APP_PROCESSES` mehrere Anwendungsprozesse an einem Port (Standard 1, siehe [Konfiguration](konfiguration.md#datenbank-cache-suche)) |
+| `worker` | Ereignisse, Aufträge und alle [Zeitpläne](cron.md) (`manage.py events_worker`, Warteschlangen `default`, `mail`, `index`, `adapter` und `text`). In `text` liest er mit drei Plätzen die Textebene der Dokumente, die erste Stufe der Texterkennung, sobald sie auf den Worker umgestellt ist. Ohne ihn laufen keine Erinnerungen, kein Nachladen von Dokumenten und keine Sitzungsmappen. |
+| `worker-heavy` | Erkennung aus dem Bild für Dokumente ohne ausreichende Textebene und Aufträge der KI (Warteschlangen `ocr` und `ai`) mit eigener Speichergrenze, Standard 3 GB. Er arbeitet erst, wenn die Texterkennung auf den Worker umgestellt ist (`TASKS_BACKEND=journal` und `TEXT_EXTRACTION_RUNNER=worker`); bis dahin wartet er. |
 | `worker-live` | Live-Übertragungen von Gremiensitzungen (Warteschlange `live`). Solange `LIVE_UEBERTRAGUNG_AKTIV` aus ist, wartet er nur. |
 | `minutes-orchestrator` | Protokollierung: legt GPU-Rechenknoten für die Transkription nach Bedarf an und löscht sie wieder. Tut nichts, solange im Admin unter *System → GPU-Rechenknoten* „Rechenknoten aktiv“ ausgeschaltet ist. |
 | `website` | Website mit Wagtail aus dem Repository [mandariOSS/marketing-website](https://github.com/mandariOSS/marketing-website), dieselbe wie auf mandari.de, mit eigener Datenbank `mandari_website`. Caddy gibt ihr alle Pfade, die nicht zur Anwendung gehören, auch die Startseite `/`. Das Image hat dieselben Versions-Tags wie die Anwendung. |
 | `ingestor` | Abgleich der OParl- und Scraper-Quellen; erkennt im Standard auch den Text der Dokumente (`TEXT_EXTRACTION_RUNNER=ingestor`) |
 | `postgres` | Datenbank (PostgreSQL 16) |
+| `pgbouncer` | optional (Profil `pgbouncer`): Verbindungs-Pooler im Transaktionsmodus nur für die Anwendung, ohne Port nach außen; Einschalten unter [Konfiguration](konfiguration.md#datenbank-cache-suche) |
 | `elasticsearch` | Volltextsuche (Elasticsearch 8) |
 | `redis` | Cache, Sitzungen, Sperren und Echtzeitfunktionen (Redis 7) |
 

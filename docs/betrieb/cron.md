@@ -25,6 +25,7 @@ So arbeiten die Zeitpläne:
 | `befehl:fetch_person_photos` | montags 03:00 | Personenfotos aus den Quellsystemen |
 | `befehl:sync_plan_boundaries` | täglich 04:50 | Umringe von Bebauungsplänen aus den Geodiensten |
 | `befehl:cleanup_orphaned_accounts` | täglich 03:45 | verwaiste Konten nach Frist löschen |
+| `befehl:sitzungen_aufraeumen` | täglich 04:25 | abgelaufene Anmeldesitzungen aus der Datenbank löschen; Django räumt sie nicht selbst auf |
 | `befehl:cache_files` | stündlich :40 | [Dokument-Cache](dokument-cache.md): fehlende Dateien nachladen, neueste zuerst (`--limit 400`) |
 | `befehl:loeschabgleich` | stündlich :15 | Löschabgleich der Dokumente mit den Quellen |
 | `befehl:dokumentablage` | stündlich :50 | Dokumentablage aufräumen, mit Objektspeicher vorher hochladen; hält die Obergrenze `FILE_CACHE_MAX_TOTAL_GB` ein |
@@ -34,9 +35,10 @@ So arbeiten die Zeitpläne:
 | `befehl:check_service_levels` | täglich 06:30 | Service-Level: Plattenplatz, Zertifikate, Fehlerquote, Warteschlangen |
 | `befehl:availability_report` | am 1. um 00:15 | Verfügbarkeitsbericht des Vormonats; nur mit `GATUS_URL` |
 | `befehl:verify_audit_chain` | täglich 04:20 | Hash-Ketten der Protokollierung prüfen; ein Befund lässt den Lauf scheitern |
-| `befehl:purge_security_audit_log` | täglich 04:40 | Sicherheitsprotokoll nach Frist löschen |
+| `befehl:purge_security_audit_log` | täglich 04:40 | Sicherheitsprotokoll nach Frist löschen (`SECURITY_AUDIT_RETENTION_DAYS`), Archivpakete nach `SECURITY_AUDIT_ARCHIVE_RETENTION_DAYS` |
+| `befehl:purge_login_attempts` | täglich 04:35 | Anmeldeversuche der Drosselung nach `LOGIN_ATTEMPT_RETENTION_DAYS` (Standard 30 Tage) löschen |
 | `befehl:session_privacy_purge` | am 1. um 05:00 | Anonymisierungs- und Löschlauf nach den Fristen je Mandant ([Löschkonzept](../datenschutz/loeschkonzept.md)) |
-| `befehl:build_meeting_packages` | jede Minute | Sitzungsmappen erzeugen, die die Oberfläche angefordert hat |
+| `befehl:build_meeting_packages` | jede Minute | Sitzungsmappen erzeugen, die die Oberfläche angefordert hat, höchstens fünf je Lauf |
 | `befehl:events_purge` | täglich 04:10 | Journal der Ereignistechnik nach Frist aufräumen; nur mit `EVENTS_JOURNAL_PURGE_ENABLED=true` |
 
 ## Weitere Zeitpläne
@@ -47,7 +49,7 @@ So arbeiten die Zeitpläne:
 | `insight_core.schedules.verortung_automatisch` | alle 15 Minuten (`GEOREF_AUTO_INTERVAL_MINUTES`) | begrenzter Verortungslauf für Vorlagen, abschaltbar mit `GEOREF_AUTO_ENABLED=false` |
 | `insight_core.schedules.kommunenverzeichnis_abgleichen` | stündlich | gelistete Kommunen ins Kommunenverzeichnis übernehmen |
 | `insight_core.schedules.rueckmeldungen_aufraeumen` | täglich 03:50 | Rückmeldungen zu Seiten nach Frist löschen |
-| `insight_core.schedules.texterkennung_einplanen` | alle 2 Minuten | Aufträge für die Texterkennung einreihen; nur mit `TEXT_EXTRACTION_RUNNER=worker` |
+| `insight_core.schedules.texterkennung_einplanen` | alle 2 Minuten | Aufträge der Texterkennung einreihen, reihum über die Quellen: zuerst die Textebene (Warteschlange `text`), die Erkennung aus dem Bild (`ocr`) nur für Dateien, deren Textebene nicht reicht; nur mit `TEXT_EXTRACTION_RUNNER=worker` |
 | `apps.work.schedules.fraktionserinnerungen_senden` | alle 15 Minuten | Erinnerungen an Fraktionssitzungen |
 | `apps.work.schedules.fraktionseinladungen_senden` | alle 15 Minuten | automatische Einladungen, Freigabe-Hinweise, Erinnerungen zum Eintragen von TOPs |
 | `apps.work.schedules.fraktionssitzungen_erzeugen` | alle 60 Minuten (`FACTION_SCHEDULE_INTERVAL_MINUTES`) | Fraktionssitzungen aus Sitzungsreihen anlegen |

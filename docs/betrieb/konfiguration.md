@@ -7,8 +7,10 @@ description: Referenz der Umgebungsvariablen einer mandari-Installation. Pflicht
 
 mandari wird über Umgebungsvariablen konfiguriert, in der Docker-Installation über die Datei `.env`. Diese Seite ist die Referenz. Werte in der Spalte Standard gelten, wenn die Variable nicht gesetzt ist.
 
+Die Seite nennt jede Umgebungsvariable, die die Anwendung (`mandari/mandari/settings.py` und übriger Code) und `docker-compose.yml` lesen, dazu die wichtigen des Ingestors. Ob das noch stimmt, prüft das Skript `tests/umgebungsvariablen.py` im [Repository der Dokumentation](https://github.com/mandariOSS/docs) gegen einen Checkout der Anwendung; mit `--liste` gibt es alle Variablen mit dem Standardwert im Code und der Fundstelle aus.
+
 !!! note "Nicht jede Variable erreicht die Dienste"
-    Unter Docker Compose erreicht einen Dienst nur, was `docker-compose.yml` in seinem Abschnitt `environment` nennt. Die Anwendung und ihre Worker erhalten die Variablen aus `x-app-environment`, der Ingestor die aus seinem eigenen Abschnitt. Fehlt eine Variable dort, wirkt ein Eintrag nur in der `.env` nicht: Tragen Sie sie im Abschnitt `environment` des Dienstes oder in einer zusätzlichen Compose-Datei ein. Im Helm-Chart gehören solche Variablen in `app.extraEnv` (Anwendung und Worker) bzw. `ingestor.extraEnv`.
+    Unter Docker Compose erreicht einen Dienst nur, was `docker-compose.yml` in seinem Abschnitt `environment` nennt. Die Anwendung und ihre Worker erhalten die Variablen aus `x-app-environment`, der Ingestor die aus seinem eigenen Abschnitt. Fehlt eine Variable dort, wirkt ein Eintrag nur in der `.env` nicht: Tragen Sie sie in einer `docker-compose.override.yml` beim Dienst ein (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)). Im Helm-Chart gehören solche Variablen in `app.extraEnv` (Anwendung und Worker) bzw. `ingestor.extraEnv`.
 
 ## Pflichtwerte
 
@@ -58,7 +60,11 @@ Compose ergänzt die Umgebung dieser Dienste um die Einträge; danach `docker co
 | `DEBUG` | `True` (`docker-compose.yml`: `false`) | Nur für die lokale Entwicklung einschalten; ohne Compose in Produktion ausdrücklich `false` setzen |
 | `TZ` | `Europe/Berlin` | Zeitzone der Container |
 | `IMAGE_TAG` | `latest` | Version der Container-Images, siehe [Updates](updates-backups.md) |
-| `PROVISIONING_API_KEY` | leer | Aktiviert die Provisioning-API. Leer bedeutet abgeschaltet. |
+| `PROVISIONING_API_KEY` | leer | Aktiviert die Provisioning-API unter `/api/provisioning/`. Leer bedeutet abgeschaltet. |
+| `PROVISIONING_V2_API_KEY` | leer | Eigener Schlüssel (Bearer) für die Provisioning-API v2 unter `/api/provisioning/v2/`. Leer bedeutet abgeschaltet; alle Adressen antworten dann mit 404. |
+| `PROVISIONING_V2_ALLOWED_NETWORKS` | leer | Provisioning-API v2 nur aus diesen Netzen (CIDR, kommagetrennt), leer = keine Beschränkung; andere Absender erhalten 404. Voraussetzung wie bei `ADMIN_ALLOWED_NETWORKS`. |
+| `SEITENHINWEIS` | leer | Kurzer Betriebshinweis oben in Insight und Work, etwa bei einer Störung außerhalb von mandari. Leer = kein Hinweis. Wirkt nach dem Neuerstellen der Container, ohne Update. |
+| `SEITENHINWEIS_LINK` | `https://status.mandari.de/` | Ziel des Links im Betriebshinweis; für eine eigene Installation auf die eigene Statusseite setzen |
 | `COMPOSE_PROJECT_NAME` | `mandari` | Projektname für Container und Volumes; eine zweite Installation auf demselben Server braucht einen anderen |
 | `ENCRYPTION_MASTER_KEY_PREVIOUS` | leer | Nur während eines Schlüsselwechsels: der bisherige Hauptschlüssel, mehrere durch Komma getrennt. Wird nur zum Lesen verwendet und danach wieder geleert; Ablauf in `docs/KRYPTOKONZEPT.md` im Repository. |
 | `CSRF_TRUSTED_ORIGINS` | `SITE_URL` | Weitere vertrauenswürdige Ursprünge für Formulare und WebSockets, kommagetrennt mit Schema. Nur nötig, wenn ein anderer Host Formulare an diese Installation sendet. |
@@ -68,8 +74,10 @@ Compose ergänzt die Umgebung dieser Dienste um die Einträge; danach `docker co
 | `MARKETING_URL` | leer (mit `DEBUG`: `http://localhost:8001`) | Adresse der Website, wenn sie nicht unter derselben Domain läuft |
 | `DEMO_INSTANCE` | `false` | Macht die Installation zur öffentlichen Demo: kein Mailversand, keine KI, Passwort, zweiter Faktor und Konto nicht änderbar. Nie in einer Installation mit echten Daten setzen, siehe [Demo-Umgebung](demo-umgebung.md). |
 | `DEMO_PASSWORD` | leer | Nur mit `DEMO_INSTANCE`: festes Passwort aller Demo-Konten |
+| `OLD_MASTER_KEY` | leer | Nur für `manage.py rotate_encryption`: ein zusätzlicher alter Hauptschlüssel, etwa nach einem Datenbankumzug. Im laufenden Betrieb gilt `ENCRYPTION_MASTER_KEY_PREVIOUS`. |
+| `DJANGO_VITE_DEV_MODE` | leer | Nur in der Entwicklung: Skripte und Styles kommen vom Vite-Dev-Server mit Hot Reload statt aus dem gebauten Manifest, siehe [Entwicklung](../entwicklung/index.md#lokal-entwickeln) |
 
-Unter Docker Compose wirken aus dieser Tabelle `TZ` und `ENCRYPTION_MASTER_KEY_PREVIOUS`, die `docker-compose.yml` an die Dienste weiterreicht, sowie `IMAGE_TAG` und `COMPOSE_PROJECT_NAME`, die die Compose-Datei selbst liest; `DEBUG` steht dort fest auf `false`. Die übrigen tragen Sie unter Docker Compose in einer `docker-compose.override.yml` (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)) ein, im Helm-Chart in `app.extraEnv`; ein Eintrag nur in der `.env` wirkt nicht.
+Unter Docker Compose wirken aus dieser Tabelle `TZ` und `ENCRYPTION_MASTER_KEY_PREVIOUS`, die `docker-compose.yml` an die Dienste weiterreicht, sowie `IMAGE_TAG` und `COMPOSE_PROJECT_NAME`, die die Compose-Datei selbst liest; `DEBUG` steht dort fest auf `false`. `OLD_MASTER_KEY` gehört nicht in die `.env`, sondern nur in den einzelnen Aufruf, etwa `docker compose exec -e OLD_MASTER_KEY mandari python manage.py rotate_encryption` mit dem Wert in der Umgebung der aufrufenden Shell. Die übrigen tragen Sie unter Docker Compose in einer `docker-compose.override.yml` (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)) ein, im Helm-Chart in `app.extraEnv`; ein Eintrag nur in der `.env` wirkt nicht.
 
 ## Anmeldung und Zugriffsschutz
 
@@ -96,7 +104,9 @@ Den SMTP-Zugang pflegen Sie am einfachsten im Admin in den Systemeinstellungen; 
 | `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD` | leer | Zugangsdaten |
 | `EMAIL_USE_TLS`, `EMAIL_USE_SSL` | `true`, `false` | STARTTLS bzw. TLS von Anfang an |
 | `EMAIL_TIMEOUT` | `30` | Zeitgrenze der SMTP-Verbindung in Sekunden |
+| `EMAIL_BACKEND` | Systemeinstellungen (mit `DEBUG`: Ausgabe auf der Konsole) | Versandweg der Plattform als Python-Pfad. Der Standard liest den SMTP-Zugang aus den Systemeinstellungen und fällt auf die `EMAIL_*`-Werte zurück; nur für Tests oder Sonderfälle ändern. |
 | `DEFAULT_FROM_EMAIL` | `noreply@mandari.de` | Absender, wenn die Systemeinstellungen keinen nennen |
+| `SERVER_EMAIL` | `DEFAULT_FROM_EMAIL` | Absender der Fehlermails, die Django selbst verschickt |
 | `EMAIL_MESSAGE_ID_DOMAIN` | Domain von `DEFAULT_FROM_EMAIL`, sonst Host aus `SITE_URL` | Domain hinter dem `@` der Message-ID und Name im EHLO. Setzen, wenn der Absender in den Systemeinstellungen eine andere Domain hat. |
 | `MAIL_QUEUE` | leer | Mailarten, die nicht in der Anfrage, sondern als Auftrag im Worker (Warteschlange `mail`, mit Wiederholung) hinausgehen: kommagetrennte Muster wie `work.*,konto.*` oder `*`. Braucht `TASKS_BACKEND=journal`; leer = sofort. |
 | `MAIL_QUEUE_MAX_BYTES` | `20971520` | Größere Mails (Text und Anhänge in Bytes) gehen sofort hinaus |
@@ -122,6 +132,9 @@ Den SMTP-Zugang pflegen Sie am einfachsten im Admin in den Systemeinstellungen; 
 | `DB_POOL_TIMEOUT` | `5` | Sekunden Wartezeit bei erschöpftem Pool, danach 503 |
 | `DB_POOL_MAX_LIFETIME` | `1800` | Verbindungen nach so vielen Sekunden erneuern |
 | `DB_CONN_MAX_AGE` | `60` | Lebensdauer einer Verbindung ohne Pool; mit Pool setzt die Anwendung `0` |
+| `DB_PGBOUNCER` | `false` | `DATABASE_URL` zeigt auf PgBouncer im Transaktionsmodus: keine serverseitigen Cursor, keine vorbereiteten Anweisungen. Nur zusammen mit einem Pooler setzen. |
+| `DB_DIRECT_URL` | leer | Direktverbindung zu PostgreSQL für `migrate`, `safemigrate` und `events_after_restore`, wenn `DB_PGBOUNCER` gesetzt ist; ohne sie laufen auch diese über den Pooler |
+| `APP_PROCESSES` | `1` | Zahl der Anwendungsprozesse an Port 8000 (1 bis 64). Jeder Prozess hat einen eigenen Pool mit `DB_POOL_MAX` Verbindungen und braucht rund 1 GB Arbeitsspeicher. Im Helm-Chart nicht setzen, dort skaliert `app.replicas`. |
 
 **PostgreSQL im Compose-Stack.** Diese Werte liest `docker-compose.yml` selbst aus der `.env`. Die Einstellungen von PostgreSQL wirken erst, wenn der Datenbankdienst neu startet (`docker compose up -d postgres`):
 
@@ -137,7 +150,22 @@ Den SMTP-Zugang pflegen Sie am einfachsten im Admin in den Systemeinstellungen; 
 | `POSTGRES_SHARED_PRELOAD_LIBRARIES` | `pg_stat_statements` | vorab geladene Erweiterungen; leer setzen schaltet die Abfragestatistik ab |
 | `WEBSITE_DB`, `WEBSITE_SECRET_KEY` | `mandari_website`, `SECRET_KEY` | Datenbank und Schlüssel der Website |
 
-Die `DB_POOL*`- und `DB_CONN_MAX_AGE`-Werte und `ELASTICSEARCH_AUTO_INDEX` reicht `docker-compose.yml` nicht an die Anwendung weiter; abweichende Werte gehören unter Docker Compose in einer `docker-compose.override.yml` (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)), im Helm-Chart in `app.extraEnv`.
+**Anwendung im Compose-Stack.** Auch diese Werte liest `docker-compose.yml` selbst aus der `.env` und setzt daraus die Variablen nur des Dienstes `mandari`; Worker, Ingestor, Protokoll-Orchestrator und Website verbinden sich immer direkt mit PostgreSQL. Danach `docker compose up -d mandari`:
+
+| Variable | Standard | Bedeutung |
+|----------|----------|-----------|
+| `APP_PROCESSES` | `1` | Anwendungsprozesse, siehe oben |
+| `MANDARI_MEM_LIMIT` | `1g` | Speichergrenze des Dienstes `mandari` für alle Prozesse zusammen; mit `APP_PROCESSES` mitziehen, rund 1 GB je Prozess |
+| `MANDARI_DB_POOL_MAX` | `10` | wird zu `DB_POOL_MAX` der Anwendung |
+| `MANDARI_DB_HOST` | `postgres` | Host in `DATABASE_URL` der Anwendung; `pgbouncer` für den Weg über PgBouncer |
+| `MANDARI_DB_PGBOUNCER` | `false` | wird zu `DB_PGBOUNCER`; `DB_DIRECT_URL` setzt `docker-compose.yml` selbst auf `postgres` |
+| `COMPOSE_PROFILES` | leer | `pgbouncer` startet den optionalen Dienst `pgbouncer` |
+| `PGBOUNCER_MAX_CLIENT_CONN` | `200` | Verbindungen der Anwendung zu PgBouncer, höchstens: `MANDARI_DB_POOL_MAX` × Prozesse mit Reserve |
+| `PGBOUNCER_DEFAULT_POOL_SIZE` | `20` | Verbindungen von PgBouncer zu PostgreSQL; zählen gegen `POSTGRES_MAX_CONNECTIONS` |
+
+PgBouncer schalten Sie mit drei Zeilen gemeinsam ein: `COMPOSE_PROFILES=pgbouncer`, `MANDARI_DB_HOST=pgbouncer` und `MANDARI_DB_PGBOUNCER=true`, dazu meist ein größerer `MANDARI_DB_POOL_MAX`. Zeigt die Anwendung ohne den Schalter auf PgBouncer, scheitern Seiten mit großen Ergebnissen unter Last. Lohnend ist PgBouncer ab zwei Anwendungsprozessen; ohne ihn erhöhen Sie `POSTGRES_MAX_CONNECTIONS` je zusätzlichem Prozess um `DB_POOL_MAX`. Verbindungsrechnung, Prüfung und Rückweg beschreibt `DEPLOYMENT.md` im Repository („PgBouncer für die Webanwendung“, „Mehrere Anwendungsprozesse“).
+
+`DB_POOL`, `DB_POOL_MIN`, `DB_POOL_MAX_WAITING`, `DB_POOL_TIMEOUT`, `DB_POOL_MAX_LIFETIME`, `DB_CONN_MAX_AGE` und `ELASTICSEARCH_AUTO_INDEX` reicht `docker-compose.yml` nicht an die Anwendung weiter; abweichende Werte gehören unter Docker Compose in einer `docker-compose.override.yml` (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)), im Helm-Chart in `app.extraEnv`.
 
 ## Volltextsuche
 
@@ -168,6 +196,7 @@ Die Dienste `worker`, `worker-heavy` und `worker-live` führen Aufträge, die Er
 | `INGESTOR_EVENTS_ENABLED` | `false` | Ingestor und Anwendung melden Änderungen am RIS-Bestand als Ereignisse ins Journal. Erst einschalten, wenn der Worker läuft. |
 | `SESSION_EVENTS` | `aus` | Ereignisse aus mandari Session an die Datendrehscheibe: `aus`, `schatten` (Ereignisse werden geschrieben; scheitert das, bleibt die Änderung trotzdem bestehen) oder `aktiv` (Änderung und Ereignis atomar); je Mandant im Admin überschreibbar |
 | `EVENTS_REDACT_NEUTRALIZE` | `false` | Nach einem Ereignis mit `operation=redact` personenbezogene Nutzlasten im Journal leeren (DSGVO) |
+| `EVENTS_VALIDATE_CONTRACTS` | wie `DEBUG` | Jedes veröffentlichte Ereignis zusätzlich gegen seinen Vertrag prüfen. Im Betrieb aus; dort gelten nur die Formatprüfungen, die Verträge sichern die Tests. |
 | `EVENTS_IDEMPOTENCY_RETENTION_DAYS` | `30` | Aufbewahrung der Idempotenzschlüssel der Befehle in Tagen |
 | `EVENTS_JOURNAL_PURGE_ENABLED` | `false` | Journal täglich nach Frist aufräumen; vorher `manage.py events_purge --dry-run` prüfen |
 | `EVENTS_JOURNAL_RETENTION_DAYS` | `90` | Aufbewahrung des Journals in Tagen; mindestens 90 und nie kürzer als `OPARL_CHANGES_RETENTION_DAYS` |
@@ -178,11 +207,11 @@ Die Dienste `worker`, `worker-heavy` und `worker-live` führen Aufträge, die Er
 | `WORKER_HEAVY_OCR_MEMORY_LIMIT_MB` | `2048` | Adressraum je Tesseract-Prozess in `worker-heavy`, höchstens Speichergrenze minus 1 GB (nur Docker Compose) |
 | `WORKER_SERVICES` | `ingestor minutes-orchestrator worker worker-heavy worker-live` | Dienste, die `update.sh` während der Migrationen anhält |
 
-`docker-compose.yml` reicht alle durch außer `EVENTS_IDEMPOTENCY_RETENTION_DAYS` und `WORKER_PUSH_INTERVAL`; `WORKER_HEAVY_*` liest die Compose-Datei selbst, `WORKER_SERVICES` das Skript `update.sh`. Im Helm-Chart heißen die wichtigsten `events.producers`, `events.changesFeed`, `events.journalPurge` und `worker.*`, siehe [Betrieb in Kubernetes](kubernetes.md).
+`docker-compose.yml` reicht alle durch außer `EVENTS_VALIDATE_CONTRACTS`, `EVENTS_IDEMPOTENCY_RETENTION_DAYS` und `WORKER_PUSH_INTERVAL`; `WORKER_HEAVY_*` liest die Compose-Datei selbst, `WORKER_SERVICES` das Skript `update.sh`. Im Helm-Chart heißen die wichtigsten `events.producers`, `events.changesFeed`, `events.journalPurge` und `worker.*`, siehe [Betrieb in Kubernetes](kubernetes.md).
 
 ## Datendrehscheibe: schrittweise Umstellungen
 
-Diese Schalter stellen einzelne Aufgaben schrittweise auf Ereignisse und Abonnements um. Standard ist überall `aus`; `schatten` bzw. `probe` arbeitet neben dem bisherigen Weg und vergleicht nur. Alle brauchen den Worker; Voraussetzungen und Reihenfolge beim Umschalten beschreibt `DEPLOYMENT.md` im Repository.
+Diese Schalter stellen einzelne Aufgaben schrittweise auf Ereignisse und Abonnements um. Standard ist überall `aus`, außer bei `URHEBER_SUBSCRIPTION`; `schatten` bzw. `probe` arbeitet neben dem bisherigen Weg und vergleicht nur. Alle brauchen den Worker; Voraussetzungen und Reihenfolge beim Umschalten beschreibt `DEPLOYMENT.md` im Repository.
 
 | Variable | Werte | Bedeutung |
 |----------|-------|-----------|
@@ -191,21 +220,25 @@ Diese Schalter stellen einzelne Aufgaben schrittweise auf Ereignisse und Abonnem
 | `SEARCH_INDEX_SHADOW_MAX_DOCS` | Zahl, Standard `100000` | ungefähre Obergrenze der Dokumente in allen Schattenindizes; `0` = keine |
 | `WORK_NOTIFICATION_SUBSCRIPTION` | `aus`, `schatten`, `aktiv` | Benachrichtigungen in Work über Ereignisse; `schatten` und `aktiv` brauchen `TASKS_BACKEND=journal` |
 | `GEOREF_SUBSCRIPTION`, `SUMMARY_SUBSCRIPTION` | `aus`, `schatten`, `aktiv` | neuer Text eines Dokuments stößt die Verortung seines Vorgangs an bzw. verwirft dessen KI-Zusammenfassung |
+| `URHEBER_SUBSCRIPTION` | `aus`, `schatten`, `aktiv`; Standard `aktiv` | neue oder geänderte Vorlagen und neuer Text ihrer Anlagen stoßen die Ermittlung der antragstellenden Fraktionen an (Bürgerportal und OParl `originatorOrganization`); schreibt nur eigene, abgeleitete Tabellen |
 | `RIS_SESSION_PROJECTOR` | `aus`, `schatten` | RIS-Bestand der Session-Mandanten aus deren Ereignissen, vorerst als unsichtbare Schatten-Quelle |
 | `RIS_SESSION_PROJECTOR_TENANTS` | Kennungen, kommagetrennt | nur diese Session-Mandanten; leer = alle |
 | `WORK_RIS_RELINK` | `aus`, `probe`, `aktiv` | Notizen, Positionen und Kommentare in Work folgen ihrem Tagesordnungspunkt bzw. ihrer Vorlage, wenn ein RIS seinen Stand neu veröffentlicht; `probe` meldet nur im Protokoll |
 | `WORK_RIS_RELINK_INTERVAL_MINUTES` | Zahl, Standard `15` | Abstand des Abgleichs in Minuten |
 
-`docker-compose.yml` reicht alle durch.
+`docker-compose.yml` reicht alle durch außer `URHEBER_SUBSCRIPTION`.
 
 ## Texterkennung
 
 | Variable | Standard | Bedeutung |
 |----------|----------|-----------|
-| `TEXT_EXTRACTION_RUNNER` | `ingestor` | Wer den Text der RIS-Dateien erkennt: `ingestor` (der Ingestor lädt und erkennt selbst) oder `worker` (Aufträge im Dienst `worker-heavy`, die nur aus Ablage und Objektspeicher lesen). `worker` braucht `TASKS_BACKEND=journal`, sonst startet die Anwendung nicht. In Anwendung und Ingestor gleich setzen. |
+| `TEXT_EXTRACTION_RUNNER` | `ingestor` | Wer den Text der RIS-Dateien erkennt: `ingestor` (der Ingestor lädt und erkennt selbst) oder `worker` (Aufträge der Anwendung, die nur aus Ablage und Objektspeicher lesen, in zwei Stufen: die Textebene in der Warteschlange `text` im Dienst `worker`, die Erkennung aus dem Bild nur für Dateien ohne ausreichende Textebene in `ocr` im Dienst `worker-heavy`). `worker` braucht `TASKS_BACKEND=journal`, sonst startet die Anwendung nicht. In Anwendung und Ingestor gleich setzen. |
 | `TEXT_EXTRACTION_ENABLED` | `True` | Nur im Ingestor: Volltext aus Dokumenten extrahieren |
 | `TEXT_EXTRACTION_MAX_SIZE_MB` | `50` | Größere Dateien werden nicht verarbeitet |
-| `TEXT_EXTRACTION_QUEUE_DEPTH` | `20` | Nur mit `worker`: höchstens so viele Aufträge der Texterkennung warten oder laufen zugleich |
+| `TEXT_EXTRACTION_QUEUE_DEPTH` | `20` | Nur mit `worker`: höchstens so viele Aufträge der Erkennung aus dem Bild (`ocr`) warten oder laufen zugleich |
+| `TEXT_LAYER_QUEUE_DEPTH` | `300` | Nur mit `worker`: höchstens so viele Aufträge der ersten Stufe (`text`) warten oder laufen zugleich. Die Tiefe bestimmt den Durchsatz, denn der Zeitplan füllt nur alle zwei Minuten nach. |
+| `TEXT_LAYER_MEMORY_LIMIT_MB` | `512` | Adressraum je Prozess, der die Textebene liest, in MB, `0` = ohne Grenze; darüber geht die Datei an die Erkennung aus dem Bild. Im Ingestor gilt ein eigener Wert, siehe [Ingestor](#ingestor). |
+| `TEXT_EXTRACTION_OCR_MIXED_PAGES` | `true` | Eingescannte Seiten eines sonst getippten PDFs erkennen (Seite mit Bild und kaum Text); `false` = jeder Text in der Textebene reicht |
 | `TEXT_EXTRACTION_STALE_MINUTES`, `TEXT_EXTRACTION_MAX_ATTEMPTS` | `60`, `3` | Eine Datei, die länger in Bearbeitung ist, gilt als abgebrochen; nach so vielen Abbrüchen als gescheitert |
 | `TEXT_EXTRACTION_GIVE_UP_ALERT` | `5` | Die Prüfung „texterkennung“ wird erst ab so vielen aufgegebenen Dateien in 24 Stunden rot |
 | `TEXT_EXTRACTION_BACKLOG_ALERT_HOURS` | `24` | Nur mit `worker`: Die Prüfung „dokumenttext“ wird rot, wenn ein abgelegtes Dokument länger auf seinen Text wartet |
@@ -216,7 +249,7 @@ Diese Schalter stellen einzelne Aufgaben schrittweise auf Ereignisse und Abonnem
 | `MISTRAL_OCR_MODEL` | `pixtral-12b-2409` | Modell des externen Dienstes |
 | `MISTRAL_OCR_RATE_LIMIT` | `60` | Anfragen pro Minute an den externen Dienst |
 
-Die Erkennung liest zuerst die Textebene des PDFs, dann, falls eingerichtet, den externen Dienst, sonst und als Rückfall die lokale Texterkennung mit Tesseract. `docker-compose.yml` reicht `TEXT_EXTRACTION_RUNNER`, `TEXT_EXTRACTION_QUEUE_DEPTH`, `OCR_MEMORY_LIMIT_MB`, `MISTRAL_API_KEY` und `MISTRAL_BASE_URL` durch, die übrigen nicht. Umstellen auf `worker`: Ablauf „Dokumentkette einschalten“ in `DEPLOYMENT.md` im Repository.
+Die Erkennung liest zuerst die Textebene des PDFs, dann, falls eingerichtet, den externen Dienst, sonst und als Rückfall die lokale Texterkennung mit Tesseract. `docker-compose.yml` reicht `TEXT_EXTRACTION_RUNNER`, `TEXT_EXTRACTION_QUEUE_DEPTH`, `TEXT_LAYER_QUEUE_DEPTH`, `TEXT_LAYER_MEMORY_LIMIT_MB`, `TEXT_EXTRACTION_OCR_MIXED_PAGES`, `OCR_MEMORY_LIMIT_MB`, `MISTRAL_API_KEY` und `MISTRAL_BASE_URL` an Anwendung und Worker durch, die übrigen nicht. Umstellen auf `worker`: Ablauf „Dokumentkette einschalten“ in `DEPLOYMENT.md` im Repository.
 
 ## KI
 
@@ -271,7 +304,7 @@ Die Erkennung liest zuerst die Textebene des PDFs, dann, falls eingerichtet, den
 | `RIS_REQUEST_INTERVAL` | `1.0` | Abstand je Server in Sekunden für alle Abrufe der Anwendung (gemeinsamer Takt über Redis); `0` schaltet die Drossel ab, nur für Tests und Notfälle |
 | `INSIGHT_SOURCE_BACKOFF_FAILURES` | `3` | Ab so vielen fehlgeschlagenen Läufen des Abgleichs in Folge ruhen Dokument-Cache, Vorschau, Löschabgleich und Personenfotos für die Quelle |
 
-`FILE_CACHE_MAX_MB`, `FILE_PROXY_TIMEOUT_SECONDS`, `RIS_REQUEST_INTERVAL` und `INSIGHT_SOURCE_BACKOFF_FAILURES` reicht `docker-compose.yml` nicht durch. Tragen Sie sie unter Docker Compose in `x-app-environment` ein, im Helm-Chart in `app.extraEnv`; ein Eintrag nur in der `.env` wirkt nicht.
+`OPARL_FILES_ROOT` setzt `docker-compose.yml` fest auf `/app/files`, `FILE_CACHE_MIN_FREE_GB` reicht es durch. `FILE_CACHE_MAX_MB`, `FILE_PROXY_TIMEOUT_SECONDS`, `RIS_REQUEST_INTERVAL` und `INSIGHT_SOURCE_BACKOFF_FAILURES` reicht es nicht durch; tragen Sie sie unter Docker Compose in einer `docker-compose.override.yml` ein (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)), im Helm-Chart in `app.extraEnv`. Ein Eintrag nur in der `.env` wirkt nicht.
 
 Details unter [Dokument-Cache](dokument-cache.md).
 
@@ -280,6 +313,7 @@ Details unter [Dokument-Cache](dokument-cache.md).
 | Variable | Standard | Bedeutung |
 |----------|----------|-----------|
 | `FILE_STORE_LAYOUT` | `sha256` | Ablage nach SHA-256 mit Referenzzählung; `kommune` behält das ältere Verzeichnis je Kommune, ohne Deduplizierung und ohne Objektspeicher |
+| `FILE_STORE_SHARED` | `true` | Sieht dieser Dienst die gemeinsame Ablage? `false` nur auf einem eigenen Server für die Texterkennung, der die Inhalte allein über den Objektspeicher sieht: Was weder in der lokalen Ablage noch im Objektspeicher liegt, gilt dann als gestört statt als fehlend und löst keinen Abruf bei der Quelle aus. |
 | `INGESTOR_STORES_FILES` | `false` (`docker-compose.yml`: `true`) | Der Ingestor legt Dateien, die er für den Text lädt, selbst in der Ablage ab; der Dokument-Cache holt sie dann nicht noch einmal |
 | `FILE_CACHE_MAX_TOTAL_GB` | `0` | Obergrenze der Gesamtgröße in GB, `0` = unbegrenzt. Darüber verdrängt das stündliche Aufräumen die am wenigsten gebrauchten Dokumente. |
 | `FILE_CACHE_EVICT_TARGET_PERCENT` | `90` | so weit unter die Obergrenze räumt das Aufräumen |
@@ -295,10 +329,11 @@ Details unter [Dokument-Cache](dokument-cache.md).
 | `OBJ_ENDPOINT`, `OBJ_BUCKET`, `OBJ_REGION` | leer | Adresse, Bucket und Region |
 | `OBJ_KEY`, `OBJ_SECRET` | leer | Zugangsdaten, nie im Repository |
 | `OBJ_CACHE_MAX_GB` | `60` | Größe des lokalen Zwischenspeichers |
+| `OBJ_EVICT_MAX_MISSING` | `20` | Bremse: Verdrängen und Zurückholen brechen ab, wenn so viele Inhalte in Folge im Objektspeicher fehlen (etwa ein falscher Bucket); `0` = ohne Grenze |
 | `OBJ_CHECKSUMS` | `when_required` | Prüfsummen beim Hochladen: `when_required` (verträglich mit S3-kompatiblen Anbietern) oder `when_supported` |
 | `OBJ_ADDRESSING_STYLE`, `OBJ_TIMEOUT_SECONDS`, `OBJ_FETCH_TOTAL_SECONDS` | `auto`, `30`, `60` | Adressierung, Zeitgrenze je Anfrage und Gesamtdauer eines Abrufs aus dem Objektspeicher |
 
-`docker-compose.yml` reicht `FILE_STORE_LAYOUT`, `INGESTOR_STORES_FILES`, `FILE_CACHE_MAX_TOTAL_GB`, `FILE_CACHE_EVICT_TARGET_PERCENT`, `FILE_ACCEL_REDIRECT`, `INSIGHT_FETCH_ALLOW_PRIVATE_NETWORKS` sowie `OBJ_ENABLED`, `OBJ_ENDPOINT`, `OBJ_BUCKET`, `OBJ_KEY`, `OBJ_SECRET`, `OBJ_REGION`, `OBJ_CACHE_MAX_GB` und `OBJ_CHECKSUMS` durch, die übrigen nicht. Die Zugangsdaten des Objektspeichers können auch in einer eigenen Umgebungsdatei liegen: `docker compose --env-file .env --env-file <datei> up -d`.
+`docker-compose.yml` reicht `FILE_STORE_LAYOUT`, `FILE_STORE_SHARED`, `INGESTOR_STORES_FILES`, `FILE_CACHE_MAX_TOTAL_GB`, `FILE_CACHE_EVICT_TARGET_PERCENT`, `FILE_ACCEL_REDIRECT`, `INSIGHT_FETCH_ALLOW_PRIVATE_NETWORKS` sowie `OBJ_ENABLED`, `OBJ_ENDPOINT`, `OBJ_BUCKET`, `OBJ_KEY`, `OBJ_SECRET`, `OBJ_REGION`, `OBJ_CACHE_MAX_GB`, `OBJ_EVICT_MAX_MISSING` und `OBJ_CHECKSUMS` durch, die übrigen nicht. Die Zugangsdaten des Objektspeichers können auch in einer eigenen Umgebungsdatei liegen: `docker compose --env-file .env --env-file <datei> up -d`.
 
 ## Quellenüberwachung
 
@@ -325,6 +360,7 @@ Details unter [Betriebsmonitor](monitoring.md).
 | `HEALTH_READY_OPTIONAL` | leer | Prüfungen, die `/health/ready/` meldet, ohne deshalb 503 zu antworten, zum Beispiel `elasticsearch` |
 | `REPORTS_ROOT` | `<MEDIA_ROOT>/berichte` | Ablage der Berichte, etwa des Verfügbarkeitsberichts; nie über `/media/` abrufbar |
 | `LOG_FORMAT`, `LOG_LEVEL`, `OTEL_EXPORTER_OTLP_ENDPOINT`, `OTEL_SERVICE_NAME` | | siehe [Logging und Tracing](logging-tracing.md) |
+| `DJANGO_LOG_LEVEL` | `INFO` | Protokollstufe der Meldungen von Django selbst; `LOG_LEVEL` gilt für die Anwendung |
 
 Die Alarme gehen an `INSIGHT_ALERT_EMAILS`. `docker-compose.yml` reicht nur `METRICS_URL` und `GATUS_URL` durch.
 
@@ -353,6 +389,8 @@ Die Alarme gehen an `INSIGHT_ALERT_EMAILS`. `docker-compose.yml` reicht nur `MET
 | `AUDIT_ARCHIVE_STORAGE` | leer | statt des Verzeichnisses ein Speicher aus `STORAGES`, etwa ein S3-Speicher |
 | `AUDIT_EXPORT_MAX_ROWS` | `100000` | Obergrenze eines Exports des Prüfprotokolls aus der Oberfläche; größere Zeiträume mit `manage.py export_audit_log` |
 | `SECURITY_AUDIT_RETENTION_DAYS` | `365` | Aufbewahrung des Sicherheitsprotokolls in Tagen |
+| `SECURITY_AUDIT_ARCHIVE_RETENTION_DAYS` | `0` | Aufbewahrung der Archivpakete des Sicherheitsprotokolls in Tagen ab Ablage; `0` = keine Löschung |
+| `LOGIN_ATTEMPT_RETENTION_DAYS` | `30` | Aufbewahrung der Anmeldeversuche, mit denen die Anmeldung gedrosselt wird, in Tagen; `0` = keine Löschung. Es löscht der tägliche Zeitplan `befehl:purge_login_attempts`. |
 | `FACTION_SCHEDULE_INTERVAL_MINUTES`, `FACTION_SCHEDULE_HORIZON_DAYS` | `60`, `90` | Work: Fraktionssitzungen aus Sitzungsreihen; Abstand des Laufs in Minuten und Zeitraum in Tagen, für den Sitzungen im Voraus entstehen |
 
 `docker-compose.yml` reicht keine davon durch.
@@ -382,7 +420,12 @@ Die Alarme gehen an `INSIGHT_ALERT_EMAILS`. `docker-compose.yml` reicht nur `MET
 | `INGESTOR_USER_AGENT` (älter: `SCRAPER_USER_AGENT`) | `mandari-ingestor/<Version> (+https://mandari.de/ingestor/; support@mandari.de)` | User-Agent des Ingestors (Abgleich, Scraper, Texterkennung, Sondierung) |
 | `SCRAPER_TOMBSTONE_FULL_CRAWLS` | `3` | Nach so vielen Voll-Crawls ohne Sichtung gilt ein Objekt als gelöscht |
 | `SCRAPER_PARSE_QUOTA_WARN` | `0.8` | Warnung, wenn weniger als dieser Anteil der Seiten geparst werden konnte |
+| `INGESTOR_MODIFIED_SINCE_MARGIN_MINUTES` | `120` | Sicherheitsabstand des Änderungsfensters in Minuten: Ein Änderungsabgleich fragt ab dem Beginn des letzten vollständig erfolgreichen Abgleichs abzüglich dieses Abstands; je Quelle abweichend über `sync_config` |
+| `OPARL_REQUEST_TIMEOUT`, `OPARL_MAX_RETRIES` | `60`, `3` | Zeitgrenze einer Anfrage in Sekunden und Wiederholungen bei Fehlern. Die gleichnamigen Einstellungen der Anwendung (Standard `300` und `5`) werden dort derzeit nicht verwendet. |
+| `INGESTOR_TEXT_LAYER_MEMORY_LIMIT_MB`, `INGESTOR_TEXT_LAYER_TIMEOUT`, `INGESTOR_TEXT_LAYER_CONCURRENCY` | `384`, `120`, `2` | Nur Docker Compose, im Ingestor `TEXT_LAYER_MEMORY_LIMIT_MB`, `TEXT_LAYER_TIMEOUT` und `TEXT_LAYER_CONCURRENCY`: Die Textebene eines PDFs liest ein eigener Prozess mit Grenze des Adressraums in MB (`0` = ohne) und Zeitgrenze in Sekunden, höchstens so viele zugleich. Anzahl mal Grenze plus rund 200 MB unter `INGESTOR_MEM_LIMIT` halten. |
 
-`INGESTOR_INTERVAL`, `INGESTOR_FULL_SYNC_HOUR`, `INGESTOR_CONCURRENT`, `INGESTOR_SYNC_POOL_SIZE` und `INGESTOR_MEM_LIMIT` liest `docker-compose.yml` aus der `.env`; im Helm-Chart heißen die ersten drei `ingestor.syncInterval`, `ingestor.fullSyncHour` und `ingestor.concurrent`, `INGESTOR_SYNC_POOL_SIZE` gehört dort in `ingestor.extraEnv`. Die übrigen Variablen der Tabelle reicht es nicht durch: Tragen Sie sie unter Docker Compose im Abschnitt `environment` des Dienstes `ingestor` ein, im Helm-Chart in `ingestor.extraEnv`; ein Eintrag nur in der `.env` wirkt nicht. Die Sync-Aktionen an einer Quelle im Admin gehen an den Ingestor, solange er läuft; ohne ihn und für abgeschaltete Quellen laufen sie im Worker der Anwendung. Setzen Sie `INGESTOR_USER_AGENT`, `INGESTOR_REQUEST_INTERVAL` und `INGESTOR_HOST_MAX_CONCURRENT` deshalb auch dort, unter Docker Compose in `x-app-environment`, im Helm-Chart in `app.extraEnv`; sonst ruft der Worker mit der Standardkennung samt support@mandari.de ab.
+`INGESTOR_INTERVAL`, `INGESTOR_FULL_SYNC_HOUR`, `INGESTOR_CONCURRENT`, `INGESTOR_SYNC_POOL_SIZE`, `INGESTOR_MEM_LIMIT` und `INGESTOR_TEXT_LAYER_*` liest `docker-compose.yml` aus der `.env`; im Helm-Chart heißen die ersten drei `ingestor.syncInterval`, `ingestor.fullSyncHour` und `ingestor.concurrent`, `INGESTOR_SYNC_POOL_SIZE` gehört dort in `ingestor.extraEnv`. Die übrigen Variablen der Tabelle reicht es nicht durch: Tragen Sie sie unter Docker Compose in einer `docker-compose.override.yml` beim Dienst `ingestor` ein (siehe [Eigene Variablen unter Docker Compose](#eigene-variablen)), im Helm-Chart in `ingestor.extraEnv`; ein Eintrag nur in der `.env` wirkt nicht. Abgeglichen wird nur im Ingestor: Die Sync-Aktionen im Admin gehen an den laufenden Ingestor, ohne ihn meldet der Admin einen Fehler. `INGESTOR_USER_AGENT`, `INGESTOR_REQUEST_INTERVAL` und `INGESTOR_HOST_MAX_CONCURRENT` gehören deshalb nur in die Umgebung des Ingestors. Die Abrufe der Anwendung selbst (Dokument-Cache, Vorschau, Löschabgleich, Personenfotos) melden sich mit der festen Kennung `mandari-ingestor (+https://mandari.de/ingestor/; support@mandari.de)`; ihren Abstand je Server stellt `RIS_REQUEST_INTERVAL` ein.
+
+Weitere Feineinstellungen des Ingestors, etwa Parallelität, Wiederholungen und Schutzschalter, stehen mit ihren Standardwerten in `ingestor/src/config.py` im Repository. Ihre Namen sind die Feldnamen in Großbuchstaben.
 
 Details unter [Quellen anbinden](quellen-anbinden.md), Regeln für den Abruf unter [Ingestor und Opt-out](../datenschutz/ingestor.md).
