@@ -1,6 +1,6 @@
 ---
 title: Fehlertypen der Schnittstellen
-description: Fehlerantworten der mandari-Schnittstellen nach RFC 9457 (Problem Details). Aufbau, Felder und alle Fehlertypen der Session-API v1, des Änderungsfeeds, des Datenkatalogs und der Befehle der Datendrehscheibe.
+description: Fehlerantworten der mandari-Schnittstellen nach RFC 9457 (Problem Details). Aufbau, Felder und alle Fehlertypen der Session-API v1, des Änderungsfeeds, des Datenkatalogs und der Befehle der Datendrehscheibe, etwa der Einreichung von Anträgen.
 ---
 
 # Fehlertypen der Schnittstellen
@@ -36,7 +36,7 @@ Manche Typen tragen weitere Felder, etwa `snapshot` bei [cursor-abgelaufen](#cur
 
 | Schnittstelle | Fehler nach RFC 9457 |
 |---------------|----------------------|
-| [Session-API v1](../session/api-v1.md) (`/api/v1/session/<mandant>/…`) | alle Fehler |
+| [Session-API v1](../session/api-v1.md) (`/api/v1/session/<mandant>/…`) | alle Fehler; beim Einreichen eines Antrags zusätzlich die Typen des Befehls `submission.submit` (siehe [Befehle der Datendrehscheibe](#befehle-der-datendrehscheibe)) |
 | Änderungsfeed und Snapshot je Kommune ([OParl-Aggregations-API](../insight/oparl-api.md), [OParl-API je Kommune](../session/oparl-api.md)) | nur [cursor-abgelaufen](#cursor-abgelaufen) und [kommune-zurueckgenommen](#kommune-zurueckgenommen); die übrigen Fehler der OParl-Schnittstellen sind einfaches JSON mit `error` und `status` |
 | Datenkatalog nach DCAT-AP.de (`/data/dcat/…` und `/session/<mandant>/api/dcat/catalog`, nur wenn die Installation ihn eingeschaltet hat) | [keine-lizenz](#keine-lizenz) und [kommune-zurueckgenommen](#kommune-zurueckgenommen) |
 | Befehle der Datendrehscheibe | alle Fehler, siehe [Befehle der Datendrehscheibe](#befehle-der-datendrehscheibe) |
@@ -69,7 +69,7 @@ Abhilfe: Nach der genannten Wartezeit erneut senden und Anfragen gleichmäßiger
 
 **Status 422.** Die Anfrage enthält ungültige oder fehlende Felder. Das Feld `errors` nennt die Stellen:
 
-- **Session-API:** je Fehler `loc` (Stelle), `msg` (Meldung) und `type` (Art der Prüfung).
+- **Session-API:** je Fehler `loc` (Stelle), `msg` (Meldung) und `type` (Art der Prüfung). Prüfungen des Befehls beim Einreichen, etwa Pflichttexte nur aus Leerzeichen, tragen `type` `befehl`.
 - **Befehle der Datendrehscheibe:** je Fehler `pointer` (Stelle als JSON-Pointer nach RFC 6901, etwa `/antrag/titel`) und `detail` (verletzte Regel). Werte aus der Anfrage stehen nie in der Antwort.
 
 Abhilfe: Die genannten Felder nach der OpenAPI-Beschreibung bzw. dem Vertrag des Befehls korrigieren.
@@ -103,9 +103,11 @@ Abhilfe: Die Einträge der Kommune wie gelöscht behandeln, also auch aus eigene
 
 ## Befehle der Datendrehscheibe
 
-Wer Daten eines anderen Moduls ändern will, schickt dessen Eigentümer einen **Befehl** und erhält sofort eine Quittung oder ein Problem mit den Typen dieses Abschnitts. Noch nutzt kein Einreichungsweg die Befehle, und die Standardinstallation bindet ihren HTTP-Weg nicht unter einer öffentlichen Adresse ein. Die Typen stehen trotzdem schon fest; Grundlage ist die Architekturentscheidung [Befehle synchron](https://github.com/mandariOSS/mandari/blob/dev/docs/adr/20260929-befehle-synchron.md).
+Wer Daten eines anderen Moduls ändern will, schickt dessen Eigentümer einen **Befehl** und erhält sofort eine Quittung oder ein Problem mit den Typen dieses Abschnitts. Grundlage ist die Architekturentscheidung [Befehle synchron](https://github.com/mandariOSS/mandari/blob/main/docs/adr/20260929-befehle-synchron.md).
 
-Eine Anfrage, die mit 409, 429, 502, 503 oder 504 scheitert, darf mit **demselben** Idempotenzschlüssel wiederholt werden.
+Der erste Befehl ist `submission.submit`, der einzige Weg, einen Antrag bei einer Verwaltung einzureichen. Ihn senden mandari Work, die [Session-API v1](../session/api-v1.md) (`…/applications/submit/`) und der abgekündigte Pfad der alten Session-API; geprüft wird nur im Sitzungsdienst. Die Session-API v1 gibt die Probleme des Befehls mit Typ, Status und Meldung unverändert weiter, Validierungsfehler mit `errors` in ihrem eigenen Format; der alte Pfad antwortet im alten Format `{"error": …}`. Den HTTP-Weg der Befehle selbst bindet die Standardinstallation nicht unter einer öffentlichen Adresse ein.
+
+Eine Anfrage, die mit 409, 429, 502, 503 oder 504 scheitert, darf mit **demselben** Idempotenzschlüssel wiederholt werden. In der Session-API ist der Schlüssel der Header `Idempotency-Key`. Er ist dort optional und gilt je Token, solange die Installation Idempotenzschlüssel aufbewahrt (Standard 30 Tage, `EVENTS_IDEMPOTENCY_RETENTION_DAYS`); ohne ihn ist jede Anfrage eine neue Einreichung.
 
 ### idempotenzschluessel-fehlt { #idempotenzschluessel-fehlt }
 
@@ -131,9 +133,13 @@ Eine Anfrage, die mit 409, 429, 502, 503 oder 504 scheitert, darf mit **demselbe
 
 **Status 404.** Diesen Befehl gibt es in dieser Version nicht.
 
+### mandant-unbekannt { #mandant-unbekannt }
+
+**Status 404.** Die Verwaltung, an die der Befehl geht, ist nicht bekannt oder deaktiviert.
+
 ### idempotenzschluessel-wiederverwendet { #idempotenzschluessel-wiederverwendet }
 
-**Status 422.** Der Idempotenzschlüssel wurde schon für einen anderen Befehl oder einen anderen Inhalt verwendet. Für einen neuen Befehl einen neuen Schlüssel erzeugen.
+**Status 422.** Der Idempotenzschlüssel wurde schon für einen anderen Befehl oder einen anderen Inhalt verwendet. Für einen neuen Befehl einen neuen Schlüssel erzeugen. Eine Wiederholung mit demselben Schlüssel und demselben Inhalt ist dagegen kein Fehler: Sie liefert dieselbe Quittung, ohne ein zweites Mal auszuführen.
 
 ### interner-fehler { #interner-fehler }
 
@@ -143,6 +149,10 @@ Eine Anfrage, die mit 409, 429, 502, 503 oder 504 scheitert, darf mit **demselbe
 
 **Status 501.** Den Befehl gibt es, diese Installation führt ihn aber nicht aus.
 
+### anlagen-nicht-unterstuetzt { #anlagen-nicht-unterstuetzt }
+
+**Status 501.** Der Befehl hat Anlagen, Sender und Eigentümer laufen aber getrennt. Anlagen lassen sich über den HTTP-Weg noch nicht übertragen.
+
 ### unerwartete-antwort { #unerwartete-antwort }
 
 **Status 502.** Der Eigentümer hat unerwartet geantwortet, wenn Sender und Eigentümer getrennt laufen. Später mit demselben Idempotenzschlüssel wiederholen.
@@ -151,4 +161,8 @@ Eine Anfrage, die mit 409, 429, 502, 503 oder 504 scheitert, darf mit **demselbe
 
 **Status 503.** Der Eigentümer ist nicht erreichbar, wenn Sender und Eigentümer getrennt laufen. Später mit demselben Idempotenzschlüssel wiederholen.
 
-Über den HTTP-Weg kommen [nicht-authentifiziert](#nicht-authentifiziert) (401) und [keine-berechtigung](#keine-berechtigung) (403) hinzu, für Inhalte, die nicht zum Vertrag passen, [validierung](#validierung) (422). Fachliche Ablehnungen meldet der Eigentümer mit einem eigenen Typ, etwa mit Status 409.
+### anlagen-nicht-abgelegt { #anlagen-nicht-abgelegt }
+
+**Status 503.** Die Anlagen eines eingereichten Antrags ließen sich nicht ablegen, etwa weil der Speicher nicht erreichbar war. Der Antrag ist **nicht** eingegangen; der ganze Befehl wurde zurückgerollt. Später mit demselben Idempotenzschlüssel wiederholen.
+
+Über den HTTP-Weg kommen [nicht-authentifiziert](#nicht-authentifiziert) (401) und [keine-berechtigung](#keine-berechtigung) (403) hinzu. Inhalte, die nicht zum Vertrag passen, meldet jeder Weg mit [validierung](#validierung) (422); bei `submission.submit` gehören dazu auch Pflichttexte nur aus Leerzeichen und Anlagen, deren Größe oder Prüfsumme nicht passt. Eine Anmeldung, die bei dieser Verwaltung nicht einreichen darf, ergibt [keine-berechtigung](#keine-berechtigung) (403). Weitere fachliche Ablehnungen meldet der Eigentümer mit einem eigenen Typ, etwa mit Status 409.

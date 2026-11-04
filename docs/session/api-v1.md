@@ -64,9 +64,16 @@ Content-Type: application/json
 }
 ```
 
-Antwort `201` mit `id`, `reference` (Aktenzeichen) und `status`. Zulässige `application_type`-Werte:
-`motion`, `inquiry`, `resolution`, `urgent`, `amendment`, `other`. Das Work-Portal nutzt genau diesen
-Weg, siehe [Anträge digital einreichen](../work/antraege-einreichen.md).
+Antwort `201` mit `id`, `reference` (Eingangsnummer), `status`, `feedback` (Adresse des Rückmeldestands),
+`submitted_at` (Eingangszeit der Einreichung) und `content_hash` (SHA-256 über die eingereichten Angaben als
+kanonisches JSON nach RFC 8785).
+Zulässige `application_type`-Werte: `motion`, `inquiry`, `resolution`, `urgent`, `amendment`, `other`.
+
+Der Header `Idempotency-Key` ist optional und empfohlen: Eine Wiederholung mit demselben Schlüssel und denselben
+Angaben liefert dieselbe Antwort, ohne den Antrag ein zweites Mal einzureichen; derselbe Schlüssel mit anderen
+Angaben ergibt `422`. Ohne Schlüssel ist jede Anfrage eine neue Einreichung. Die Einreichung läuft über denselben
+Befehl und dieselbe Prüfung wie aus dem Work-Portal, siehe [Anträge digital einreichen](../work/antraege-einreichen.md);
+die möglichen Fehler stehen unter [Fehlertypen der Schnittstellen](../api/probleme.md#befehle-der-datendrehscheibe).
 
 ## Fehlerformat
 

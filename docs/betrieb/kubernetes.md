@@ -99,7 +99,7 @@ Wie in Docker Compose laufen Ereignisse, Aufträge und alle [Zeitpläne](cron.md
 
 | Deployment | Aufgabe | Speichergrenze |
 |------------|---------|----------------|
-| `mandari-worker` | alle Rollen, Warteschlangen `default`, `mail`, `index`, `adapter` | 1Gi |
+| `mandari-worker` | alle Rollen, Warteschlangen `default`, `mail`, `index`, `adapter` und `text` (erste Stufe der Texterkennung, drei Plätze über `worker.concurrency`) | 1Gi |
 | `mandari-worker-heavy` | Texterkennung und KI (`ocr`, `ai`), abschaltbar mit `worker.heavy.enabled: false` | 3Gi |
 | `mandari-worker-live` | Live-Übertragungen (`live`), abschaltbar mit `worker.live.enabled: false` | 512Mi |
 
@@ -146,10 +146,14 @@ kubectl -n mandari get secret mandari-secrets -o yaml > mandari-secrets-backup.y
 | `ingestor.fullSyncHour`, `ingestor.concurrent` | `3`, `10` | Beginn des nächtlichen Fensters für Vollabgleiche, gleichzeitige Anfragen je Lauf |
 | `ingestor.extraEnv` | – | Umgebungsvariablen nur für den Ingestor |
 | `worker.enabled`, `worker.replicas` | `true`, `1` | Worker für Ereignisse, Aufträge und Zeitpläne |
+| `worker.queues`, `worker.concurrency` | `default,mail,index,adapter,text`, `text=3` | Warteschlangen des Hauptworkers und Plätze der ersten Stufe der Texterkennung; ohne `text` plant die Anwendung alles in `ocr` ein |
 | `worker.heavy.enabled`, `worker.live.enabled` | `true`, `true` | eigene Worker für Texterkennung und KI bzw. Live-Übertragungen |
 | `worker.affinity` | `{}` | z. B. `podAffinity` zur Anwendung bei `ReadWriteOnce` (siehe [Skalieren](#skalieren)) |
 | `files.textExtractionRunner` | `ingestor` | Wer den Text der Dokumente erkennt; `worker` braucht zusätzlich `TASKS_BACKEND=journal` in `app.extraEnv` |
 | `events.producers`, `events.changesFeed` | `false` | Ereignisse zum RIS-Bestand bzw. Änderungsfeed einschalten (siehe unten) |
+| `events.journalPurge`, `events.journalRetentionDays` | `false`, `90` | Journal der Ereignistechnik täglich nach Frist aufräumen (`EVENTS_JOURNAL_PURGE_ENABLED`); vorher `manage.py events_purge --dry-run` prüfen |
+| `events.workerPushUrl` | leer | „Worker lebt“ an die Statusseite melden (`WORKER_PUSH_URL`); das Token `WORKER_PUSH_TOKEN` über `app.extraEnvFromSecret` |
+| `events.redactNeutralize` | `false` | personenbezogene Nutzlasten im Journal nach einem Löschereignis leeren (`EVENTS_REDACT_NEUTRALIZE`) |
 | `liveStreams.enabled` | `false` | Live-Übertragungen (`LIVE_UEBERTRAGUNG_AKTIV`) |
 | `mail.fromEmail`, `mail.messageIdDomain` | leer | Absender und Domain für Message-ID und EHLO |
 | `persistence.files.size` | `50Gi` | Heruntergeladene Dokumente; wächst mit der Zahl der Kommunen |
@@ -168,14 +172,14 @@ Die Migrationen laufen vor und nach dem Ausrollen von selbst (siehe [Migrationen
 
 ```bash
 helm upgrade mandari deploy/kubernetes/helm/mandari -n mandari \
-  --reset-then-reuse-values --set image.tag=v0.11.0 --wait --wait-for-jobs
+  --reset-then-reuse-values --set image.tag=v0.12.0 --wait --wait-for-jobs
 ```
 
 `--reset-then-reuse-values` (Helm 3.14 oder neuer) übernimmt neue Standardwerte des Charts und behält Ihre eigenen Werte.
 
 ## Skalieren
 
-Mehr Repliken der Anwendung brauchen eine Speicherklasse mit `ReadWriteMany` (zum Beispiel NFS, CephFS, Longhorn). Der Ingestor bleibt bei einer Instanz, damit Quellen nicht doppelt abgefragt werden. Die Worker binden `media` und `files` ein wie die Anwendung: Mit `ReadWriteOnce` (Standard) müssen auf einem Cluster mit mehreren Knoten Anwendung, Ingestor und Worker auf demselben Knoten laufen, sonst bleibt ein Pod mit „Multi-Attach“ hängen. Dafür `worker.affinity` und `app.affinity` auf denselben Knoten legen oder `ReadWriteMany` verwenden.
+Mehr Instanzen der Anwendung bekommen Sie über `app.replicas`, je Pod ein Prozess; `APP_PROCESSES` aus Docker Compose bleibt im Chart ungesetzt. Einen PgBouncer bringt das Chart nicht mit, und `DATABASE_URL` gilt dort für Anwendung, Worker, Ingestor und Migrations-Jobs zugleich. Mehr Repliken der Anwendung brauchen eine Speicherklasse mit `ReadWriteMany` (zum Beispiel NFS, CephFS, Longhorn). Der Ingestor bleibt bei einer Instanz, damit Quellen nicht doppelt abgefragt werden. Die Worker binden `media` und `files` ein wie die Anwendung: Mit `ReadWriteOnce` (Standard) müssen auf einem Cluster mit mehreren Knoten Anwendung, Ingestor und Worker auf demselben Knoten laufen, sonst bleibt ein Pod mit „Multi-Attach“ hängen. Dafür `worker.affinity` und `app.affinity` auf denselben Knoten legen oder `ReadWriteMany` verwenden.
 
 ## Sichern
 

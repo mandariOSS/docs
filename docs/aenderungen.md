@@ -7,6 +7,10 @@ description: Was sich an der mandari-Dokumentation wann geändert hat.
 
 Größere Änderungen an Struktur und Inhalt, neueste zuerst. Einzelne Korrekturen finden Sie in der [Commit-Historie](https://github.com/mandariOSS/docs/commits/main).
 
+## November 2026
+
+- Korrigiert (04.11.2026): Betrieb und Entwicklung auf dem Stand von Version 0.12.0. Die [Konfiguration](betrieb/konfiguration.md) nennt jetzt jede Umgebungsvariable der Anwendung und von `docker-compose.yml`, darunter PgBouncer, mehrere Anwendungsprozesse, die Texterkennung in zwei Stufen, den Betriebshinweis und die Provisioning-API v2; ein Skript im Repository der Dokumentation gleicht sie mit dem Code ab. [Regelmäßige Aufgaben](betrieb/cron.md) mit den Zeitplänen für abgelaufene Sitzungen und Anmeldeversuche, [Self-Hosting](betrieb/index.md) mit der Warteschlange `text` und dem optionalen PgBouncer, [Updates und Backups](betrieb/updates-backups.md) mit den Tags `v0.12.0`, `v0.11` und dem Verhalten von `latest`, [Betrieb in Kubernetes](betrieb/kubernetes.md) mit den Werten des Workers. Abgeglichen wird nur noch im Ingestor ([Quellen anbinden](betrieb/quellen-anbinden.md), mit Abruffenster je Quelle). Die [Fehlertypen der Schnittstellen](api/probleme.md) nennen die Einreichung über den Befehl `submission.submit` und drei weitere Typen. [Entwicklung](entwicklung/index.md) und [Qualitätsgates](entwicklung/qualitaetsgates.md) beschreiben die lokale Umgebung mit `.env` in der Wurzel und die heutigen Jobs der CI; die [Demo-Umgebung](betrieb/demo-umgebung.md) nennt die verorteten Vorgänge und die Präsentationsumgebung.
+
 ## Oktober 2026
 
 - Aktualisiert (18.10.2026): [Konto und Sicherheit](work/konto-und-sicherheit.md#zwei-faktor-pflicht) nennt den erweiterten Kreis, für den die Zwei-Faktor-Anmeldung in Work Pflicht ist, die Empfehlung auf der Startseite und die Angabe in der Mitgliederliste; [Was ist neu in Work](work/was-ist-neu.md) mit einem Eintrag dazu.

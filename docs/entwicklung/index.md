@@ -19,7 +19,7 @@ Entwicklung findet im Hauptrepository auf dem Branch `dev` statt, `main` ist der
 
 | Komponente | Technologie |
 |------------|-------------|
-| Backend | Django 6.1, Python 3.12 oder neuer |
+| Backend | Django 6.1, Python 3.12 bis 3.14 |
 | Frontend | Django-Templates, HTMX, Alpine.js, Tailwind CSS, Tiptap-Editor; TypeScript, gebaut mit Vite |
 | Admin | django-unfold |
 | Datenbank | PostgreSQL 16 |
@@ -31,17 +31,39 @@ Entwicklung findet im Hauptrepository auf dem Branch `dev` statt, `main` ist der
 
 ## Lokal entwickeln
 
-Voraussetzungen: Python 3.12 oder neuer, Node.js 22 oder neuer, Docker (für PostgreSQL, Redis und Elasticsearch) und [uv](https://docs.astral.sh/uv/). Die Python-Abhängigkeiten stehen in `mandari/pyproject.toml`, die gesperrten Versionen in `mandari/uv.lock`. Eine `requirements.txt` liegt nicht im Repository; wer sie für pip braucht, erzeugt sie mit `sh scripts/export_requirements.sh <datei>` aus der Lock-Datei.
+Voraussetzungen: Python 3.12 bis 3.14, Node.js 22 oder neuer, Docker (für PostgreSQL, Redis und Elasticsearch) und [uv](https://docs.astral.sh/uv/). Die Python-Abhängigkeiten stehen in `mandari/pyproject.toml`, die gesperrten Versionen in `mandari/uv.lock`. Eine `requirements.txt` liegt nicht im Repository; wer sie für pip braucht, erzeugt sie mit `sh scripts/export_requirements.sh <datei>` aus der Lock-Datei.
 
 ```bash
 git clone https://github.com/mandariOSS/mandari.git
 cd mandari
+cp .env.example .env
+```
 
-# Datenbank, Cache und Suche starten
-docker compose up -d postgres redis elasticsearch
+Die `.env` gehört in die **Wurzel** des Repositorys: Docker Compose liest dort die Passwörter für Datenbank und Redis, und die Anwendung lädt dieselbe Datei beim Start. Trag dort `POSTGRES_PASSWORD`, `REDIS_PASSWORD`, `SECRET_KEY` und `ENCRYPTION_MASTER_KEY` ein (Passwörter nur aus Buchstaben und Ziffern, den Schlüssel mit `openssl rand -base64 32`) und ergänze die Verbindungen für die Anwendung, die außerhalb von Docker läuft:
+
+```ini
+DATABASE_URL=postgresql://mandari:<POSTGRES_PASSWORD>@localhost:5432/mandari
+REDIS_URL=redis://:<REDIS_PASSWORD>@localhost:6379/0
+```
+
+`docker-compose.yml` veröffentlicht die Ports von Datenbank, Redis und Suche nicht. Für die Entwicklung gibt eine `docker-compose.override.yml` in der Wurzel sie nur auf dem eigenen Rechner frei; das Repository ignoriert diese Datei. Belegt schon ein anderer Dienst einen dieser Ports, wähle links einen freien und pass die Adresse in der `.env` an.
+
+```yaml
+services:
+  postgres:
+    ports: ["127.0.0.1:5432:5432"]
+  redis:
+    ports: ["127.0.0.1:6379:6379"]
+  elasticsearch:
+    ports: ["127.0.0.1:9200:9200"]
+```
+
+Danach:
+
+```bash
+docker compose up -d postgres redis elasticsearch   # Datenbank, Cache und Suche
 
 cd mandari
-cp ../.env.example .env          # SECRET_KEY und ENCRYPTION_MASTER_KEY eintragen
 uv sync --extra dev              # Abhängigkeiten aus uv.lock, mit Test- und Lint-Werkzeugen
 npm ci && npm run build          # Frontend bauen
 
@@ -62,8 +84,10 @@ Die Testsuite läuft mit pytest:
 ```bash
 cd mandari
 uv run pytest apps/work/tasks -q                 # einzelne App
-uv run pytest -n auto -m "not migrationen"       # parallel, ohne Migrationstests
+uv run --with pytest-xdist pytest -n auto -m "not migrationen"   # parallel wie in der CI, ohne Migrationstests
 ```
+
+Ohne `DATABASE_URL` in der Umgebung der Shell laufen die Tests auf einer frischen SQLite-Datenbank; der Eintrag in der `.env` zählt dafür nicht. Die CI testet mit PostgreSQL. `pytest-xdist` gehört nicht zu den Entwicklungswerkzeugen in `uv.lock`, deshalb `--with`.
 
 Neben den Unit-Tests gibt es eine Reihe von **Smoke-Tests** unter `scripts/smoke_*.py`. Jeder läuft selbst enthalten auf einer frischen SQLite-Datenbank und prüft ein Feature Ende-zu-Ende, inklusive Berechtigungen, Mandantentrennung und der Garantie, dass nur öffentliche Inhalte nach außen gelangen. Beispiele:
 

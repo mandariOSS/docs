@@ -17,9 +17,10 @@ Die Container-Images liegen in der GitHub Container Registry. Ein einziges `IMAG
 
 | Tag | Bedeutung |
 |-----|-----------|
-| `v0.11.0` usw. | eine veröffentlichte Version (Release) mit Changelog, siehe [GitHub Releases](https://github.com/mandariOSS/mandari/releases) |
-| `latest` | beweglich: der jüngste Stand des Zweigs `main`; auch ein Release setzt `latest` |
-| `main-<commit>` | unveränderlicher Stand eines Commits auf `main` |
+| `v0.12.0`, `v0.11.1` usw. | eine veröffentlichte Version (Release) mit Changelog, siehe [GitHub Releases](https://github.com/mandariOSS/mandari/releases) |
+| `v0.11` | beweglich: das jüngste Patch-Release der Linie 0.11, derzeit `v0.11.1`. Für Installationen, die bei 0.11 bleiben und nur noch Korrekturen übernehmen. |
+| `latest` | beweglich: der jüngste Stand des Zweigs `main`. Jeder Push auf `main` setzt es, ebenso ein Release der jüngsten Linie; ein Patch-Release einer älteren Linie (etwa `v0.11.1` nach 0.12.0) setzt es nicht. `latest` kann deshalb Änderungen enthalten, die noch in keinem Release stehen. |
+| `main-<commit>` | unveränderlicher Stand eines Commits auf `main`; dasselbe Image trägt auch das ältere Tag `<commit>` ohne Präfix |
 | `dev`, `dev-<commit>` | Entwicklungsstand, instabil und nicht für den Produktivbetrieb |
 
 Für den Betrieb empfehlen wir eine Release-Version, damit jedes Update eine bewusste Entscheidung ist. Versionierung, Release-Rhythmus und Supportzeiträume regelt die [Release- und Support-Politik](../entwicklung/release-politik.md).
@@ -28,7 +29,7 @@ Für den Betrieb empfehlen wir eine Release-Version, damit jedes Update eine bew
 
 ```bash
 ./update.sh                  # auf latest
-./update.sh --tag v0.11.0    # auf eine bestimmte Version
+./update.sh --tag v0.12.0    # auf eine bestimmte Version
 ./update.sh --tag dev        # Entwicklungsstand (instabil)
 ./update.sh --dry-run        # nur prüfen, nichts ändern
 ./update.sh --rollback       # zurück auf die Version vor dem letzten Update
@@ -36,7 +37,7 @@ Für den Betrieb empfehlen wir eine Release-Version, damit jedes Update eine bew
 
 | Option | Wirkung |
 |--------|---------|
-| `--tag <tag>` | Zielversion, Vorgabe `latest` |
+| `--tag <tag>` | Zielversion, Vorgabe `latest`; die Version geht auch ohne `--tag` als erstes Argument (`./update.sh v0.12.0`) |
 | `--dry-run` | nur prüfen, nichts ändern |
 | `--rollback` | zurück auf die Version aus `.env.pre-update` |
 | `--no-backup` | die Rückfrage nach einer Sicherung überspringen |
@@ -51,12 +52,16 @@ So läuft ein Update:
 5. Ingestor, Protokoll-Orchestrator und Worker halten während der Migrationen an. Die verträglichen Migrationen laufen vor dem Umschalten in einem eigenen Container (`safemigrate`), ebenso die der Website.
 6. Die Worker starten mit dem neuen Image vor der Anwendung (Migration, dann Worker, dann Web). Danach tauscht das Skript die Container der Anwendung und der Website; Caddy hält Anfragen währenddessen kurz an.
 7. Eine Anwendungsprüfung im Container ruft unter anderem Bereitschaft, Anmeldeseite, Bürgerportal und OParl-System ab. Scheitert sie, schaltet das Skript selbst auf das vorherige Image zurück.
-8. Zum Schluss spielt es die übrigen Migrationen ein und startet Ingestor und Protokoll-Orchestrator mit dem neuen Image.
+8. Zum Schluss spielt es die übrigen Migrationen ein, startet Ingestor und Protokoll-Orchestrator mit dem neuen Image, lädt die Konfiguration von Caddy neu und räumt alte Images auf.
+
+Ein laufender PgBouncer läuft dabei unverändert weiter; die Migrationen verbinden sich über `DB_DIRECT_URL` direkt mit PostgreSQL.
 
 Welche Dienste während der Migrationen stehen, legt `WORKER_SERVICES` fest (Vorgabe: `ingestor minutes-orchestrator worker worker-heavy worker-live`). Wer einen weiteren Dienst in einer eigenen Compose-Datei betreibt, ergänzt ihn dort, zum Beispiel `WORKER_SERVICES="ingestor minutes-orchestrator worker worker-heavy ocr-worker"` in der `.env`.
 
 !!! note "Migrationen und Rückfall"
     Migrationen sind abwärtsverträglich angelegt. Der Rückfall rollt deshalb nur das Image zurück, keine Migrationen. Lesen Sie vor einem Update trotzdem die Release-Notes; einzelne Releases nennen dort Schritte nach dem Update.
+
+    Wer [PgBouncer](konfiguration.md#datenbank-cache-suche) nutzt, schaltet ihn vor einem Wechsel auf eine Version vor 0.12.0 zuerst ab: Ältere Images kennen `DB_PGBOUNCER` nicht.
 
 Für nicht interaktive Updates (Betrieb, Automatisierung) gibt es `deploy/scripts/deploy.sh` mit derselben Prüfung und demselben Rückfall, Beschreibung in `DEPLOYMENT.md` im Repository.
 
