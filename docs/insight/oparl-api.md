@@ -15,7 +15,7 @@ mandari stellt die gespiegelten Ratsinformationen aller angebundenen Kommunen al
 ## Einstiegspunkt
 
 ```bash
-curl https://mandari.de/oparl/v1/system
+curl https://oparl.mandari.de/oparl/v1/system
 ```
 
 Von dort hangelst du dich über die verlinkten Objekte durch alle Daten:
@@ -24,11 +24,34 @@ Von dort hangelst du dich über die verlinkten Objekte durch alle Daten:
 System → Bodies (Kommunen) → Organizations, Persons, Meetings, Papers
 ```
 
+Die Kennungen aller Objekte beginnen mit `https://oparl.mandari.de/oparl/v1/`. Dieselben Pfade unter `https://mandari.de/oparl/` liefern dieselben Objekte mit denselben Kennungen.
+
+## Kommunen finden
+
+Um nicht erst alle Bodies laden zu müssen, gibt es zwei Verzeichnisse mit denselben Kommunen, wie sie im Bürgerportal stehen:
+
+- **Übersicht [`https://oparl.mandari.de/oparl/`](https://oparl.mandari.de/oparl/)**: Das Feld `bodyIndex` nennt je Kommune `name`, `displayName`, `slug`, `ags` (achtstellig, soweit gepflegt), `license` (der Kommune, sonst die der Installation) und die Adressen `body`, `paper`, `meeting`, `organization`, `person` und `web`, alphabetisch nach `displayName`. Ein Abruf genügt.
+- **Seite [Offene Daten](https://mandari.de/insight/offene-daten/)** im Bürgerportal: dieselben Adressen als Tabelle, mit Beispiel.
+
+Umgekehrt zeigt `Body.web` auf die Seite der Kommune im Bürgerportal (`https://mandari.de/insight/k/<slug>/`), und jede Seite einer Kommune nennt ihren Body im Kopf als `<link rel="alternate" type="application/json">`. `Body.ags` ist der achtstellige Amtliche Gemeindeschlüssel, wie wir ihn pflegen, sonst die Angabe der Quelle.
+
+## Schnellstart: Anträge einer Kommune abrufen
+
+```bash
+# 1. Adresse der Vorlagen-Liste von Münster aus dem Verzeichnis holen
+curl -s https://oparl.mandari.de/oparl/ | jq -r '.bodyIndex[] | select(.slug == "muenster") | .paper'
+
+# 2. Nur, was sich seit dem 1. November 2026 geändert hat (Zeitzone angeben)
+curl -s "<Adresse aus Schritt 1>?modified_since=2026-11-01T00:00:00Z"   | jq '.data[] | {name, reference, paperType, date, web}'
+```
+
+Die Liste der Vorlagen enthält Vorlagen, Anträge und Anfragen. Die Art steht im Feld `paperType` (etwa „Antrag“ oder „Anfrage“), die Dokumente stehen unter `mainFile` und `auxiliaryFile`. Den erkannten Text liefert eine Datei nur unter ihrer eigenen Adresse (`id`) im Feld `text`, nicht in der Liste. Weitere Seiten findest du unter `links.next`.
+
 ## Endpunkte
 
 | Endpunkt | Inhalt |
 |----------|--------|
-| `GET /oparl/v1/` | JSON-Übersicht über die API |
+| `GET /oparl/v1/` | JSON-Übersicht über die API mit dem Verzeichnis der Kommunen (`bodyIndex`) |
 | `GET /oparl/v1/system` | OParl-System-Objekt (Einstiegspunkt) |
 | `GET /oparl/v1/bodies` | Liste aller Kommunen (paginiert) |
 | `GET /oparl/v1/body/<uuid>` | Einzelne Kommune |
@@ -73,10 +96,10 @@ Alle Listen unterstützen `created_since`, `created_until`, `modified_since` und
 
 ```bash
 # Alle Sitzungen, die seit dem 1. Juni 2026 (UTC) geändert wurden
-curl "https://mandari.de/oparl/v1/body/<uuid>/meetings?modified_since=2026-06-01T00%3A00%3A00%2B00%3A00"
+curl "https://oparl.mandari.de/oparl/v1/body/<uuid>/meetings?modified_since=2026-06-01T00%3A00%3A00%2B00%3A00"
 
 # Das Z-Suffix ist ebenfalls gültig
-curl "https://mandari.de/oparl/v1/body/<uuid>/meetings?modified_since=2026-06-01T00:00:00Z"
+curl "https://oparl.mandari.de/oparl/v1/body/<uuid>/meetings?modified_since=2026-06-01T00:00:00Z"
 ```
 
 !!! warning "Zeitstempel brauchen eine Zeitzone"
@@ -92,7 +115,7 @@ Objekte, die im Quellsystem gelöscht wurden, werden in mandari nicht physisch g
 
     ```json
     {
-      "id": "https://mandari.de/oparl/v1/paper/<uuid>",
+      "id": "https://oparl.mandari.de/oparl/v1/paper/<uuid>",
       "type": "https://schema.oparl.org/1.1/Paper",
       "created": "2024-01-01T00:00:00+00:00",
       "modified": "2026-07-01T12:00:00+00:00",
