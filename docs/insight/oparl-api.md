@@ -30,10 +30,10 @@ Die Kennungen aller Objekte beginnen mit `https://oparl.mandari.de/oparl/v1/`. D
 
 Um nicht erst alle Bodies laden zu müssen, gibt es zwei Verzeichnisse mit denselben Kommunen, wie sie im Bürgerportal stehen:
 
-- **Übersicht [`https://oparl.mandari.de/oparl/`](https://oparl.mandari.de/oparl/)**: Das Feld `bodyIndex` nennt je Kommune `name`, `displayName`, `slug`, `ags` (soweit bekannt) und die Adressen `body`, `paper`, `meeting`, `organization`, `person` und `web`, alphabetisch nach `displayName`. Ein Abruf genügt.
+- **Übersicht [`https://oparl.mandari.de/oparl/`](https://oparl.mandari.de/oparl/)**: Das Feld `bodyIndex` nennt je Kommune `name`, `displayName`, `slug`, `ags` (achtstellig, soweit gepflegt), `license` (der Kommune, sonst die der Installation) und die Adressen `body`, `paper`, `meeting`, `organization`, `person` und `web`, alphabetisch nach `displayName`. Ein Abruf genügt.
 - **Seite [Offene Daten](https://mandari.de/insight/offene-daten/)** im Bürgerportal: dieselben Adressen als Tabelle, mit Beispiel.
 
-Umgekehrt zeigt `Body.web` auf die Seite der Kommune im Bürgerportal (`https://mandari.de/insight/k/<slug>/`), und jede Seite einer Kommune nennt ihren Body im Kopf als `<link rel="alternate" type="application/json">`. `Body.ags` ist der Amtliche Gemeindeschlüssel, wie wir ihn pflegen, sonst die Angabe der Quelle.
+Umgekehrt zeigt `Body.web` auf die Seite der Kommune im Bürgerportal (`https://mandari.de/insight/k/<slug>/`), und jede Seite einer Kommune nennt ihren Body im Kopf als `<link rel="alternate" type="application/json">`. `Body.ags` ist der achtstellige Amtliche Gemeindeschlüssel, wie wir ihn pflegen, sonst die Angabe der Quelle.
 
 ## Schnellstart: Anträge einer Kommune abrufen
 
@@ -45,7 +45,7 @@ curl -s https://oparl.mandari.de/oparl/ | jq -r '.bodyIndex[] | select(.slug == 
 curl -s "<Adresse aus Schritt 1>?modified_since=2026-11-01T00:00:00Z"   | jq '.data[] | {name, reference, paperType, date, web}'
 ```
 
-Die Liste der Vorlagen enthält Vorlagen, Anträge und Anfragen. Die Art steht im Feld `paperType` (etwa „Antrag“ oder „Anfrage“), die Dokumente stehen unter `mainFile` und `auxiliaryFile`, ihr erkannter Text am Objekt der Datei im Feld `text`. Weitere Seiten findest du unter `links.next`.
+Die Liste der Vorlagen enthält Vorlagen, Anträge und Anfragen. Die Art steht im Feld `paperType` (etwa „Antrag“ oder „Anfrage“), die Dokumente stehen unter `mainFile` und `auxiliaryFile`. Den erkannten Text liefert eine Datei nur unter ihrer eigenen Adresse (`id`) im Feld `text`, nicht in der Liste. Weitere Seiten findest du unter `links.next`.
 
 ## Endpunkte
 
