@@ -5,7 +5,8 @@
 Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerportal Insight unter https://mandari.de/insight/, den Arbeitsbereich Work für Fraktionen und das Ratsinformationssystem Session für kommunale Verwaltungen. Dazu kommen die offenen Schnittstellen nach dem Standard OParl 1.1, der Selbstbetrieb mit Docker oder Kubernetes und der Datenschutz.
 
 - Die Anwendung läuft unter https://mandari.de, die Dokumentation unter https://docs.mandari.de.
-- Einstiegspunkt der OParl-Aggregations-API: https://mandari.de/oparl/v1/system (lesend, anonym, JSON).
+- Einstiegspunkt der OParl-Aggregations-API: https://oparl.mandari.de/oparl/v1/system (lesend, anonym, JSON).
+- Alle Kommunen mit den Adressen ihrer Vorlagen, Sitzungen, Gremien und Personen: https://oparl.mandari.de/oparl/ (Feld bodyIndex) und als Tabelle https://mandari.de/insight/offene-daten/.
 - Inhalte der Dokumentation stehen unter CC BY 4.0, der Quellcode liegt unter https://github.com/mandariOSS.
 
 ## Einstieg

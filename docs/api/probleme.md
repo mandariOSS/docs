@@ -85,7 +85,7 @@ Abhilfe: Die genannten Felder nach der OpenAPI-Beschreibung bzw. dem Vertrag des
   "status": 410,
   "detail": "Der Cursor ist nicht mehr gültig: …",
   "instance": "/oparl/v1/body/<uuid>/changes",
-  "snapshot": "https://mandari.de/oparl/v1/body/<uuid>/snapshot"
+  "snapshot": "https://oparl.mandari.de/oparl/v1/body/<uuid>/snapshot"
 }
 ```
 
