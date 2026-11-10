@@ -31,18 +31,33 @@ Die Kennungen aller Objekte beginnen mit `https://oparl.mandari.de/oparl/v1/`. D
 Um nicht erst alle Bodies laden zu müssen, gibt es zwei Verzeichnisse mit denselben Kommunen, wie sie im Bürgerportal stehen:
 
 - **Übersicht [`https://oparl.mandari.de/oparl/`](https://oparl.mandari.de/oparl/)**: Das Feld `bodyIndex` nennt je Kommune `name`, `displayName`, `slug`, `ags` (achtstellig, soweit gepflegt), `license` (der Kommune, sonst die der Installation) und die Adressen `body`, `paper`, `meeting`, `organization`, `person` und `web`, alphabetisch nach `displayName`. Ein Abruf genügt.
-- **Seite [Offene Daten](https://mandari.de/insight/offene-daten/)** im Bürgerportal: dieselben Adressen als Tabelle, mit Beispiel.
+- **Seite [Offene Daten](https://mandari.de/offene-daten/)**: dieselben Adressen zum Lesen, mit Beispiel und einer eigenen Seite je Kommune, zum Beispiel [mandari.de/offene-daten/muenster/](https://mandari.de/offene-daten/muenster/).
 
 Umgekehrt zeigt `Body.web` auf die Seite der Kommune im Bürgerportal (`https://mandari.de/insight/k/<slug>/`), und jede Seite einer Kommune nennt ihren Body im Kopf als `<link rel="alternate" type="application/json">`. `Body.ags` ist der achtstellige Amtliche Gemeindeschlüssel, wie wir ihn pflegen, sonst die Angabe der Quelle.
+
+## Kurzadressen mit dem Namen der Kommune
+
+Statt der UUID darf in der Adresse der Name der Kommune stehen, wie er im Feld `slug` des Verzeichnisses und in der Adresse des Bürgerportals steht:
+
+```
+https://oparl.mandari.de/oparl/v1/body/muenster
+https://oparl.mandari.de/oparl/v1/body/muenster/papers
+https://oparl.mandari.de/oparl/v1/body/muenster/meetings?modified_since=2026-11-01T00:00:00Z
+```
+
+Die Kurzadresse antwortet mit einer Weiterleitung (HTTP 307) auf die Adresse mit der UUID; Parameter bleiben erhalten. Die UUID bleibt die Kennung der Kommune: Sie ändert sich nie, ein Name kann sich ändern. Wer Kennungen speichert oder vergleicht, nimmt deshalb das Feld `id` der Antwort. Ein unbekannter Name gibt HTTP 404 mit einem Hinweis auf das Verzeichnis.
 
 ## Schnellstart: Anträge einer Kommune abrufen
 
 ```bash
-# 1. Adresse der Vorlagen-Liste von Münster aus dem Verzeichnis holen
-curl -s https://oparl.mandari.de/oparl/ | jq -r '.bodyIndex[] | select(.slug == "muenster") | .paper'
+# Vorlagen von Münster, die sich seit dem 1. November 2026 geändert haben (Zeitzone angeben; -L folgt der Weiterleitung)
+curl -sL "https://oparl.mandari.de/oparl/v1/body/muenster/papers?modified_since=2026-11-01T00:00:00Z"   | jq '.data[] | {name, reference, paperType, date, web}'
+```
 
-# 2. Nur, was sich seit dem 1. November 2026 geändert hat (Zeitzone angeben)
-curl -s "<Adresse aus Schritt 1>?modified_since=2026-11-01T00:00:00Z"   | jq '.data[] | {name, reference, paperType, date, web}'
+Ohne Kurzadresse steht die Adresse der Liste im Verzeichnis:
+
+```bash
+curl -s https://oparl.mandari.de/oparl/ | jq -r '.bodyIndex[] | select(.slug == "muenster") | .paper'
 ```
 
 Die Liste der Vorlagen enthält Vorlagen, Anträge und Anfragen. Die Art steht im Feld `paperType` (etwa „Antrag“ oder „Anfrage“), die Dokumente stehen unter `mainFile` und `auxiliaryFile`. Den erkannten Text liefert eine Datei nur unter ihrer eigenen Adresse (`id`) im Feld `text`, nicht in der Liste. Weitere Seiten findest du unter `links.next`.
@@ -55,6 +70,7 @@ Die Liste der Vorlagen enthält Vorlagen, Anträge und Anfragen. Die Art steht i
 | `GET /oparl/v1/system` | OParl-System-Objekt (Einstiegspunkt) |
 | `GET /oparl/v1/bodies` | Liste aller Kommunen (paginiert) |
 | `GET /oparl/v1/body/<uuid>` | Einzelne Kommune |
+| `GET /oparl/v1/body/<name>[/…]` | Kurzadresse mit dem Namen der Kommune, leitet auf die Adresse mit der UUID weiter |
 | `GET /oparl/v1/body/<uuid>/organizations` | Gremien der Kommune (paginiert, filterbar) |
 | `GET /oparl/v1/body/<uuid>/people` | Personen der Kommune (paginiert, filterbar) |
 | `GET /oparl/v1/body/<uuid>/meetings` | Sitzungen der Kommune (paginiert, filterbar) |
@@ -130,6 +146,18 @@ Objekte, die im Quellsystem gelöscht wurden, werden in mandari nicht physisch g
 - **Eingebettete Referenzen** wie `Meeting.agendaItem` oder `Paper.consultation` lassen gelöschte Objekte aus. Tombstones erscheinen nur als Top-Level-Objekte.
 
 Eine physische Löschung erfolgt ausschließlich auf ausdrückliche Aufforderung einer Kommune, siehe [Ingestor und Opt-out](../datenschutz/ingestor.md).
+
+## Zugriff für KI-Assistenten (MCP)
+
+Neben der OParl-Schnittstelle gibt es auf mandari.de einen öffentlichen, nur lesenden MCP-Server ([Model Context Protocol](https://modelcontextprotocol.io)):
+
+```
+https://mandari.de/insight/mcp
+```
+
+KI-Assistenten und eigene Agenten, die MCP sprechen, können damit Kommunen, Vorlagen, Sitzungen und Beschlüsse abfragen, mit denselben Werkzeugen wie der KI-Assistent im Bürgerportal. Der Server braucht keine Anmeldung und ändert nichts. Transport ist „Streamable HTTP“ (nur `POST` mit JSON-RPC 2.0). Es gelten 30 Anfragen je Minute und 500 Werkzeugaufrufe je Tag und Adresse.
+
+In eigenen Installationen ist der Server ausgeschaltet, bis der Betrieb ihn mit `INSIGHT_MCP_ENABLED=true` einschaltet ([Konfiguration](../betrieb/konfiguration.md)).
 
 ## Dateien
 
