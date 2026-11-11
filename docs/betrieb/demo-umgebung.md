@@ -50,6 +50,18 @@ Mandant **„Stadtverwaltung Musterstadt (Demo)“**:
 
 Der Mandant veröffentlicht **nicht** im Bürgerportal. Die Musterstadt in Insight stammt aus der eigenen Demo-Quelle, nicht aus dem Session-Mandanten.
 
+### Bestand der Musterstadt
+
+Die Abläufe oben sind von Hand geschrieben. Damit Rat, Ausschüsse, Fraktionen und Verwaltung so voll aussehen wie in einer echten Stadt, legt `setup_demo_environment` danach einen **Bestand** an. Jedes Portal legt seinen Teil selbst an, aus einem gemeinsamen Katalog:
+
+| Befehl | Portal | Inhalt |
+|---|---|---|
+| `setup_demo_insight` | Insight | 6 Fraktionen und Gruppen, gut 50 Personen mit Rat-, Fraktions- und Ausschussmitgliedschaften, 11 Gremien, ein Jahr Sitzungen (rund 115) mit Tagesordnungen samt nichtöffentlichen Teilen, rund 185 Vorgänge mit Beratungsfolgen, Beschlussnummern, Abstimmungen (auch namentlich), Umsetzungsstand, PDF-Drucksachen, Einladungen, Niederschriften und Orten für die Karte |
+| `setup_demo_work_bestand` | Work | weitere Mitglieder der Musterfraktion (ohne Anmeldung), ihre Anträge und Anfragen passend zum Ratsinformationssystem, Entwürfe, Ordner, Aufgaben, Sitzungsvorbereitungen mit Positionen |
+| `setup_demo_session` | Session | dieselben Gremien, Personen, Ämter, Vorlagen, Sitzungen, Anträge, Anwesenheiten und Niederschriften im Sitzungsdienst |
+
+Termine liegen relativ zum Tag des Aufbaus: Ratssitzung alle sechs Wochen, die Ausschüsse davor; Ausschüsse sind nach d'Hondt besetzt. `DEMO_UMFANG=voll` ist der Standard; `klein` legt dieselben Wege mit einem Bruchteil der Daten an (für Tests).
+
 ## Zugangsdaten
 
 Die Passwörter der Demo-Nutzer werden bei **jedem Lauf neu erzeugt** und ausschließlich auf der Konsole ausgegeben. Sie werden nirgendwo gespeichert. Ein erneuter Lauf rotiert die Passwörter, praktisch, wenn sie verloren gegangen sind.
@@ -66,11 +78,12 @@ Für einen öffentlichen Testzugang läuft die Demo als **eigene Installation mi
 | KI-Funktionen | abgeschaltet |
 | Passwort, zweiter Faktor, Sicherheitsschlüssel | nicht änderbar; alle Besucher teilen sich die Konten |
 | Registrierung, „Passwort vergessen“, Kontolöschung | gesperrt |
-| Hinweis | auf jeder Seite: Demo-Umgebung, alle Daten sind erfunden |
+| Hinweis | auf jeder Seite: Demo-Umgebung, alle Daten sind erfunden und werden zurückgesetzt, mit den Uhrzeiten aus `DEMO_NEUAUFBAU_UTC` |
+| Anmeldeseite | Liste aller Demo-Zugänge mit dem Passwort; je Rolle meldet ein Klick an und führt in Work oder Session. Dazu ein Link ins Bürgerportal der Musterstadt. |
 
 Ist zusätzlich `DEMO_PASSWORD` gesetzt, bekommen alle Demo-Konten dieses feste Passwort, damit es öffentlich genannt werden kann. Das gilt **nur** mit `DEMO_INSTANCE`; sonst ignoriert der Befehl die Variable. Setzen Sie `DEMO_INSTANCE` nie in einer Installation mit echten Daten.
 
-Wer die Demo regelmäßig zurücksetzen will, verwirft die Demo-Datenbank, migriert neu und ruft `setup_demo_environment` erneut auf. Der Hinweis auf jeder Seite sagt fest, dass die Daten jede Nacht zurückgesetzt werden und keine E-Mails hinausgehen; den nächtlichen Neuaufbau richtet der Betreiber selbst ein.
+Wer die Demo regelmäßig zurücksetzen will, verwirft die Demo-Datenbank, migriert neu und ruft `setup_demo_environment` (und gegebenenfalls `setup_demo_praesentation`) erneut auf. Den Zeitplan richtet der Betreiber selbst ein, etwa per Cron. Damit der Hinweis ihn nennen kann, steht er zusätzlich in `DEMO_NEUAUFBAU_UTC`: Uhrzeiten in UTC, kommagetrennt, etwa `03:30,15:30`; angezeigt werden sie in Ortszeit. Beide Angaben müssen zusammenpassen. Ohne die Variable sagt der Hinweis nur „regelmäßig“.
 
 ## Präsentationsumgebung
 
@@ -87,6 +100,7 @@ Das Passwort der Leitstelle entsteht beim Anlegen und erscheint nur dann auf der
 ## Wiederholbarkeit und Aufräumen
 
 - Alle Objekte hängen an festen Demo-Kennungen (Slugs mit Endung `-demo`, OParl-IDs unter einer nicht auflösbaren Demo-Domain). Wiederholte Läufe aktualisieren statt zu duplizieren.
+- Kennungen des Bestands beginnen mit `b-`. Ein wiederholter Lauf entfernt den Bestand und legt ihn neu an; die von Hand geschriebenen Abläufe bleiben unberührt.
 - Die Demo-Quelle ist **inaktiv**, damit der Ingestor sie nie abruft.
 - `--reset` löscht ausschließlich die über diese Kennungen identifizierten Objekte: Session-Mandant, Work-Organisation, Parteigruppe, Demo-Nutzer, Quelle samt Kommune und die erzeugten PDF-Dateien, dazu eine darauf aufgesetzte Präsentationsumgebung (siehe unten).
 
