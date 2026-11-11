@@ -18,12 +18,12 @@ Die Container-Images liegen in der GitHub Container Registry. Ein einziges `IMAG
 | Tag | Bedeutung |
 |-----|-----------|
 | `v0.12.0`, `v0.11.1` usw. | eine veröffentlichte Version (Release) mit Changelog, siehe [GitHub Releases](https://github.com/mandariOSS/mandari/releases) |
-| `v0.12`, `v0.16` usw. | beweglich: die jüngste Patch-Version einer Linie. Für Installationen, die auf einer [Pflegeversion](../entwicklung/release-politik.md#pflegeversionen-und-supportzeitraum) bleiben und nur deren Korrekturen übernehmen. |
+| `v0.12`, `v0.16` usw. | beweglich: die jüngste Patch-Version einer Linie. Zeigt Installationen auf einer [Pflegeversion](../entwicklung/release-politik.md#pflegeversionen-und-supportzeitraum), welche Patch-Version aktuell ist; eingespielt wird mit fester Version (`v0.16.2`), weil der automatische Rückfall ein bewegliches Tag nicht auf das vorherige Image zurückführen kann. |
 | `latest` | beweglich: der jüngste Stand des Zweigs `main`. Jeder Push auf `main` setzt es, ebenso ein Release der jüngsten Linie; ein Patch-Release einer älteren Linie (etwa `v0.11.1` nach 0.12.0) setzt es nicht. `latest` kann deshalb Änderungen enthalten, die noch in keinem Release stehen. |
 | `main-<commit>` | unveränderlicher Stand eines Commits auf `main`; dasselbe Image trägt auch das ältere Tag `<commit>` ohne Präfix |
 | `dev`, `dev-<commit>` | Entwicklungsstand, instabil und nicht für den Produktivbetrieb |
 
-Für den Betrieb empfehlen wir eine Release-Version, damit jedes Update eine bewusste Entscheidung ist: entweder mit dem Takt die jüngste Version (alle zwei Wochen) oder eine Pflegeversion mit ihrem Linien-Tag. Versionierung, Release-Rhythmus und Supportzeiträume regelt die [Release- und Support-Politik](../entwicklung/release-politik.md).
+Für den Betrieb empfehlen wir eine Release-Version, damit jedes Update eine bewusste Entscheidung ist: entweder mit dem Takt die jüngste Version (alle zwei Wochen) oder eine Pflegeversion mit ihren Patch-Versionen. Versionierung, Release-Rhythmus und Supportzeiträume regelt die [Release- und Support-Politik](../entwicklung/release-politik.md).
 
 ## Aktualisieren mit update.sh
 
