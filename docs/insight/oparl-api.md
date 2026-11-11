@@ -45,7 +45,7 @@ https://oparl.mandari.de/oparl/v1/body/muenster/papers
 https://oparl.mandari.de/oparl/v1/body/muenster/meetings?modified_since=2026-11-01T00:00:00Z
 ```
 
-Die Kurzadresse antwortet mit einer Weiterleitung (HTTP 307) auf die Adresse mit der UUID; Parameter bleiben erhalten. Die UUID bleibt die Kennung der Kommune: Sie ändert sich nie, ein Name kann sich ändern. Wer Kennungen speichert oder vergleicht, nimmt deshalb das Feld `id` der Antwort. Ein unbekannter Name gibt HTTP 404 mit einem Hinweis auf das Verzeichnis.
+Die Kurzadresse antwortet mit einer Weiterleitung (HTTP 307) auf die Adresse mit der UUID; Parameter bleiben erhalten. Die UUID bleibt die Kennung der Kommune: Sie ändert sich nie, ein Name kann sich ändern. Wer Kennungen speichert oder vergleicht, nimmt sie deshalb aus der Antwort: Die Kennung der Kommune ist das Feld `id` ihres Body-Objekts (`/body/muenster`). Eine Liste wie `/body/muenster/papers` trägt selbst keine Kennung der Kommune; dort ist `data[].id` die Kennung des einzelnen Eintrags, und dessen Feld `body` nennt die Kommune. Ausnahme sind gelöschte Objekte (Tombstones, siehe den Abschnitt „Gelöschte Objekte“ weiter unten): Sie tragen kein Feld `body`. Wer mit `modified_since` abgleicht, merkt sich die Kommune deshalb aus der Abfrage oder aus dem zuvor gespeicherten Objekt. Ein unbekannter Name gibt HTTP 404 mit einem Hinweis auf das Verzeichnis.
 
 ## Schnellstart: Anträge einer Kommune abrufen
 
