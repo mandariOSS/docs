@@ -1,5 +1,5 @@
 ---
-title: Session – Ratsinformationssystem für Verwaltungen
+title: Session – das Ratsinformationssystem
 description: Was mandari Session dem kommunalen Sitzungsdienst bietet, wie Mandanten, Rollen und Öffentlichkeit funktionieren und welche Anleitungen es gibt.
 ---
 
