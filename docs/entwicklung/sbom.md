@@ -5,11 +5,11 @@ description: Software Bill of Materials der mandari-Plattform. Wo die Liste der 
 
 # Abhängigkeiten (SBOM)
 
-Die Software Bill of Materials der mandari-Plattform wird im Hauptrepository gepflegt, damit sie mit dem Code versioniert bleibt:
+Jedes Release bringt eine maschinenlesbare Stückliste im Format CycloneDX mit, versionsgenau und mit allen transitiven Paketen. Sie hängt als drei Dateien an jedem [GitHub-Release](https://github.com/mandariOSS/mandari/releases): `sbom-mandari-python.cdx.json` (Django-Anwendung), `sbom-ingestor-python.cdx.json` (Ingestor) und `sbom-mandari-npm.cdx.json` (Frontend).
 
-**[docs/SBOM.md im Repository mandariOSS/mandari](https://github.com/mandariOSS/mandari/blob/main/docs/SBOM.md)**
+Wie die Stückliste entsteht und welche Lizenzen gelten, steht in der Datei `DEPENDENCIES.md` im Hauptrepository:
 
-Sie listet die direkten Abhängigkeiten der Django-Anwendung, des Ingestors und des gemeinsamen OParl-Pakets mit Version, Lizenz und Zweck. Transitive Abhängigkeiten sind nicht vollständig aufgeführt. Eine maschinenlesbare CycloneDX-Erzeugung in der CI ist geplant.
+**[Stückliste (SBOM) je Release in DEPENDENCIES.md](https://github.com/mandariOSS/mandari/blob/main/DEPENDENCIES.md#stückliste-sbom-je-release)**
 
 ## Die wichtigsten Bausteine
 
