@@ -32,7 +32,7 @@ Die Container-Images tragen die Version als Tag, zum Beispiel `v0.16.0`. Dazu gi
 | **PATCH** | bei Bedarf, innerhalb der Fristen unten | nur Korrekturen, keine neuen Funktionen |
 | **MAJOR** | angekündigt mindestens **sechs Monate** vorher | mit Migrationsleitfaden |
 
-Jedes Release läuft vorher mehrere Tage in dem von uns betriebenen Hosting; ein Release ist damit nie der erste Kontakt mit echtem Betrieb. Fällt ein Termin zwischen den 24.12. und den 01.01. oder auf einen bundesweiten Feiertag, entfällt das Release. Die Termine stehen an den [Meilensteinen auf GitHub](https://github.com/mandariOSS/mandari/milestones).
+Jedes Release läuft vorher in dem von uns betriebenen Hosting; ein Release ist damit nie der erste Kontakt mit echtem Betrieb. Muss nach dem Donnerstag ein Fehler behoben werden, der das Release verhindert, erscheint der korrigierte Stand, wenn er bis Dienstag mindestens einen Werktag bei uns läuft; er enthält dann auch, was seitdem fertig wurde. Sonst entfällt das Release, und das nächste erscheint planmäßig. Fällt ein Termin zwischen den 24.12. und den 01.01. oder auf einen bundesweiten Feiertag, entfällt das Release. Die Termine stehen an den [Meilensteinen auf GitHub](https://github.com/mandariOSS/mandari/milestones).
 
 Zwei Wochen bringen Korrekturen und neue Funktionen schnell zu allen Installationen, und jedes Release bleibt klein. Wer seltener aktualisieren möchte, bleibt auf einer Pflegeversion.
 
