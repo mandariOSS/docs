@@ -36,6 +36,7 @@ Diese Dokumentation beschreibt die drei Bausteine der Plattform: das Bürgerport
 - [Work – Arbeitsbereich für Fraktionen](https://docs.mandari.de/work/): Überblick, Rollen und Rechte
 - [Erste Schritte in Work](https://docs.mandari.de/work/erste-schritte/): Anmeldung, Profil, Dashboard und Navigation
 - [Sitzungen vorbereiten](https://docs.mandari.de/work/sitzungen-vorbereiten/): Rats- und Ausschusssitzungen gemeinsam vorbereiten
+- [Kalender, Termine und Terminumfrage](https://docs.mandari.de/work/kalender/): alle Termine an einem Ort, eigene Termine mit Einladungen, Terminumfrage, Abonnieren im eigenen Kalender
 - [Dokumente und Anträge](https://docs.mandari.de/work/dokumente/): Anträge und Anfragen gemeinsam schreiben, abstimmen und freigeben
 - [Anträge digital einreichen](https://docs.mandari.de/work/antraege-einreichen/): Anträge direkt beim Ratsinformationssystem der Verwaltung einreichen
 - [Termine auf der eigenen Webseite](https://docs.mandari.de/work/termine-einbinden/): öffentliche Fraktionssitzungen ohne Plugin auf der Fraktions-Webseite anzeigen

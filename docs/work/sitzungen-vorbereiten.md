@@ -16,7 +16,7 @@ Die Liste hat zwei Reiter:
 
 Haben Sie keine Gremien ausgewählt und auch keine zugewiesen bekommen, zeigt der Reiter „Meine Gremien“ einen Hinweis und darunter alle Sitzungen.
 
-Filter grenzen nach Gremium, Zeitraum (anstehend, vergangen, alle) und Suchbegriff ein. Angezeigt werden Sitzungen aus einem Fenster von rund sechs Monaten in die jeweilige Richtung. Daneben gibt es eine Kalenderansicht.
+Filter grenzen nach Gremium, Zeitraum (anstehend, vergangen, alle) und Suchbegriff ein. Angezeigt werden Sitzungen aus einem Fenster von rund sechs Monaten in die jeweilige Richtung. Daneben gibt es den [Kalender](kalender.md), der auch interne Sitzungen, eigene Termine, Fristen und Aufgaben zeigt.
 
 ## Eine Sitzung vorbereiten { #vorbereitung }
 

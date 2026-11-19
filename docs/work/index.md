@@ -43,6 +43,7 @@ Für den Alltag im Arbeitsbereich:
 - [Was ist neu in Work](was-ist-neu.md): Änderungen der letzten Wochen, neueste zuerst
 - [Erste Schritte](erste-schritte.md): Zugang, Profil, Dashboard und Navigation, Nutzung auf dem Smartphone
 - [Sitzungen vorbereiten](sitzungen-vorbereiten.md): Positionen, Notizen, Redebeiträge und Diskussion je Tagesordnungspunkt
+- [Kalender, Termine und Terminumfrage](kalender.md): alle Termine an einem Ort, eigene Termine mit Einladungen, Termine gemeinsam finden, im eigenen Kalender abonnieren
 - [Dokumente und Anträge](dokumente.md): gemeinsam schreiben, freigeben, exportieren, KI-Assistent
 - [Konto und Sicherheit](konto-und-sicherheit.md): Passwort, Zwei-Faktor-Anmeldung, Sicherheitsschlüssel, Datenexport
 - [Häufige Fragen](haeufige-fragen.md)

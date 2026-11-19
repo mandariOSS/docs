@@ -29,7 +29,7 @@ Unter **Profil** pflegen Sie Ihre Angaben:
 
 | Reiter | Inhalt |
 |--------|--------|
-| Profil | Vorname, Nachname, Telefon, Profilbild (JPG, PNG oder WebP bis 5 MB), persönlicher Kalender-Feed |
+| Profil | Vorname, Nachname, Telefon, Profilbild (JPG, PNG oder WebP bis 5 MB), [Kalender abonnieren](kalender.md#abonnieren) |
 | Sichtbarkeit | Kurzvorstellung und welche Kontaktwege andere Mitglieder sehen |
 | Meine Gremien | Gremien, die Sie interessieren, für Ihr Dashboard und Ihre Sitzungsliste |
 | Sicherheit | Passwort, Zwei-Faktor-Anmeldung, Sicherheitsschlüssel, aktive Sitzungen |
