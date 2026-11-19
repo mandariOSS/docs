@@ -50,7 +50,7 @@ Eingeladene sehen ihren Termin immer. Gäste Ihrer Organisation sehen keine Term
 
 ### Einladen und antworten { #einladen }
 
-Im Formular wählen Sie die Mitglieder aus, die Sie einladen. Sie bekommen eine Benachrichtigung und antworten auf der Seite des Termins mit **Zusagen**, **Vielleicht** oder **Absagen**. Die Seite zeigt allen Beteiligten, wer wie geantwortet hat. Die Antwort lässt sich jederzeit ändern.
+Im Formular wählen Sie die Mitglieder aus, die Sie einladen. Sie bekommen eine Benachrichtigung, sehen die Einladung auf der Startseite unter **Für Sie** und antworten auf der Seite des Termins mit **Zusagen**, **Vielleicht** oder **Absagen**. Die Seite zeigt allen Beteiligten, wer wie geantwortet hat. Die Antwort lässt sich jederzeit ändern.
 
 Ist eine eingeladene Person als abwesend eingetragen, geht die Benachrichtigung an ihre Vertretung, sofern diese den Termin selbst sehen darf.
 
@@ -82,13 +82,15 @@ Je Vorschlag wählen die Gefragten **Ja**, **Wenn nötig** oder **Nein** und spe
 - was am selben Tag schon im eigenen Kalender liegt, zum Beispiel eine Ausschusssitzung, und
 - welcher Vorschlag bisher die meisten Zusagen hat.
 
-Offene Umfragen stehen über dem Kalender, mit dem Hinweis, wo Ihre Antwort noch fehlt. Die Antworten lassen sich ändern, bis die Umfrage abgeschlossen ist.
+Offene Umfragen stehen über dem Kalender, mit dem Hinweis, wo Ihre Antwort noch fehlt, und auf der Startseite unter **Für Sie**. Endet die Antwortfrist morgen, erinnert Work alle Gefragten, die noch nicht geantwortet haben, einmal daran. Die Antworten lassen sich ändern, bis die Umfrage abgeschlossen ist.
 
 ### Vorschlag ergänzen und Termin festlegen { #umfrage-festlegen }
 
 Wer die Umfrage angelegt hat, kann nachträglich weitere Vorschläge ergänzen. Die Gefragten werden benachrichtigt und ergänzen ihre Antwort.
 
 Mit **Termin festlegen** wählen Sie am Ende einen Vorschlag. Daraus entsteht ein Termin für die Gefragten. Ihre Antwort aus der Umfrage steht schon als Zusage, „vielleicht“ oder Absage am Termin, und alle bekommen die Nachricht, dass der Termin feststeht. Die Umfrage ist danach abgeschlossen.
+
+Dürfen Sie interne Sitzungen anlegen, wählen Sie beim Festlegen stattdessen **Eine interne Sitzung** und die Sitzungsart, etwa einen Arbeitskreis. Die Sitzung entsteht wie beim Planen von Hand, mit Tagesordnung, Protokoll und Zu- und Absagen. Die Gefragten stehen auf der Anwesenheitsliste, ihre Antwort aus der Umfrage schon als Zusage, „vielleicht“ oder Absage. Die Einladung mit Tagesordnung verschicken Sie wie gewohnt aus der Sitzung.
 
 ## Im eigenen Kalender abonnieren { #abonnieren }
 
