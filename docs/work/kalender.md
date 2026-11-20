@@ -64,7 +64,7 @@ Mit einer Terminumfrage finden Sie gemeinsam einen Zeitpunkt. Anders als bei ein
 
 ### Umfrage starten { #umfrage-starten }
 
-Über **Termin abstimmen** am Kalender oder **Neu → Terminumfrage** geben Sie der Umfrage einen Titel und tragen die Vorschläge ein, je Zeile einen Zeitpunkt aus Tag, Beginn und auf Wunsch dem Ende. Am schnellsten geht das im Monatsblatt neben den Zeilen: Jeder Klick auf einen Tag ergänzt einen Vorschlag mit der Uhrzeit des letzten Vorschlags (beim ersten 18 Uhr), ein zweiter Klick nimmt den Tag wieder heraus. Mindestens zwei Vorschläge sind nötig, höchstens zwanzig möglich. Ort, Beschreibung und eine Frist für die Antworten sind freiwillig.
+Über **Termin abstimmen** am Kalender oder **Neu → Terminumfrage** geben Sie der Umfrage einen Titel und tragen die Vorschläge ein, je Zeile einen Zeitpunkt aus Tag, Beginn und auf Wunsch dem Ende. Am schnellsten geht das im Monatsblatt: Jeder Klick auf einen Tag ergänzt einen Vorschlag mit der Uhrzeit des letzten Vorschlags (beim ersten 18 Uhr), ein zweiter Klick nimmt den Tag wieder heraus. Mindestens zwei Vorschläge sind nötig, höchstens zwanzig möglich. Ort, Beschreibung und eine Frist für die Antworten sind freiwillig.
 
 Sie fragen wahlweise
 
