@@ -157,6 +157,20 @@ https://mandari.de/insight/mcp
 
 KI-Assistenten und eigene Agenten, die MCP sprechen, können damit Kommunen, Vorlagen, Sitzungen und Beschlüsse abfragen, mit denselben Werkzeugen wie der KI-Assistent im Bürgerportal. Der Server braucht keine Anmeldung und ändert nichts. Transport ist „Streamable HTTP“ (nur `POST` mit JSON-RPC 2.0). Es gelten 30 Anfragen je Minute und 500 Werkzeugaufrufe je Tag und Adresse.
 
+### Als Connector in Claude
+
+1. In Claude (im Browser oder in der Desktop-App) die Einstellungen öffnen, Bereich „Connectors“.
+2. Einen eigenen Connector hinzufügen: Name frei wählbar, zum Beispiel „mandari“, Adresse `https://mandari.de/insight/mcp`, ohne Anmeldung.
+3. Im Gespräch den Connector einschalten und fragen, zum Beispiel: „Was steht in der nächsten Ratssitzung in Münster an?“
+
+Die Antworten nennen die Seiten des Bürgerportals als Quelle. Andere Assistenten und Werkzeuge mit MCP-Unterstützung nehmen dieselbe Adresse; in Konfigurationsdateien sieht der Eintrag meist so aus:
+
+```json
+{"mcpServers": {"mandari": {"type": "http", "url": "https://mandari.de/insight/mcp"}}}
+```
+
+Ab Version 0.14 nennt auch die Schnittstelle den Server, damit Assistenten ihn von dort finden: das System-Objekt im Feld `mandari:mcp`, die Übersicht [`https://oparl.mandari.de/oparl/`](https://oparl.mandari.de/oparl/) im Feld `mcp`. Ist der Server ausgeschaltet, fehlen beide Felder.
+
 In eigenen Installationen ist der Server ausgeschaltet, bis der Betrieb ihn mit `INSIGHT_MCP_ENABLED=true` einschaltet ([Konfiguration](../betrieb/konfiguration.md)).
 
 ## Dateien
@@ -177,6 +191,7 @@ Ergänzende Felder tragen das Präfix `mandari:` und können von Standard-Client
 | `mandari:originalId` | alle | Original-URL des Objekts im kommunalen Quellsystem |
 | `mandari:slug`, `mandari:displayName` | Body | URL-Slug und Anzeigename der Kommune |
 | `mandari:locationList` | Body | URL der Orte-Liste |
+| `mandari:mcp` | System | Adresse des MCP-Servers für KI-Assistenten, wenn er eingeschaltet ist (ab 0.14) |
 | `mandari:summary` | Paper | Automatisch erstellte Zusammenfassung, falls vorhanden |
 | `mandari:originalAccessUrl` | File | Original-Datei-URL beim Quellserver |
 | `mandari:sha256`, `mandari:pageCount` | File | SHA-256-Hash und Seitenzahl |
