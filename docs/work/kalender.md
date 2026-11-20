@@ -64,7 +64,7 @@ Mit einer Terminumfrage finden Sie gemeinsam einen Zeitpunkt. Anders als bei ein
 
 ### Umfrage starten { #umfrage-starten }
 
-Über **Termin abstimmen** am Kalender oder **Neu → Terminumfrage** geben Sie der Umfrage einen Titel und tragen die Vorschläge ein, je Zeile einen Zeitpunkt aus Tag, Beginn und auf Wunsch dem Ende. Mindestens zwei Vorschläge sind nötig, höchstens zwanzig möglich. Ort, Beschreibung und eine Frist für die Antworten sind freiwillig.
+Über **Termin abstimmen** am Kalender oder **Neu → Terminumfrage** geben Sie der Umfrage einen Titel und tragen die Vorschläge ein, je Zeile einen Zeitpunkt aus Tag, Beginn und auf Wunsch dem Ende. Am schnellsten geht das im Monatsblatt neben den Zeilen: Jeder Klick auf einen Tag ergänzt einen Vorschlag mit der Uhrzeit des letzten Vorschlags (beim ersten 18 Uhr), ein zweiter Klick nimmt den Tag wieder heraus. Mindestens zwei Vorschläge sind nötig, höchstens zwanzig möglich. Ort, Beschreibung und eine Frist für die Antworten sind freiwillig.
 
 Sie fragen wahlweise
 
@@ -76,11 +76,13 @@ Die Gefragten bekommen eine Benachrichtigung. Sie selbst stimmen immer mit ab.
 
 ### Antworten { #umfrage-antworten }
 
-Je Vorschlag wählen die Gefragten **Ja**, **Wenn nötig** oder **Nein** und speichern alles mit einem Knopf. Unter jedem Vorschlag steht,
+Die Umfrage zeigt die Antworten als Raster: je Vorschlag eine Spalte wie ein Kalenderblatt, je Person eine Zeile. In Ihrer eigenen Zeile oben wählen Sie je Vorschlag **Ja**, **Wenn nötig** oder **Nein** und speichern alles mit einem Knopf. Darunter sehen Sie,
 
-- wer wie geantwortet hat,
-- was am selben Tag schon im eigenen Kalender liegt, zum Beispiel eine Ausschusssitzung, und
-- welcher Vorschlag bisher die meisten Zusagen hat.
+- was am selben Tag schon in Ihrem Kalender liegt, zum Beispiel eine Ausschusssitzung,
+- wie viele Zusagen jeder Vorschlag hat und
+- welcher Vorschlag bisher die meisten Zusagen hat (markiert).
+
+Am Handy schieben Sie das Raster seitlich, die Namen bleiben dabei stehen.
 
 Offene Umfragen stehen über dem Kalender, mit dem Hinweis, wo Ihre Antwort noch fehlt, und auf der Startseite unter **Für Sie**. Endet die Antwortfrist morgen, erinnert Work alle Gefragten, die noch nicht geantwortet haben, einmal daran. Die Antworten lassen sich ändern, bis die Umfrage abgeschlossen ist.
 
@@ -90,7 +92,7 @@ Wer die Umfrage angelegt hat, kann nachträglich weitere Vorschläge ergänzen. 
 
 Mit **Termin festlegen** wählen Sie am Ende einen Vorschlag. Daraus entsteht ein Termin für die Gefragten. Ihre Antwort aus der Umfrage steht schon als Zusage, „vielleicht“ oder Absage am Termin, und alle bekommen die Nachricht, dass der Termin feststeht. Die Umfrage ist danach abgeschlossen.
 
-Dürfen Sie interne Sitzungen anlegen, wählen Sie beim Festlegen stattdessen **Eine interne Sitzung** und die Sitzungsart, etwa einen Arbeitskreis. Die Sitzung entsteht wie beim Planen von Hand, mit Tagesordnung, Protokoll und Zu- und Absagen. Die Gefragten stehen auf der Anwesenheitsliste, ihre Antwort aus der Umfrage schon als Zusage, „vielleicht“ oder Absage. Die Einladung mit Tagesordnung verschicken Sie wie gewohnt aus der Sitzung.
+Dürfen Sie interne Sitzungen anlegen, wählen Sie beim Festlegen stattdessen **Eine interne Sitzung** und die Sitzungsart, etwa einen Arbeitskreis. Die Sitzung entsteht wie beim Planen von Hand, mit Tagesordnung, Protokoll und Zu- und Absagen. Titel, Zeit und Ort kommen aus der Umfrage; die Beschreibung bleibt bei der Umfrage, die auf die Sitzung verweist. Die Gefragten stehen auf der Anwesenheitsliste, ihre Antwort aus der Umfrage schon als Zusage, „vielleicht“ oder Absage. Die Einladung mit Tagesordnung verschicken Sie wie gewohnt aus der Sitzung.
 
 ## Im eigenen Kalender abonnieren { #abonnieren }
 
