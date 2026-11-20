@@ -47,7 +47,7 @@ Was Sie sehen, richtet sich nach Ihren Rollen und Berechtigungen in der Organisa
 
 ### Wie bekomme ich die Termine in meinen Kalender? { #kalender }
 
-Unter *Profil* erzeugen Sie einen persönlichen Kalender-Feed (iCal). Er enthält Ihre Fraktionssitzungen aus allen Ihren Organisationen und die Sitzungen Ihrer zugewiesenen Gremien, jeweils nur mit Titel, Zeit und Ort. Die Adresse wird nur einmal angezeigt. Behandeln Sie sie wie ein Passwort. Wer sie kennt, sieht Ihre Termine.
+Unter *Profil → Kalender abonnieren* erzeugen Sie eine persönliche Adresse (iCal) und tragen sie in Ihrem Kalenderprogramm ein, etwa in Google Kalender, auf dem iPhone, in Outlook oder Thunderbird. Der Kalender enthält Ihre internen Sitzungen aus allen Ihren Organisationen, die Sitzungen Ihrer zugewiesenen Gremien und die eigenen Termine, jeweils nur mit Titel, Zeit und Ort. Die Adresse wird nur einmal angezeigt. Behandeln Sie sie wie ein Passwort. Wer sie kennt, sieht Ihre Termine. Die Schritte je Programm stehen unter [Im eigenen Kalender abonnieren](kalender.md#abonnieren).
 
 ### Wie teile ich unsere Termine auf der Webseite der Fraktion? { #webseite }
 
