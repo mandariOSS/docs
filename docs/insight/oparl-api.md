@@ -163,6 +163,8 @@ KI-Assistenten und eigene Agenten, die MCP sprechen, können damit Kommunen, Vor
 2. Einen eigenen Connector hinzufügen: Name frei wählbar, zum Beispiel „mandari“, Adresse `https://mandari.de/insight/mcp`, ohne Anmeldung.
 3. Im Gespräch den Connector einschalten und fragen, zum Beispiel: „Was steht in der nächsten Ratssitzung in Münster an?“
 
+In einer Organisation mit Claude Team oder Enterprise legt zuerst ein Owner den Connector mit derselben Adresse in den Einstellungen der Organisation an; danach verbinden sich die Mitglieder unter „Connectors“ mit ihm.
+
 Die Antworten nennen die Seiten des Bürgerportals als Quelle. Andere Assistenten und Werkzeuge mit MCP-Unterstützung nehmen dieselbe Adresse; in Konfigurationsdateien sieht der Eintrag meist so aus:
 
 ```json
