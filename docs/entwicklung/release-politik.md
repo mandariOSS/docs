@@ -34,7 +34,7 @@ Die Container-Images tragen die Version als Tag, zum Beispiel `v0.16.0`. Dazu gi
 
 Jedes Release läuft vorher in dem von uns betriebenen Hosting; ein Release ist damit nie der erste Kontakt mit echtem Betrieb. Muss nach dem Donnerstag ein Fehler behoben werden, der das Release verhindert, erscheint der korrigierte Stand, wenn er bis Dienstag mindestens einen Werktag bei uns läuft; er enthält dann auch, was seitdem fertig wurde. Sonst entfällt das Release, und das nächste erscheint planmäßig. Fällt ein Termin zwischen den 24.12. und den 01.01. oder auf einen bundesweiten Feiertag, entfällt das Release. Die Termine stehen an den [Meilensteinen auf GitHub](https://github.com/mandariOSS/mandari/milestones).
 
-Zwei Wochen bringen Korrekturen und neue Funktionen schnell zu allen Installationen, und jedes Release bleibt klein. Jede MINOR lässt sich ohne Handarbeit einspielen; deshalb pflegen wir nur die jüngste.
+Zwei Wochen bringen Korrekturen und neue Funktionen schnell zu allen Installationen, und jedes Release bleibt klein. Jede MINOR lässt sich ohne Handarbeit einspielen, außer bei einer vor 1.0 angekündigten brechenden Änderung (mit Migrationsanleitung) und bei einer MAJOR-Version (mit Migrationsleitfaden). Deshalb pflegen wir nur die jüngste.
 
 ## Supportzeitraum
 
@@ -43,7 +43,7 @@ Wir unterstützen nur die **jüngste MINOR**. Pflegeversionen gibt es nicht, und
 | Version | Erhält | Dauer |
 |---------|--------|-------|
 | **Jüngste MINOR** | Sicherheitskorrekturen und Korrekturen kritischer Fehler als PATCH oder mit der nächsten MINOR, wenn diese innerhalb der Frist erscheint | bis zur nächsten MINOR |
-| **ältere MINOR** | keine Korrekturen mehr nach Erscheinen der Nachfolgerin; die Aktualisierung auf die jüngste Version geht ohne Handarbeit | – |
+| **ältere MINOR** | keine Korrekturen mehr nach Erscheinen der Nachfolgerin; die Aktualisierung auf die jüngste Version geht ohne Handarbeit, außer bei angekündigten brechenden Änderungen und MAJOR-Versionen | – |
 | **0.11 und 0.12** (Übergang) | Sicherheitskorrekturen ab „mittel“ und Korrekturen kritischer Fehler als PATCH | bis **31.01.2027** |
 
 Kritische Fehler sind Datenverlust oder die Verfälschung gespeicherter Daten, Nichtöffentliches oder Personenbezogenes, das Unbefugten sichtbar wird, der Ausfall einer Kernfunktion ohne Umgehung und Fehler mit Rechtswirkung, etwa falsch berechnete Fristen. Zurückportierte Korrekturen enthalten keine Datenbankmigrationen. Die jeweils gültige Liste steht in [SECURITY.md](https://github.com/mandariOSS/mandari/blob/main/SECURITY.md#unterstützte-versionen).
@@ -97,7 +97,7 @@ Der [Changelog](https://github.com/mandariOSS/mandari/blob/main/CHANGELOG.md) fo
 |-------|-------|
 | Rhythmus MINOR | alle zwei Wochen, dienstags |
 | Unterstützt | nur die jüngste MINOR: Sicherheitskorrekturen und kritische Fehler als PATCH oder mit der nächsten MINOR |
-| ältere MINOR | keine Korrekturen mehr; Aktualisierung ohne Handarbeit |
+| ältere MINOR | keine Korrekturen mehr; Aktualisierung ohne Handarbeit (Ausnahmen: angekündigte brechende Änderungen, MAJOR) |
 | Pflegeversionen, LTS | keine, auch nicht ab 1.0 |
 | Übergang | 0.11 und 0.12 bis 31.01.2027, Sicherheitskorrekturen ab „mittel“ und kritische Fehler |
 | Aktualisierung im betreuten Hosting | binnen 14 Tagen, Sicherheit nach Fristen |
